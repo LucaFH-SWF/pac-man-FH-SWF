@@ -43,7 +43,7 @@ int main()
 
 	points[1][2] = '.';
 	points[3][2] = 'o';
-	points[5][2] = '.';
+	points[5][2] = ' ';
 
 	initscr();
 	cbreak();
