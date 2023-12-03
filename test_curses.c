@@ -55,6 +55,10 @@ int main()
 
 	start_color();
 	
+	init_pair(1, COLOR_BLUE, COLOR_BLUE);
+	
+	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
+	
 /*
 	while(!quit)//action-loop
 	{
@@ -64,7 +68,11 @@ int main()
 	print_src(walls, sizex, sizey);
 
 	print_src2(points, sizex, sizey);
-	//mvprintw(5, 5, "%c", walls[1][2]);
+	
+	attron(COLOR_PAIR(2));
+	mvprintw(5, 5, "%c", 'P');
+	attroff(COLOR_PAIR(2));
+	
 	refresh();
 	
 	getchar();
@@ -74,7 +82,6 @@ int main()
 
 void print_src(char **walls, int sizex, int sizey)
 {
-	init_pair(1, COLOR_BLUE, COLOR_BLUE);
 	attron(COLOR_PAIR(1));
 	for(int i = 0; i < sizey; ++i)
 	{
@@ -94,6 +101,6 @@ void print_src2(char **walls, int sizex, int sizey)
 		{
 			mvprintw(5+j, 5+i, "%c", walls[i][j]);
 		}
-	};
+	}
 }
 
