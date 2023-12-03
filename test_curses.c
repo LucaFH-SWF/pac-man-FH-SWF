@@ -40,10 +40,10 @@ int main()
 			points[j][i] = '\0';
 		}
 	}
-	
+
 	points[1][2] = '.';
 	points[3][2] = 'o';
-	points[5][2] = 'O';
+	points[5][2] = '.';
 
 	initscr();
 	cbreak();
@@ -54,11 +54,11 @@ int main()
 	curs_set(0);
 
 	start_color();
-	
+
 	init_pair(1, COLOR_BLUE, COLOR_BLUE);
-	
+
 	init_pair(2, COLOR_BLACK, COLOR_YELLOW);
-	
+
 /*
 	while(!quit)//action-loop
 	{
@@ -68,13 +68,13 @@ int main()
 	print_src(walls, sizex, sizey);
 
 	print_src2(points, sizex, sizey);
-	
+
 	attron(COLOR_PAIR(2));
 	mvprintw(10 + 5, 10 + 5, "%c", 'P');
 	attroff(COLOR_PAIR(2));
-	
+
 	refresh();
-	
+
 	getchar();
 	endwin();
 	return 0;
