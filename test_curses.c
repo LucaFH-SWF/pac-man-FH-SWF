@@ -26,8 +26,8 @@ int main()
 		
 	}
 */
-	print_src(walls, sizex, sizey);
-
+	//print_src(walls, sizex, sizey);
+	mvprintw(5, 5, "%c", walls[1][2]);
 	endwin();
 	return 0;
 }
