@@ -1,7 +1,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
-void print_src(char walls[][], int sizex, int sizey);
+void print_src(char *walls[], int sizex, int sizey);
 
 int main()
 {
@@ -9,8 +9,12 @@ int main()
 	int sizex = 10;
 	int sizey = 10;
 	
-	//char **walls = (char **) malloc(sizex*sizey * sizeof(char));
-	char walls[sizex][sizey];
+	char *walls[sizex];
+	
+	for(int i = 0; i < sizex; ++i)
+		walls[i] = (char *) malloc(sizex*sizey * sizeof(char));
+		
+	//char walls[sizex][sizey];
 
 	for(int i = 0; i < sizey; ++i)
 	{
@@ -35,7 +39,7 @@ int main()
 		
 	}
 */
-	print_src(walls, sizex, sizey);
+	//print_src(walls, sizex, sizey);
 	mvprintw(5, 5, "%c", walls[1][2]);
 	refresh();
 	
@@ -44,7 +48,7 @@ int main()
 	return 0;
 }
 
-void print_src(char walls[][], int sizex, int sizey)
+void print_src(char *walls[], int sizex, int sizey)
 {
 	for(int i = 0; i < sizey; ++i)
 	{
