@@ -33,11 +33,11 @@ int main()
 	for(int i = 0; i < sizex; ++i) //sizex viele char reservieren für jeden pointer
 		points[i] = (char *) malloc(sizey * sizeof(char));
 
-	for(int i = 0; i < sizex; ++i)
+	for(int i = 0; i < sizey; ++i)
 	{
-		for(int j = 0; j < sizey; ++j)
+		for(int j = 0; j < sizex; ++j)
 		{
-			points[j][i] = '\0';
+			points[i][j] = '\0';
 		}
 	}
 	points[1][2] = '.';
