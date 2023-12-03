@@ -34,7 +34,7 @@ int main()
 
 	curs_set(0);
 
-	init_pair(1, COLOR_WHITE, COLOR_BLUE);
+	
 	
 /*
 	while(!quit)//action-loop
@@ -53,6 +53,7 @@ int main()
 
 void print_src(char **walls, int sizex, int sizey)
 {
+	init_pair(1, COLOR_WHITE, COLOR_BLUE);
 	attron(COLOR_PAIR(1));
 	for(int i = 0; i < sizey; ++i)
 	{
