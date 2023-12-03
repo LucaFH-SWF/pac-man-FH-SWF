@@ -34,7 +34,7 @@ int main()
 
 	curs_set(0);
 
-	
+	start_color();
 	
 /*
 	while(!quit)//action-loop
