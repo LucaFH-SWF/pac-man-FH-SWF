@@ -37,7 +37,7 @@ int main()
 	{
 		for(int j = 0; j < sizey; ++j)
 		{
-			points[i][j] = '\0';
+			points[j][i] = '\0';
 		}
 	}
 	points[2][1] = '.';
