@@ -1,8 +1,9 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
-void print_src(char **walls, int sizex, int sizey);
+void print_background(int sizex, int sizey);
 void print_src2(char **walls, int sizex, int sizey);
+char** init_points(int sizex, int sizey);
 
 int main()
 {
@@ -10,36 +11,7 @@ int main()
 	int sizex = 50;
 	int sizey = 30;
 
-	char **walls;
-
-	walls = (char **) malloc(sizey * sizeof(walls)); //sizey viele pointer auf pointer
-
-	for(int i = 0; i < sizey; ++i) //sizex viele char reservieren für jeden pointer
-		walls[i] = (char *) malloc(sizex * sizeof(char));
-
-	for(int i = 0; i < sizey; ++i)
-	{
-		for(int j = 0; j < sizex; ++j)
-		{
-			walls[i][j] = 'W';
-		}
-	}
-
-
-	char **points;
-
-	points = (char **) malloc(sizex * sizeof(points)); //sizey viele pointer auf pointer
-
-	for(int i = 0; i < sizex; ++i) //sizex viele char reservieren für jeden pointer
-		points[i] = (char *) malloc(sizey * sizeof(char));
-
-	for(int i = 0; i < sizex; ++i)
-	{
-		for(int j = 0; j < sizey; ++j)
-		{
-			points[i][j] = '\0';
-		}
-	}
+	char **points = init_points(sizex, sizey);
 
 	points[1][2] = '.';
 	points[3][2] = 'o';
@@ -65,7 +37,7 @@ int main()
 		
 	}
 */
-	print_src(walls, sizex, sizey);
+	print_background(sizex, sizey);
 
 	print_src2(points, sizex, sizey);
 
@@ -80,7 +52,26 @@ int main()
 	return 0;
 }
 
-void print_src(char **walls, int sizex, int sizey)
+char** init_points(int sizex, int sizey)
+{
+	char **points;
+	
+	points = (char **) malloc(sizex * sizeof(points)); //sizey viele pointer auf pointer
+	
+	for(int i = 0; i < sizex; ++i) //sizex viele char reservieren für jeden pointer
+		points[i] = (char *) malloc(sizey * sizeof(char));
+	
+	for(int i = 0; i < sizex; ++i)
+	{
+		for(int j = 0; j < sizey; ++j)
+		{
+			points[i][j] = '\0';
+		}
+	}
+	return points;
+}
+
+void print_background(int sizex, int sizey)
 {
 	attron(COLOR_PAIR(1));
 	for(int i = 0; i < sizey; ++i)
