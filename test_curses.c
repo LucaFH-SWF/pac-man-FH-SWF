@@ -6,7 +6,7 @@ void print_src(char *walls[], int sizex, int sizey);
 int main()
 {
 	int quit = 1;
-	int sizex = 10;
+	int sizex = 50;
 	int sizey = 20;
 	
 	char *walls[sizey];
