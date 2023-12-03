@@ -9,7 +9,7 @@ int main()
 	int quit = 1;
 	int sizex = 50;
 	int sizey = 30;
-	
+
 	char **walls;
 
 	walls = (char **) malloc(sizey * sizeof(walls)); //sizey viele pointer auf pointer
@@ -103,4 +103,3 @@ void print_src2(char **walls, int sizex, int sizey)
 		}
 	}
 }
-
