@@ -14,27 +14,18 @@ xy *new_xy(int x, int y);
 
 int main()
 {
-	int quit = 1;
-	int sizex = 50;
-	int sizey = 30;
-
 	xy *size;
 	size = new_xy(50 ,30);
-	
-	char **points = create_points(size);
-	init_points(points, size);
 
-	points[1][2] = '.';
-	points[3][2] = 'o';
-	points[5][2] = ' ';
+	char **points = create_points(size);
 
 	initscr();
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
-
 	curs_set(0);
+
 
 	start_color();
 
@@ -42,12 +33,6 @@ int main()
 
 	init_pair(2, COLOR_BLACK, COLOR_YELLOW);
 
-/*
-	while(!quit)//action-loop
-	{
-		
-	}
-*/
 	print_background(size);
 
 	print_points(points, size);
@@ -72,6 +57,7 @@ char **create_points(xy* size)
 	for(int i = 0; i < size->x; ++i) //sizex viele char reservieren für jeden pointer
 		points[i] = (char *) malloc(size->y * sizeof(char));
 
+	init_points(points, size);
 	return points;
 }
 
@@ -92,6 +78,10 @@ void init_points(char **points, xy* size)
 			points[i][j] = '\0';
 		}
 	}
+	points[1][2] = '.';
+	points[3][2] = 'o';
+	points[5][2] = ' ';
+
 }
 
 void print_background(xy* size)
