@@ -1,6 +1,6 @@
 #include <ncurses.h>
 #include <stdlib.h>
-
+//zeit
 typedef struct{
 	int x;
 	int y;
