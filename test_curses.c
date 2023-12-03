@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 void print_src(char **walls, int sizex, int sizey);
+void print_src2(char **walls, int sizex, int sizey);
 
 int main()
 {
@@ -23,8 +24,23 @@ int main()
 			walls[i][j] = 'W';
 		}
 	}
-	
-	//walls[1][2] = 'a';
+
+
+	char **points;
+
+	points = (char **) malloc(sizey * sizeof(points)); //sizey viele pointer auf pointer
+
+	for(int i = 0; i < sizey; ++i) //sizex viele char reservieren für jeden pointer
+		points[i] = (char *) malloc(sizex * sizeof(char));
+
+	for(int i = 0; i < sizey; ++i)
+	{
+		for(int j = 0; j < sizex; ++j)
+		{
+			points[i][j] = ' ';
+		}
+	}
+	points[1][2] = 'a';
 
 	initscr();
 	cbreak();
@@ -43,6 +59,8 @@ int main()
 	}
 */
 	print_src(walls, sizex, sizey);
+
+	print_src2(points, sizex, sizey);
 	//mvprintw(5, 5, "%c", walls[1][2]);
 	refresh();
 	
@@ -53,7 +71,7 @@ int main()
 
 void print_src(char **walls, int sizex, int sizey)
 {
-	init_pair(1, COLOR_WHITE, COLOR_BLUE);
+	init_pair(1, COLOR_BLUE, COLOR_BLUE);
 	attron(COLOR_PAIR(1));
 	for(int i = 0; i < sizey; ++i)
 	{
@@ -64,3 +82,15 @@ void print_src(char **walls, int sizex, int sizey)
 	}
 	attroff(COLOR_PAIR(1));
 }
+
+void print_src2(char **walls, int sizex, int sizey)
+{
+	for(int i = 0; i < sizey; ++i)
+	{
+		for(int j = 0; j < sizex; ++j)
+		{
+			mvprintw(5+i, 5+j, "%c", walls[i][j]);
+		}
+	};
+}
+
