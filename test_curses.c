@@ -70,7 +70,7 @@ int main()
 	print_src2(points, sizex, sizey);
 	
 	attron(COLOR_PAIR(2));
-	mvprintw(5, 5, "%c", 'P');
+	mvprintw(10 + 5, 10 + 5, "%c", 'P');
 	attroff(COLOR_PAIR(2));
 	
 	refresh();
