@@ -6,8 +6,8 @@ void print_src(char **walls, int sizex, int sizey);
 int main()
 {
 	int quit = 1;
-	int sizex = 1000;
-	int sizey = 20;
+	int sizex = 100;
+	int sizey = 50;
 	
 	char **walls;
 
