@@ -87,7 +87,7 @@ void print_src(char **walls, int sizex, int sizey)
 	{
 		for(int j = 0; j < sizex; ++j)
 		{
-			mvprintw(5+i, 5+j, "%c", walls[i][j]);
+			mvprintw(5+i, 5+j, "%c", ' ');
 		}
 	}
 	attroff(COLOR_PAIR(1));
