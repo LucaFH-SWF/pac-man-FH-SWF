@@ -3,7 +3,8 @@
 
 void print_background(int sizex, int sizey);
 void print_src2(char **walls, int sizex, int sizey);
-char** init_points(int sizex, int sizey);
+char** create_points(int sizex, int sizey);
+void init_points(char **points, int sizex, int sizey);
 
 int main()
 {
@@ -11,7 +12,8 @@ int main()
 	int sizex = 50;
 	int sizey = 30;
 
-	char **points = init_points(sizex, sizey);
+	char **points = create_points(sizex, sizey);
+	init_points(points, sizex, sizey);
 
 	points[1][2] = '.';
 	points[3][2] = 'o';
@@ -52,7 +54,7 @@ int main()
 	return 0;
 }
 
-char** init_points(int sizex, int sizey)
+char** create_points(int sizex, int sizey)
 {
 	char **points;
 	
@@ -60,7 +62,12 @@ char** init_points(int sizex, int sizey)
 	
 	for(int i = 0; i < sizex; ++i) //sizex viele char reservieren für jeden pointer
 		points[i] = (char *) malloc(sizey * sizeof(char));
-	
+
+	return points;
+}
+
+void init_points(char **points, int sizex, int sizey)
+{
 	for(int i = 0; i < sizex; ++i)
 	{
 		for(int j = 0; j < sizey; ++j)
@@ -68,7 +75,6 @@ char** init_points(int sizex, int sizey)
 			points[i][j] = '\0';
 		}
 	}
-	return points;
 }
 
 void print_background(int sizex, int sizey)
