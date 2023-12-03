@@ -28,16 +28,16 @@ int main()
 
 	char **points;
 
-	points = (char **) malloc(sizey * sizeof(points)); //sizey viele pointer auf pointer
+	points = (char **) malloc(sizex * sizeof(points)); //sizey viele pointer auf pointer
 
-	for(int i = 0; i < sizex; ++i) //sizex viele char reservieren für jeden pointer
-		points[i] = (char *) malloc(sizex * sizeof(char));
+	for(int i = 0; i < sizey; ++i) //sizex viele char reservieren für jeden pointer
+		points[i] = (char *) malloc(sizey * sizeof(char));
 
 	for(int i = 0; i < sizex; ++i)
 	{
 		for(int j = 0; j < sizey; ++j)
 		{
-			points[j][i] = '\0';
+			points[i][j] = '\0';
 		}
 	}
 
@@ -99,7 +99,7 @@ void print_src2(char **walls, int sizex, int sizey)
 	{
 		for(int j = 0; j < sizex; ++j)
 		{
-			mvprintw(5+i, 5+j, "%c", walls[i][j]);
+			mvprintw(5+i, 5+j, "%c", 'W');//walls[i][j]);
 		}
 	}
 }
