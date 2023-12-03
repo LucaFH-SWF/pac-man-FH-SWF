@@ -40,9 +40,10 @@ int main()
 			points[j][i] = '\0';
 		}
 	}
-	points[2][1] = '.';
-	points[2][3] = 'o';
-	points[2][5] = 'O';
+	
+	points[1][2] = '.';
+	points[3][2] = 'o';
+	points[5][2] = 'O';
 
 	initscr();
 	cbreak();
@@ -91,7 +92,7 @@ void print_src2(char **walls, int sizex, int sizey)
 	{
 		for(int j = 0; j < sizex; ++j)
 		{
-			mvprintw(5+i, 5+j, "%c", walls[i][j]);
+			mvprintw(5+j, 5+i, "%c", walls[i][j]);
 		}
 	};
 }
