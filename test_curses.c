@@ -9,10 +9,10 @@ int main()
 	int sizex = 10;
 	int sizey = 20;
 	
-	char *walls[sizex];
+	char *walls[sizey];
 	
-	for(int i = 0; i < sizex; ++i)
-		walls[i] = (char *) malloc(sizex*sizey * sizeof(char));
+	for(int i = 0; i < sizey; ++i)
+		walls[i] = (char *) malloc(sizex * sizeof(char));
 
 	for(int i = 0; i < sizey; ++i)
 	{
@@ -52,7 +52,7 @@ void print_src(char *walls[], int sizex, int sizey)
 	{
 		for(int j = 0; j < sizex; ++j)
 		{
-			mvprintw(5+i, 5+j, "%c", walls[j][i]);
+			mvprintw(5+i, 5+j, "%c", walls[i][j]);
 		}
 	}
 }
