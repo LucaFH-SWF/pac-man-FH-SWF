@@ -7,9 +7,9 @@ typedef struct{
 } xy;
 
 void print_background(xy* size);
-void print_points(char **points, int sizex, int sizey);
-char **create_points(int sizex, int sizey);
-void init_points(char **points, int sizex, int sizey);
+void print_points(char **points, xy* size);
+char **create_points(xy* size);
+void init_points(char **points, xy* size);
 xy *new_xy(int x, int y);
 
 int main()
@@ -21,8 +21,8 @@ int main()
 	xy *size;
 	size = new_xy(50 ,30);
 	
-	char **points = create_points(sizex, sizey);
-	init_points(points, sizex, sizey);
+	char **points = create_points(size);
+	init_points(points, size);
 
 	points[1][2] = '.';
 	points[3][2] = 'o';
@@ -50,7 +50,7 @@ int main()
 */
 	print_background(size);
 
-	print_points(points, sizex, sizey);
+	print_points(points, size);
 
 	attron(COLOR_PAIR(2));
 	mvprintw(10 + 5, 10 + 5, "%c", 'P');
@@ -63,14 +63,14 @@ int main()
 	return 0;
 }
 
-char **create_points(int sizex, int sizey)
+char **create_points(xy* size)
 {
 	char **points;
 	
-	points = (char **) malloc(sizex * sizeof(points)); //sizey viele pointer auf pointer
+	points = (char **) malloc(size->x * sizeof(points)); //sizey viele pointer auf pointer
 	
-	for(int i = 0; i < sizex; ++i) //sizex viele char reservieren für jeden pointer
-		points[i] = (char *) malloc(sizey * sizeof(char));
+	for(int i = 0; i < size->x; ++i) //sizex viele char reservieren für jeden pointer
+		points[i] = (char *) malloc(size->y * sizeof(char));
 
 	return points;
 }
@@ -83,11 +83,11 @@ xy *new_xy(int x, int y)
 	return new;
 }
 
-void init_points(char **points, int sizex, int sizey)
+void init_points(char **points, xy* size)
 {
-	for(int i = 0; i < sizex; ++i)
+	for(int i = 0; i < size->x; ++i)
 	{
-		for(int j = 0; j < sizey; ++j)
+		for(int j = 0; j < size->y; ++j)
 		{
 			points[i][j] = '\0';
 		}
@@ -107,11 +107,11 @@ void print_background(xy* size)
 	attroff(COLOR_PAIR(1));
 }
 
-void print_points(char **points, int sizex, int sizey)
+void print_points(char **points, xy* size)
 {
-	for(int i = 0; i < sizey; ++i)
+	for(int i = 0; i < size->y; ++i)
 	{
-		for(int j = 0; j < sizex; ++j)
+		for(int j = 0; j < size->x; ++j)
 		{
 			mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
