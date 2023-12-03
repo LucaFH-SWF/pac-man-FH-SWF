@@ -10,6 +10,8 @@ int main()
 	int sizey = 20;
 	
 	char **walls;
+
+	walls = (char **) malloc(sizey * sizeof(walls));
 	
 	for(int i = 0; i < sizey; ++i)
 		walls[i] = (char *) malloc(sizex * sizeof(char));
