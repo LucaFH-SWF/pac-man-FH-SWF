@@ -11,6 +11,7 @@ int main()
 	
 	//char **walls = (char **) malloc(sizex*sizey * sizeof(char));
 	char walls[sizex][sizey];
+	
 	walls[1][2] = 'a';
 
 	initscr();
@@ -26,6 +27,7 @@ int main()
 		
 	}
 */
+	getch();
 	//print_src(walls, sizex, sizey);
 	mvprintw(5, 5, "%c", walls[1][2]);
 	endwin();
