@@ -18,8 +18,9 @@ int main()
 	int sizex = 50;
 	int sizey = 30;
 
-	xy *size = new_xy(50 ,30);
-
+	xy *size;
+	size = new_xy(50 ,30);
+	
 	char **points = create_points(sizex, sizey);
 	init_points(points, sizex, sizey);
 
@@ -76,7 +77,7 @@ char **create_points(int sizex, int sizey)
 
 xy *new_xy(int x, int y)
 {
-	xy *new;
+	xy *new = (xy *) malloc(sizeof(xy));
 	new->x = x;
 	new->y = y;
 	return new;
