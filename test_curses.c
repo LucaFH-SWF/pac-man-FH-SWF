@@ -99,7 +99,7 @@ void print_src2(char **walls, int sizex, int sizey)
 	{
 		for(int j = 0; j < sizex; ++j)
 		{
-			mvprintw(5+j, 5+i, "%c", 'W');
+			mvprintw(5+j, 5+i, "%c", walls[i][j]);
 		}
 	}
 }
