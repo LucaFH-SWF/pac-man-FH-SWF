@@ -74,6 +74,14 @@ char **create_points(int sizex, int sizey)
 	return points;
 }
 
+xy *new_xy(int x, int y)
+{
+	xy *new;
+	new->x = x;
+	new->y = y;
+	return new;
+}
+
 void init_points(char **points, int sizex, int sizey)
 {
 	for(int i = 0; i < sizex; ++i)
