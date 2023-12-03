@@ -40,7 +40,9 @@ int main()
 			points[i][j] = 0;
 		}
 	}
-	points[1][2] = 'a';
+	points[1][2] = '.';
+	points[3][2] = 'o';
+	points[5][2] = 'O';
 
 	initscr();
 	cbreak();
