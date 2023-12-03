@@ -7,10 +7,18 @@ int main()
 {
 	int quit = 1;
 	int sizex = 10;
-	int sizey = 20;
+	int sizey = 10;
 	
 	//char **walls = (char **) malloc(sizex*sizey * sizeof(char));
 	char walls[sizex][sizey];
+
+	for(int i = 0; i < sizey; ++i)
+	{
+		for(int j = 0; j < sizex; ++j)
+		{
+			walls[i][j] = 'a';
+		}
+	}
 	
 	walls[1][2] = 'a';
 
