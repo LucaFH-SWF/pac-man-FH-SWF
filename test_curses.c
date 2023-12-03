@@ -9,8 +9,8 @@ int main()
 	int sizex = 10;
 	int sizey = 20;
 	
-	char **walls = (char **) malloc(sizex*sizey * sizeof(char));
-
+	//char **walls = (char **) malloc(sizex*sizey * sizeof(char));
+	char walls[sizex][sizey];
 	walls[1][2] = 'a';
 
 	initscr();
