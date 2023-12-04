@@ -1,6 +1,6 @@
 #include <ncurses.h>
 #include <stdlib.h>
-//pls
+
 typedef struct{
 	int x;
 	int y;
