@@ -1,10 +1,15 @@
 #include <ncurses.h>
 #include <stdlib.h>
-//lol
+
 typedef struct{
 	int x;
 	int y;
 } xy;
+
+typedef struct{
+	xy *xy;
+	char *richtung;
+}entity;
 
 void print_background(xy* size);
 void print_points(char **points, xy* size);
