@@ -16,6 +16,7 @@ void print_points(char **points, xy* size);
 char **create_points(xy* size);
 void init_points(char **points, xy* size);
 xy *new_xy(int x, int y);
+void set_xy(xy *, int x, int y);
 
 int main()
 {
@@ -24,7 +25,7 @@ int main()
 
 	Tpacman *pacman = (Tpacman *) malloc(sizeof(Tpacman));
 	pacman->xy = new_xy(30,10);
-
+	set_xy(pacman->xy, 5, 5);
 	char **points = create_points(size);
 
 	initscr();
@@ -75,6 +76,12 @@ xy *new_xy(int x, int y)
 	new->x = x;
 	new->y = y;
 	return new;
+}
+
+void set_xy(xy *xy, int x, int y)
+{
+	xy->x = x;
+	xy->y = y;
 }
 
 void init_points(char **points, xy* size)
