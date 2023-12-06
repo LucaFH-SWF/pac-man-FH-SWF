@@ -9,7 +9,7 @@ typedef struct{
 typedef struct{
 	xy *xy;
 	char *richtung;
-}pac_man;
+}Tpacman;
 
 void print_background(xy* size);
 void print_points(char **points, xy* size);
@@ -21,6 +21,9 @@ int main()
 {
 	xy *size;
 	size = new_xy(50 ,30);
+
+	Tpacman *pacman = (Tpacman *) malloc(sizeof(Tpacman));
+	pacman->xy = new_xy(10,10);
 
 	char **points = create_points(size);
 
@@ -43,7 +46,7 @@ int main()
 	print_points(points, size);
 
 	attron(COLOR_PAIR(2));
-	mvprintw(10 + 5, 10 + 5, "%c", 'P');
+	mvprintw(pacman->xy->y + 5, pacman->xy->x + 5, "%c", 'P');
 	attroff(COLOR_PAIR(2));
 
 	refresh();
