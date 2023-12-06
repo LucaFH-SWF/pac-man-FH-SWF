@@ -9,7 +9,7 @@ typedef struct{
 typedef struct{
 	xy *xy;
 	char *richtung;
-}entity;
+}pac_man;
 
 void print_background(xy* size);
 void print_points(char **points, xy* size);
