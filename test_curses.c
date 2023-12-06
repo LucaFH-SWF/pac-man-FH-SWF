@@ -25,7 +25,7 @@ int main()
 
 	Tpacman *pacman = (Tpacman *) malloc(sizeof(Tpacman));
 	pacman->xy = new_xy(30,10);
-	set_xy(pacman->xy, 5, 5);
+	set_xy(pacman->xy, 0, 0);
 	char **points = create_points(size);
 
 	initscr();
