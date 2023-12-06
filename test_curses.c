@@ -1,13 +1,13 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
-typedef struct{
+typedef struct{ //zu umständlich, direkt für Geister verwenden?
 	int x;
 	int y;
 } xy;
 
 typedef struct{
-	xy *xy;
+	xy *xy; //einfach ein int x und ein int y
 	char *richtung;
 }Tpacman;
 
@@ -41,6 +41,26 @@ int main()
 	init_pair(1, COLOR_BLUE, COLOR_BLUE);
 
 	init_pair(2, COLOR_BLACK, COLOR_YELLOW);
+
+	while(1) //action loop
+	{
+		break;
+		//==EINGABE==
+		//getch()
+		
+		//==Kolision + Geister==
+		//kolision pacman u. Wand, pacman und Geister?
+		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
+		//bewege Geister
+		//kollision geist pacman?
+		//kollision -> game over
+
+		//==PRINT==
+		//print_background
+		//print_punkte
+		//print pacman
+		//print geister
+	}
 
 	print_background(size);
 
