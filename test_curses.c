@@ -3,10 +3,13 @@
 
 typedef enum {up, right, down, left} richtung_t;//Uhrzeigersin
 
-typedef struct{ //zu umständlich, direkt für Geister verwenden?
+struct xy{
 	int x;
 	int y;
-} xy;
+};
+
+typedef struct xy xy;
+typedef struct xy geister_t;
 
 typedef struct{
 	int x;
