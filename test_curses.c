@@ -143,10 +143,8 @@ int main()
 		
 		print_points(points, size);
 
-		//print pacman
 		print_pacman(pacman);
 
-		//print geister
 		print_ghosts(ghosts);
 
 		refresh();
@@ -181,7 +179,7 @@ void init_points(char **points, xy size)
 	{
 		for(int j = 0; j < size.y; ++j)
 		{
-			points[i][j] = '\0';
+			//points[i][j] = '\0';
 		}
 	}
 
