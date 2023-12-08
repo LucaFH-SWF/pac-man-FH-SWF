@@ -35,11 +35,11 @@ int main()
 	size.x = 50;
 	size.y = 30;
 	
-//	char **points = create_points(size);
-//	if(!points)
-//		return -1;
+	char **points = create_points(size);
+	if(!points)
+		return -1;
 	
-//	init_points(points, size);
+	init_points(points, size);
 
 	pacman_t pacman;
 	pacman.x = 10;
@@ -109,14 +109,14 @@ int main()
 		//==PRINT==
 		erase();
 		print_background(size);
-//		print_points(points, size);
+		print_points(points, size);
 		//print pacman
 		attron(COLOR_PAIR(2));
 		mvprintw(pacman.y + 5, pacman.x + 5, "%c", 'P');
 		attroff(COLOR_PAIR(2));
 		//print geister
 		attron(COLOR_PAIR(3));
-		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
+		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", ausgabe);
 		attroff(COLOR_PAIR(3));
 
 		refresh();
