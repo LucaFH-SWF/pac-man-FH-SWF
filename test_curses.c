@@ -112,7 +112,7 @@ int main()
 		do
 		{
 			z = getch();
-		}while(z != EOF);
+		}while(z != EOF && z != ERR);
 		
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
