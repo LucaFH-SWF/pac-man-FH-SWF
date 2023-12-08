@@ -1,7 +1,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
-typedef enum {up, right, down, left} richtung_t;//Uhrzeigersin
+typedef enum {up, right, down, left} richtung_t;
 
 struct xy{
 	int x;
@@ -31,6 +31,7 @@ void init_points(char **points, xy size);
 void print_pacman(pacman_t pacman);
 char richtungtochar(richtung_t richtung);
 void print_ghosts(ghosts_t ghosts);
+void move_pacman(pacman_t *pacman);
 
 int main()
 {
@@ -86,7 +87,7 @@ int main()
         switch(pressed_key)
         {
             case ERR:
-                napms(100); // Pause in Millisekunden
+                napms(1000); // Pause in Millisekunden
                 break;
             case KEY_UP:
                 pacman.richtung = up;
@@ -108,12 +109,14 @@ int main()
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
+		move_pacman(&pacman);
 		//bewege Geister
 		//kollision geist pacman?
 		//kollision -> game over
 
 		//==PRINT==
 		erase();
+
 		print_background(size);
 		print_points(points, size);
 
@@ -235,4 +238,23 @@ void print_ghosts(ghosts_t ghosts)
 	attron(COLOR_PAIR(6));
 	mvprintw(ghosts.orange.y + 5, ghosts.orange.x + 5, "%c", 'O');
 	attroff(COLOR_PAIR(6));		
+}
+
+void move_pacman(pacman_t *pacman)
+{
+	switch(pacman->richtung)
+	{
+		case up:
+			pacman->y += 1;
+		break;
+		case down:
+			pacman->y -= 1;
+		break;
+		case left:
+			pacman->x -= 1;
+		break;
+		case right:
+			pacman->x +=1;
+		break;
+	}
 }
