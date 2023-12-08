@@ -72,10 +72,9 @@ int main()
 	
 	while(run) //action loop
 	{
-		break;
 		// ===== Benutzereingaben =====
 		
-        pressed_key = getchar(); // Eingabe einlesen
+        pressed_key = getch(); // Eingabe einlesen
 		
         switch(pressed_key)
         {
