@@ -81,6 +81,7 @@ int main()
 
 	while(run) //action loop
 	{
+		napms(100);
 		// ===== Benutzereingaben =====		
         pressed_key = getch(); // Eingabe einlesen
 
@@ -105,7 +106,6 @@ int main()
                 run = 0;
                 break;
 		}
-		napms(100);
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
