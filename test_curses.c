@@ -115,7 +115,7 @@ int main()
 		move++;
 
 		//====Kolision + Geister====
-		if(!kollision(pacman, input, points))
+		if(kollision(pacman, input, points) == 1)
 			pacman.richtung = input;
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> ändere Richtung Pacman, Kollision Geist -> Game Over
@@ -302,8 +302,8 @@ int kollision(pacman_t pacman, richtung_t richtung, char **points)
 			pacman.x +=1;
 			break;
 	}
-	if(points[pacman.x][pacman.y] == '\0')
-		return 0;
-	else
+	if(points[pacman.x][pacman.y] != '\0')
 		return 1;
+	else
+		return 0;
 }
