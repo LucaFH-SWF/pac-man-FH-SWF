@@ -51,6 +51,12 @@ int main()
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
 	ghosts.red.y = 5;
+	ghosts.pink.x = 5;
+	ghosts.pink.y = 5;
+	ghosts.cyan.x = 5;
+	ghosts.cyan.y = 5;
+	ghosts.orange.x = 5;
+	ghosts.orange.y = 5;
 
 	initscr();
 	cbreak();
