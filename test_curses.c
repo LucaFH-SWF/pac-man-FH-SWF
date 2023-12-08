@@ -1,4 +1,4 @@
-	#include <ncurses.h>
+#include <ncurses.h>
 #include <stdlib.h>
 
 typedef enum {up, right, down, left} richtung_t;
@@ -91,22 +91,22 @@ int main()
         {
             case ERR:
                 //napms(100); // Pause in Millisekunden
-                break;
+       	    	break;
             case KEY_UP:
                 pacman.richtung = up;
-                break;
+            	break;
 			case KEY_DOWN:
                 pacman.richtung = down;
-                break;
+            	break;
             case KEY_LEFT:
                 pacman.richtung = left;
-                break;
+            	break;
             case KEY_RIGHT:
                 pacman.richtung = right;
-                break;
+            	break;
             case 'q':
                 run = 0;
-                break;
+            	break;
 		}
 		flushinp();
 		napms(10);
@@ -118,7 +118,7 @@ int main()
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
-		if(move >= 20)
+		if(move >= 15) //bewegtsich alle 150ms
 		{
 			move_pacman(&pacman);
 			move = 0;
@@ -217,19 +217,19 @@ char richtungtochar(richtung_t richtung)
 	{
 		case up:
 			return '^';
-		break;
+			break;
 		case down:
 			return 'v';
-		break;
+			break;
 		case left:
 			return '<';
-		break;
+			break;
 		case right:
 			return '>';
-		break;
+			break;
 		default:
 			return 'P';
-		break;
+			break;
 	}
 }
 
@@ -259,15 +259,15 @@ void move_pacman(pacman_t *pacman)
 	{
 		case up:
 			pacman->y -= 1;
-		break;
+			break;
 		case down:
 			pacman->y += 1;
-		break;
+			break;
 		case left:
 			pacman->x -= 1;
-		break;
+			break;
 		case right:
 			pacman->x +=1;
-		break;
+			break;
 	}
 }
