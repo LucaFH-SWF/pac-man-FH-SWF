@@ -118,7 +118,7 @@ int main()
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
-		if(move == 10)
+		if(move >= 20)
 		{
 			move_pacman(&pacman);
 			move = 0;
