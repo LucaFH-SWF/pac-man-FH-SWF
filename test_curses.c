@@ -81,14 +81,13 @@ int main()
 
 	while(run) //action loop
 	{
-		//napms(100);
 		// ===== Benutzereingaben =====		
         pressed_key = getch(); // Eingabe einlesen
-
+		napms(100);
         switch(pressed_key)
         {
             case ERR:
-                napms(100); // Pause in Millisekunden
+                //napms(100); // Pause in Millisekunden
                 break;
             case KEY_UP:
                 pacman.richtung = up;
