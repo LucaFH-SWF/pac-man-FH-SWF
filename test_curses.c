@@ -1,4 +1,4 @@
-#include <ncurses.h>
+	#include <ncurses.h>
 #include <stdlib.h>
 
 typedef enum {up, right, down, left} richtung_t;
@@ -83,8 +83,8 @@ int main()
 	{
 
 		// ===== Benutzereingaben =====
+		flushinp();
         pressed_key = getch(); // Eingabe einlesen
-		napms(100);
 		
         switch(pressed_key)
         {
@@ -108,18 +108,9 @@ int main()
                 break;
 		}
 
-		/*
-		if(pressed_key != ERR)
-		{
-			int z;	
-			do
-			{
-				z = getch();
-			}while(z != '\n' && z != EOF && z != ERR);
-		}
-		*/
+		napms(100);
+
 		//tcflush(STDIN_FILENO, TCIFLUSH);
-		flushinp();
 				
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
