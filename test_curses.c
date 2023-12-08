@@ -108,7 +108,7 @@ int main()
 		}
 		flushinp();
 		napms(100);
-		flushinp();
+//		flushinp();
 
 		//tcflush(STDIN_FILENO, TCIFLUSH);
 				
