@@ -35,11 +35,11 @@ int main()
 	size.x = 50;
 	size.y = 30;
 	
-	char **points = create_points(size);
-	if(!points)
-		return -1;
+//	char **points = create_points(size);
+//	if(!points)
+//		return -1;
 	
-	init_points(points, size);
+//	init_points(points, size);
 
 	pacman_t pacman;
 	pacman.x = 10;
