@@ -87,7 +87,7 @@ int main()
         switch(pressed_key)
         {
             case ERR:
-                napms(1000); // Pause in Millisekunden
+                napms(100); // Pause in Millisekunden
                 break;
             case KEY_UP:
                 pacman.richtung = up;
