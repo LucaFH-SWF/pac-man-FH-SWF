@@ -107,13 +107,14 @@ int main()
                 run = 0;
                 break;
 		}
+		
 		if(pressed_key != ERR)
 		{
 			int z;	
 			do
 			{
 				z = getchar();
-			}while(z != EOF);
+			}while(z != '\n' && z != EOF);
 		}
 		
 		//==Kolision + Geister==
