@@ -68,7 +68,7 @@ int main()
 
 	int pressed_key;
 
-	char ausgabe = ' ';
+	char ausgabe = 'P';
 	
 	while(run) //action loop
 	{
@@ -111,11 +111,11 @@ int main()
 		print_points(points, size);
 		//print pacman
 		attron(COLOR_PAIR(2));
-		mvprintw(pacman.y + 5, pacman.x + 5, "%c", 'P');
+		mvprintw(pacman.y + 5, pacman.x + 5, "%c", ausgabe);
 		attroff(COLOR_PAIR(2));
 		//print geister
 		attron(COLOR_PAIR(3));
-		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", ausgabe);
+		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
 		attroff(COLOR_PAIR(3));
 
 		refresh();
