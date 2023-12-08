@@ -2,14 +2,21 @@
 #include <stdlib.h>
 
 typedef enum {up, right, down, left} richtung_t;
+typedef enum {normal, frighten, scatter} state_t;
 
 struct xy{
 	int x;
 	int y;
 };
 
+struct ghost{
+	int x;
+	int y;
+	state_t state;
+};
+
 typedef struct xy xy;
-typedef struct xy ghost_t;
+typedef struct ghost ghost_t;
 
 typedef struct{
 	ghost_t red;
@@ -89,7 +96,7 @@ int main()
 	{
 
 		// ===== Benutzereingaben =====
-        pressed_key = getch(); // Eingabe einlesen
+        pressed_key = getch();
 		
         switch(pressed_key)
         {
@@ -116,7 +123,7 @@ int main()
 		move++;
 
 		//====Kolision + Geister====
-		if(move >= 15)
+		if(move >= 15) //alle 150ms
 		{
 			move = 0;
 			if(kollision_richtung(pacman, input, points))
@@ -125,18 +132,20 @@ int main()
 				move_pacman(&pacman);
 			}
 			else
+			{
 				if(kollision_move(pacman, points))
 					move_pacman(&pacman);
+			}
 			
 		}
 		//bewege Geister
-		
-		/* == nicht notwendig? == JA!
+
+		/* == nicht notwendig? == NEIN, NOTWENDIG!
 		//kollision geist pacman?
 		//kollision -> game over
 		*/
 		
-		//==PRINT==
+		//====PRINT====
 		erase();
 
 		print_background(size);
@@ -179,7 +188,7 @@ void init_points(char **points, xy size)
 	{
 		for(int j = 0; j < size.y; ++j)
 		{
-			//points[i][j] = '\0';
+			points[i][j] = '\0';
 		}
 	}
 
@@ -190,9 +199,9 @@ void init_points(char **points, xy size)
 			points[i][j] = ' ';
 		}
 	}
-	points[1][2] = '.';
-	points[3][2] = 'o';
-	points[5][2] = ' ';
+	points[3][2] = '.';
+	points[5][2] = 'o';
+	points[7][2] = ' ';
 
 }
 
@@ -314,7 +323,7 @@ int kollision_richtung(pacman_t pacman, richtung_t richtung, char **points)
 int kollision_move(pacman_t pacman, char **points)
 {
 	switch(pacman.richtung)
-		{
+	{
 		case up:
 			pacman.y -= 1;
 			break;
