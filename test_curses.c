@@ -11,7 +11,6 @@ struct xy{
 typedef struct xy xy;
 typedef struct xy ghost_t;
 
-
 typedef struct{
 	ghost_t red;
 	ghost_t pink;
