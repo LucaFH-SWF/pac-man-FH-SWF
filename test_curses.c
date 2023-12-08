@@ -28,6 +28,8 @@ void print_background(xy size);
 void print_points(char **points, xy size);
 char **create_points(xy size);
 void init_points(char **points, xy size);
+void print_pacman(pacman_t pacman);
+char richtungtochar(richtung_t richtung);
 
 int main()
 {
@@ -68,32 +70,26 @@ int main()
 
 	int pressed_key;
 
-	char ausgabe = 'P';
-	
 	while(run) //action loop
 	{
 		// ===== Benutzereingaben =====		
         pressed_key = getch(); // Eingabe einlesen
-		
+
         switch(pressed_key)
         {
             case ERR:
                 napms(100); // Pause in Millisekunden
                 break;
             case KEY_UP:
-                ausgabe = '^';
                 pacman.richtung = up;
                 break;
 			case KEY_DOWN:
-                ausgabe = 'v';
                 pacman.richtung = down;
                 break;
             case KEY_LEFT:
-                ausgabe = '<';
                 pacman.richtung = left;
                 break;
             case KEY_RIGHT:
-                ausgabe = '>';
                 pacman.richtung = right;
                 break;
             case 'q':
@@ -112,10 +108,10 @@ int main()
 		erase();
 		print_background(size);
 		print_points(points, size);
+
 		//print pacman
-		attron(COLOR_PAIR(2));
-		mvprintw(pacman.y + 5, pacman.x + 5, "%c", ausgabe);
-		attroff(COLOR_PAIR(2));
+		print_pacman(pacman);
+
 		//print geister
 		attron(COLOR_PAIR(3));
 		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
@@ -183,5 +179,31 @@ void print_points(char **points, xy size)
 		{
 			mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
+	}
+}
+
+void print_pacman(pacman_t pacman)
+{
+	attron(COLOR_PAIR(2));
+	mvprintw(pacman.y + 5, pacman.x + 5, "%c", pacman.richtung);
+	attroff(COLOR_PAIR(2));
+}
+
+char richtungtochar(richtung_t richtung)
+{
+	switch(richtung)
+	{
+		case up:
+			return '^';
+		break;
+		case down:
+			return 'v';
+		break;
+		case left:
+			return '<';
+		break;
+		case right:
+			return '>';
+		break;
 	}
 }
