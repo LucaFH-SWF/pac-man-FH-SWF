@@ -185,7 +185,7 @@ void print_points(char **points, xy size)
 void print_pacman(pacman_t pacman)
 {
 	attron(COLOR_PAIR(2));
-	mvprintw(pacman.y + 5, pacman.x + 5, "%c", pacman.richtung);
+	mvprintw(pacman.y + 5, pacman.x + 5, "%c", richtungtochar(pacman.richtung));
 	attroff(COLOR_PAIR(2));
 }
 
