@@ -245,10 +245,10 @@ void move_pacman(pacman_t *pacman)
 	switch(pacman->richtung)
 	{
 		case up:
-			pacman->y += 1;
+			pacman->y -= 1;
 		break;
 		case down:
-			pacman->y -= 1;
+			pacman->y += 1;
 		break;
 		case left:
 			pacman->x -= 1;
