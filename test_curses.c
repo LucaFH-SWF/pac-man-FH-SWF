@@ -18,7 +18,6 @@ void print_background(xy size);
 void print_points(char **points, xy size);
 char **create_points(xy size);
 void init_points(char **points, xy size);
-xy *new_xy(int x, int y);
 void set_xy(xy *, int x, int y);
 
 int main()
@@ -92,14 +91,6 @@ char **create_points(xy size)
 
 	init_points(points, size);
 	return points;
-}
-
-xy *new_xy(int x, int y)
-{
-	xy *new = (xy *) malloc(sizeof(xy));
-	new->x = x;
-	new->y = y;
-	return new;
 }
 
 void set_xy(xy *xy, int x, int y)
