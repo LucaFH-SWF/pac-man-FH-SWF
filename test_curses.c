@@ -67,6 +67,8 @@ int main()
 	int run = 1;
 
 	int pressed_key;
+
+	char ausgabe = ' ';
 	
 	while(run) //action loop
 	{
@@ -81,16 +83,16 @@ int main()
                 napms(100); // Pause in Millisekunden
                 break;
             case KEY_UP:
-                //ausgabe = '^';
+                ausgabe = '^';
                 break;
 			case KEY_DOWN:
-                //ausgabe = 'v';
+                ausgabe = 'v';
                 break;
             case KEY_LEFT:
-                //ausgabe = '<';
+                ausgabe = '<';
                 break;
             case KEY_RIGHT:
-                //ausgabe = '>';
+                ausgabe = '>';
                 break;
             case 'q':
                 run = 0;
@@ -105,6 +107,7 @@ int main()
 		//kollision -> game over
 
 		//==PRINT==
+		erase();
 		print_background(size);
 		print_points(points, size);
 		//print pacman
