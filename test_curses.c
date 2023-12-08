@@ -32,6 +32,7 @@ void print_pacman(pacman_t pacman);
 char richtungtochar(richtung_t richtung);
 void print_ghosts(ghosts_t ghosts);
 void move_pacman(pacman_t *pacman);
+int kollision(pacman_t pacman, richtung_t richtung, char **points);
 
 int main()
 {
@@ -81,6 +82,8 @@ int main()
 
 	int move = 0;
 
+	richtung_t input;
+
 	while(run) //action loop
 	{
 
@@ -89,20 +92,17 @@ int main()
 		
         switch(pressed_key)
         {
-            case ERR:
-                //napms(100); // Pause in Millisekunden
-       	    	break;
             case KEY_UP:
-                pacman.richtung = up;
+                input = up;
             	break;
 			case KEY_DOWN:
-                pacman.richtung = down;
+                input = down;
             	break;
             case KEY_LEFT:
-                pacman.richtung = left;
+                input = left;
             	break;
             case KEY_RIGHT:
-                pacman.richtung = right;
+                input = right;
             	break;
             case 'q':
                 run = 0;
@@ -114,18 +114,23 @@ int main()
 
 		move++;
 
-		//==Kolision + Geister==
+		//====Kolision + Geister====
+		if(!kollision(pacman, input, points))
+			pacman.richtung = input;
 		//kolision pacman u. Wand, pacman und Geister?
-		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
+		//keine kollision m. Wand -> ändere Richtung Pacman, Kollision Geist -> Game Over
 		if(move >= 15) //bewegt sich alle 150ms
 		{
 			move_pacman(&pacman);
 			move = 0;
 		}
 		//bewege Geister
+		
+		/* == nicht notwendig? == 
 		//kollision geist pacman?
 		//kollision -> game over
-
+		*/
+		
 		//==PRINT==
 		erase();
 
@@ -278,4 +283,27 @@ void move_pacman(pacman_t *pacman)
 			pacman->x +=1;
 			break;
 	}
+}
+
+int kollision(pacman_t pacman, richtung_t richtung, char **points)
+{
+	switch(richtung)
+	{
+		case up:
+			pacman.y -= 1;
+			break;
+		case down:
+			pacman.y += 1;
+			break;
+		case left:
+			pacman.x -= 1;
+			break;
+		case right:
+			pacman.x +=1;
+			break;
+	}
+	if(points[pacman.x][pacman.y] == '\0')
+		return 0;
+	else
+		return 1;
 }
