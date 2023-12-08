@@ -79,6 +79,8 @@ int main()
 
 	int pressed_key;
 
+	int move = 0;
+
 	while(run) //action loop
 	{
 
@@ -107,15 +109,20 @@ int main()
                 break;
 		}
 		flushinp();
-		napms(100);
-//		flushinp();
+		napms(10);
+
+		move++;
 
 		//tcflush(STDIN_FILENO, TCIFLUSH);
 				
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
-		move_pacman(&pacman);
+		if(move == 10)
+		{
+			move_pacman(&pacman);
+			move = 0;
+		}
 		//bewege Geister
 		//kollision geist pacman?
 		//kollision -> game over
