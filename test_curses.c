@@ -107,12 +107,14 @@ int main()
                 run = 0;
                 break;
 		}
-
-		int z;	
-		do
+		if(pressed_key != ERR)
 		{
-			z = getchar();
-		}while(z != EOF);
+			int z;	
+			do
+			{
+				z = getchar();
+			}while(z != EOF);
+		}
 		
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
