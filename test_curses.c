@@ -63,12 +63,38 @@ int main()
 	init_pair(2, COLOR_BLACK, COLOR_YELLOW);
 
 	init_pair(3, COLOR_BLACK, COLOR_RED);
+	
+	int quit = 0;
 
-	while(1) //action loop
+	char pressed_key;
+	
+	while(!quit) //action loop
 	{
 		break;
-		//==EINGABE==
-		//getch()
+		// ===== Benutzereingaben =====
+		
+        pressed_key = getch(); // Eingabe einlesen
+		
+        switch(pressed_key)
+        {
+            case ERR:
+                napms(10); // Pause in Millisekunden
+                break;
+            case KEY_UP:
+                //ausgabe = '^';
+                break;
+			case KEY_DOWN:
+                //ausgabe = 'v';
+                break;
+            case KEY_LEFT:
+                //ausgabe = '<';
+                break;
+            case KEY_RIGHT:
+                //ausgabe = '>';
+                break;
+            case 'q':
+                quit = 1;
+                break;
 		
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
