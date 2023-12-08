@@ -114,19 +114,10 @@ int main()
 		attron(COLOR_PAIR(3));
 		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
 		attroff(COLOR_PAIR(3));
+
+		refresh();
 	}
 
-
-
-
-
-
-
-	
-
-	refresh();
-
-	getchar();
 	endwin();
 	return 0;
 }
