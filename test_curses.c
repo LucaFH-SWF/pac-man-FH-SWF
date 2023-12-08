@@ -87,7 +87,7 @@ int main()
         switch(pressed_key)
         {
             case ERR:
-                napms(100); // Pause in Millisekunden
+                //napms(100); // Pause in Millisekunden
                 break;
             case KEY_UP:
                 pacman.richtung = up;
@@ -105,7 +105,7 @@ int main()
                 run = 0;
                 break;
 		}
-
+		napms(100);
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
