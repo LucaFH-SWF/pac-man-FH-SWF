@@ -83,9 +83,8 @@ int main()
 	{
 
 		// ===== Benutzereingaben =====
-		flushinp();
         pressed_key = getch(); // Eingabe einlesen
-		
+		flushinp();
         switch(pressed_key)
         {
             case ERR:
