@@ -30,6 +30,7 @@ char **create_points(xy size);
 void init_points(char **points, xy size);
 void print_pacman(pacman_t pacman);
 char richtungtochar(richtung_t richtung);
+void print_ghosts(ghosts_t ghosts);
 
 int main()
 {
@@ -61,10 +62,11 @@ int main()
 	start_color();
 
 	init_pair(1, COLOR_BLUE, COLOR_BLUE);
-
 	init_pair(2, COLOR_BLACK, COLOR_YELLOW);
-
 	init_pair(3, COLOR_BLACK, COLOR_RED);
+	init_pair(4, COLOR_BLACK, COLOR_MAGENTA);
+	init_pair(5, COLOR_BLACK, COLOR_CYAN);
+	init_pair(6, COLOR_BLACK, COLOR_YELLOW);
 	
 	int run = 1;
 
@@ -113,9 +115,7 @@ int main()
 		print_pacman(pacman);
 
 		//print geister
-		attron(COLOR_PAIR(3));
-		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
-		attroff(COLOR_PAIR(3));
+		print_ghosts(ghosts);
 
 		refresh();
 	}
@@ -205,5 +205,28 @@ char richtungtochar(richtung_t richtung)
 		case right:
 			return '>';
 		break;
+		default:
+			return 'P';
+		break;
 	}
+}
+
+void print_ghosts(ghosts_t ghosts)
+{
+	//red
+	attron(COLOR_PAIR(3));
+	mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
+	attroff(COLOR_PAIR(3));
+	//pink
+	attron(COLOR_PAIR(4));
+	mvprintw(ghosts.pink.y + 5, ghosts.pink.x + 5, "%c", 'R');
+	attroff(COLOR_PAIR(4));
+	//cyan
+	attron(COLOR_PAIR(5));
+	mvprintw(ghosts.cyan.y + 5, ghosts.cyan.x + 5, "%c", 'R');
+	attroff(COLOR_PAIR(5));
+	//orange
+	attron(COLOR_PAIR(6));
+	mvprintw(ghosts.orange.y + 5, ghosts.orange.x + 5, "%c", 'R');
+	attroff(COLOR_PAIR(6));		
 }
