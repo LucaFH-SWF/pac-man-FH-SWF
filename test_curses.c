@@ -66,7 +66,7 @@ int main()
 	
 	int quit = 0;
 
-	char pressed_key;
+	int pressed_key;
 	
 	while(!quit) //action loop
 	{
@@ -95,7 +95,7 @@ int main()
             case 'q':
                 quit = 1;
                 break;
-		
+		}
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
@@ -104,23 +104,25 @@ int main()
 		//kollision -> game over
 
 		//==PRINT==
-		//print_background
-		//print_punkte
+		print_background(size);
+		print_points(points, size);
 		//print pacman
+		attron(COLOR_PAIR(2));
+		mvprintw(pacman.y + 5, pacman.x + 5, "%c", 'P');
+		attroff(COLOR_PAIR(2));
 		//print geister
+		attron(COLOR_PAIR(3));
+		mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
+		attroff(COLOR_PAIR(3));
 	}
 
-	print_background(size);
 
-	print_points(points, size);
 
-	attron(COLOR_PAIR(2));
-	mvprintw(pacman.y + 5, pacman.x + 5, "%c", 'P');
-	attroff(COLOR_PAIR(2));
 
-	attron(COLOR_PAIR(3));
-	mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
-	attroff(COLOR_PAIR(3));
+
+
+
+	
 
 	refresh();
 
