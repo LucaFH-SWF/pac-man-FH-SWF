@@ -109,7 +109,7 @@ int main()
 		//==PRINT==
 		erase();
 		print_background(size);
-		print_points(points, size);
+//		print_points(points, size);
 		//print pacman
 		attron(COLOR_PAIR(2));
 		mvprintw(pacman.y + 5, pacman.x + 5, "%c", 'P');
