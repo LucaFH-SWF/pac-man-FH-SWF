@@ -64,11 +64,11 @@ int main()
 
 	init_pair(3, COLOR_BLACK, COLOR_RED);
 	
-	int quit = 0;
+	int run = 1;
 
 	int pressed_key;
 	
-	while(!quit) //action loop
+	while(run) //action loop
 	{
 		break;
 		// ===== Benutzereingaben =====
@@ -93,7 +93,7 @@ int main()
                 //ausgabe = '>';
                 break;
             case 'q':
-                quit = 1;
+                run = 0;
                 break;
 		}
 		
