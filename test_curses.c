@@ -144,10 +144,9 @@ int main()
 		}
 		//bewege Geister
 
-		/* == nicht notwendig? == NEIN, NOTWENDIG!
 		//kollision geist pacman?
 		//kollision -> game over
-		*/
+		//keine kollision -> geist bewegen
 		
 		//====PRINT====
 		erase();
