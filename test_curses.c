@@ -72,8 +72,7 @@ int main()
 	
 	while(run) //action loop
 	{
-		// ===== Benutzereingaben =====
-		
+		// ===== Benutzereingaben =====		
         pressed_key = getch(); // Eingabe einlesen
 		
         switch(pressed_key)
@@ -83,15 +82,19 @@ int main()
                 break;
             case KEY_UP:
                 ausgabe = '^';
+                pacman.richtung = up;
                 break;
 			case KEY_DOWN:
                 ausgabe = 'v';
+                pacman.richtung = down;
                 break;
             case KEY_LEFT:
                 ausgabe = '<';
+                pacman.richtung = left;
                 break;
             case KEY_RIGHT:
                 ausgabe = '>';
+                pacman.richtung = right;
                 break;
             case 'q':
                 run = 0;
