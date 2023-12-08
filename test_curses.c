@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef enum {up, right, down, left} richtung_t;
-typedef enum {normal, frighten, scatter} state_t;
+typedef enum {normal, frighten, scatter} state_t;//waiting?
 
 struct xy{
 	int x;
@@ -61,12 +61,16 @@ int main()
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
 	ghosts.red.y = 5;
+	ghosts.red.state = normal;
 	ghosts.pink.x = 7;
 	ghosts.pink.y = 5;
+	ghosts.pink.state = normal;
 	ghosts.cyan.x = 9;
 	ghosts.cyan.y = 5;
+	ghosts.cyan.state = normal;
 	ghosts.orange.x = 11;
 	ghosts.orange.y = 5;
+	ghosts.orange.state = normal;
 
 	initscr();
 	cbreak();
