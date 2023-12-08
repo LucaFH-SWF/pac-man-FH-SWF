@@ -111,8 +111,8 @@ int main()
 		int z;	
 		do
 		{
-			z = getch();
-		}while(z != EOF && z != ERR);
+			z = getchar();
+		}while(z != EOF);
 		
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
