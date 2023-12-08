@@ -108,17 +108,16 @@ int main()
                 run = 0;
             	break;
 		}
+
 		flushinp();
 		napms(10);
 
 		move++;
 
-		//tcflush(STDIN_FILENO, TCIFLUSH);
-				
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
-		if(move >= 15) //bewegtsich alle 150ms
+		if(move >= 15) //bewegt sich alle 150ms
 		{
 			move_pacman(&pacman);
 			move = 0;
@@ -131,6 +130,7 @@ int main()
 		erase();
 
 		print_background(size);
+		
 		print_points(points, size);
 
 		//print pacman
@@ -172,6 +172,14 @@ void init_points(char **points, xy size)
 		for(int j = 0; j < size.y; ++j)
 		{
 			points[i][j] = '\0';
+		}
+	}
+
+	for(int i = 2; i < size.x-2; ++i)
+	{
+		for(int j = 2; j < size.y-2; ++j)
+		{
+			points[i][j] = ' ';
 		}
 	}
 	points[1][2] = '.';
