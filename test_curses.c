@@ -51,11 +51,11 @@ int main()
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
 	ghosts.red.y = 5;
-	ghosts.pink.x = 5;
+	ghosts.pink.x = 7;
 	ghosts.pink.y = 5;
-	ghosts.cyan.x = 5;
+	ghosts.cyan.x = 9;
 	ghosts.cyan.y = 5;
-	ghosts.orange.x = 5;
+	ghosts.orange.x = 11;
 	ghosts.orange.y = 5;
 
 	initscr();
@@ -225,14 +225,14 @@ void print_ghosts(ghosts_t ghosts)
 	attroff(COLOR_PAIR(3));
 	//pink
 	attron(COLOR_PAIR(4));
-	mvprintw(ghosts.pink.y + 5, ghosts.pink.x + 5, "%c", 'R');
+	mvprintw(ghosts.pink.y + 5, ghosts.pink.x + 5, "%c", 'P');
 	attroff(COLOR_PAIR(4));
 	//cyan
 	attron(COLOR_PAIR(5));
-	mvprintw(ghosts.cyan.y + 5, ghosts.cyan.x + 5, "%c", 'R');
+	mvprintw(ghosts.cyan.y + 5, ghosts.cyan.x + 5, "%c", 'C');
 	attroff(COLOR_PAIR(5));
 	//orange
 	attron(COLOR_PAIR(6));
-	mvprintw(ghosts.orange.y + 5, ghosts.orange.x + 5, "%c", 'R');
+	mvprintw(ghosts.orange.y + 5, ghosts.orange.x + 5, "%c", 'O');
 	attroff(COLOR_PAIR(6));		
 }
