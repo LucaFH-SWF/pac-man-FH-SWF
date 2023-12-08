@@ -74,8 +74,8 @@ int main()
 	{
 		break;
 		// ===== Benutzereingaben =====
-		/*
-        pressed_key = getch(); // Eingabe einlesen
+		
+        pressed_key = getchar(); // Eingabe einlesen
 		
         switch(pressed_key)
         {
@@ -98,7 +98,7 @@ int main()
                 run = 0;
                 break;
 		}
-		*/
+
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
