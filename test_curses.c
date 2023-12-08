@@ -113,8 +113,8 @@ int main()
 			int z;	
 			do
 			{
-				z = getchar();
-			}while(z != '\n' && z != EOF);
+				z = getch();
+			}while(z != '\n' && z != EOF && z != ERR);
 		}
 		
 		//==Kolision + Geister==
