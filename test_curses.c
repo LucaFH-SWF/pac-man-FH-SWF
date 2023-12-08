@@ -1,14 +1,17 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
+typedef enum {up, right, down, left} richtung_t;//Uhrzeigersin
+
 typedef struct{ //zu umständlich, direkt für Geister verwenden?
 	int x;
 	int y;
 } xy;
 
 typedef struct{
-	xy *xy; //einfach ein int x und ein int y
-	char *richtung;
+	int x;
+	int y;
+	richtung_t richtung;
 }Tpacman;
 
 void print_background(xy* size);
@@ -24,8 +27,8 @@ int main()
 	size = new_xy(50 ,30);
 
 	Tpacman *pacman = (Tpacman *) malloc(sizeof(Tpacman));
-	pacman->xy = new_xy(30,10);
-	set_xy(pacman->xy, 0, 0);
+	pacman->x = 10;
+	pacman->y = 10;
 	char **points = create_points(size);
 
 	initscr();
@@ -67,7 +70,7 @@ int main()
 	print_points(points, size);
 
 	attron(COLOR_PAIR(2));
-	mvprintw(pacman->xy->y + 5, pacman->xy->x + 5, "%c", 'P');
+	mvprintw(pacman->y + 5, pacman->x + 5, "%c", 'P');
 	attroff(COLOR_PAIR(2));
 
 	refresh();
