@@ -107,7 +107,8 @@ int main()
                 run = 0;
                 break;
 		}
-		
+
+		/*
 		if(pressed_key != ERR)
 		{
 			int z;	
@@ -116,7 +117,10 @@ int main()
 				z = getch();
 			}while(z != '\n' && z != EOF && z != ERR);
 		}
-		
+		*/
+		//tcflush(STDIN_FILENO, TCIFLUSH);
+		flushinp();
+				
 		//==Kolision + Geister==
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> bewege pacman, Kollision Geist -> Game Over
