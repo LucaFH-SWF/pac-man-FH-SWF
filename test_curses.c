@@ -84,6 +84,13 @@ int main()
 		// ===== Benutzereingaben =====		
         pressed_key = getch(); // Eingabe einlesen
 		napms(100);
+
+		int z;
+		do
+		{
+			z = getch();
+		}while(z != EOF);
+		
         switch(pressed_key)
         {
             case ERR:
