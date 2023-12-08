@@ -82,11 +82,12 @@ int main()
 	while(run) //action loop
 	{
 
-		// ===== Benutzereingaben =====		
+		// ===== Benutzereingaben =====	
+		int z;	
 		do
 		{
-			pressed_key = getch();
-		}while(pressed_key != EOF);
+			z = getch();
+		}while(z != EOF);
 
         pressed_key = getch(); // Eingabe einlesen
 		napms(100);
