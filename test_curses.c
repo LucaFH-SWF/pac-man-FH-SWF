@@ -21,7 +21,6 @@ void print_background(xy size);
 void print_points(char **points, xy size);
 char **create_points(xy size);
 void init_points(char **points, xy size);
-void set_xy(xy *, int x, int y);
 
 int main()
 {
@@ -29,9 +28,9 @@ int main()
 	size.x = 50;
 	size.y = 30;
 	
-	pacman_t *pacman = (pacman_t *) malloc(sizeof(pacman_t));
-	pacman->x = 10;
-	pacman->y = 10;
+	pacman_t pacman;
+	pacman.x = 10;
+	pacman.y = 10;
 	char **points = create_points(size);
 
 	initscr();
@@ -73,7 +72,7 @@ int main()
 	print_points(points, size);
 
 	attron(COLOR_PAIR(2));
-	mvprintw(pacman->y + 5, pacman->x + 5, "%c", 'P');
+	mvprintw(pacman.y + 5, pacman.x + 5, "%c", 'P');
 	attroff(COLOR_PAIR(2));
 
 	refresh();
@@ -94,12 +93,6 @@ char **create_points(xy size)
 
 	init_points(points, size);
 	return points;
-}
-
-void set_xy(xy *xy, int x, int y)
-{
-	xy->x = x;
-	xy->y = y;
 }
 
 void init_points(char **points, xy size)
