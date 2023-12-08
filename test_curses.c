@@ -32,7 +32,8 @@ void print_pacman(pacman_t pacman);
 char richtungtochar(richtung_t richtung);
 void print_ghosts(ghosts_t ghosts);
 void move_pacman(pacman_t *pacman);
-int kollision(pacman_t pacman, richtung_t richtung, char **points);
+int kollision_richtung(pacman_t pacman, richtung_t richtung, char **points);
+int kollision_move(pacman_t pacman, char **points);
 
 int main()
 {
@@ -115,18 +116,19 @@ int main()
 		move++;
 
 		//====Kolision + Geister====
-		if(kollision(pacman, input, points) == 1)
+		if(kollision_richtung(pacman, input, points))
 			pacman.richtung = input;
 		//kolision pacman u. Wand, pacman und Geister?
 		//keine kollision m. Wand -> ändere Richtung Pacman, Kollision Geist -> Game Over
 		if(move >= 15) //bewegt sich alle 150ms
 		{
-			move_pacman(&pacman);
+			if(kollision_move(pacman, points))
+				move_pacman(&pacman);
 			move = 0;
 		}
 		//bewege Geister
 		
-		/* == nicht notwendig? == 
+		/* == nicht notwendig? == JA!
 		//kollision geist pacman?
 		//kollision -> game over
 		*/
@@ -285,7 +287,7 @@ void move_pacman(pacman_t *pacman)
 	}
 }
 
-int kollision(pacman_t pacman, richtung_t richtung, char **points)
+int kollision_richtung(pacman_t pacman, richtung_t richtung, char **points)
 {
 	switch(richtung)
 	{
@@ -300,6 +302,29 @@ int kollision(pacman_t pacman, richtung_t richtung, char **points)
 			break;
 		case right:
 			pacman.x +=1;
+			break;
+	}
+	if(points[pacman.x][pacman.y] != '\0')
+		return 1;
+	else
+		return 0;
+}
+
+int kollision_move(pacman_t pacman, char **points)
+{
+	switch(pacman.richtung)
+		{
+		case up:
+			pacman.y -= 1;
+			break;
+		case down:
+			pacman.y += 1;
+			break;
+		case left:
+			pacman.x -= 1;
+			break;
+		case right:
+		pacman.x +=1;
 			break;
 	}
 	if(points[pacman.x][pacman.y] != '\0')
