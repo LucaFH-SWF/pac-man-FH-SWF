@@ -9,7 +9,15 @@ struct xy{
 };
 
 typedef struct xy xy;
-typedef struct xy geister_t;
+typedef struct xy ghost_t;
+
+
+typedef struct{
+	ghost_t red;
+	ghost_t pink;
+	ghost_t orange;
+	ghost_t cyan;
+} ghosts_t;
 
 typedef struct{
 	int x;
@@ -28,10 +36,19 @@ int main()
 	size.x = 50;
 	size.y = 30;
 	
+	char **points = create_points(size);
+	if(!points)
+		return -1;
+	
+	init_points(points, size);
+
 	pacman_t pacman;
 	pacman.x = 10;
 	pacman.y = 10;
-	char **points = create_points(size);
+
+	ghosts_t ghosts;
+	ghosts.red.x = 5;
+	ghosts.red.y = 5;
 
 	initscr();
 	cbreak();
@@ -40,12 +57,13 @@ int main()
 	nodelay(stdscr, TRUE);
 	curs_set(0);
 
-
 	start_color();
 
 	init_pair(1, COLOR_BLUE, COLOR_BLUE);
 
 	init_pair(2, COLOR_BLACK, COLOR_YELLOW);
+
+	init_pair(3, COLOR_BLACK, COLOR_RED);
 
 	while(1) //action loop
 	{
@@ -75,6 +93,10 @@ int main()
 	mvprintw(pacman.y + 5, pacman.x + 5, "%c", 'P');
 	attroff(COLOR_PAIR(2));
 
+	attron(COLOR_PAIR(3));
+	mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'P');
+	attroff(COLOR_PAIR(3));
+
 	refresh();
 
 	getchar();
@@ -87,11 +109,17 @@ char **create_points(xy size)
 	char **points;
 	
 	points = (char **) malloc(size.x * sizeof(points)); //sizey viele pointer auf pointer
+
+	if(!points)
+		return NULL;
 	
 	for(int i = 0; i < size.x; ++i) //sizex viele char reservieren für jeden pointer
+	{
 		points[i] = (char *) malloc(size.y * sizeof(char));
+		if(!points[i])
+			return NULL;
+	}
 
-	init_points(points, size);
 	return points;
 }
 
