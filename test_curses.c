@@ -116,15 +116,18 @@ int main()
 		move++;
 
 		//====Kolision + Geister====
-		if(kollision_richtung(pacman, input, points))
-			pacman.richtung = input;
-		//kolision pacman u. Wand, pacman und Geister?
-		//keine kollision m. Wand -> ändere Richtung Pacman, Kollision Geist -> Game Over
-		if(move >= 15) //bewegt sich alle 150ms
+		if(move >= 15)
 		{
-			if(kollision_move(pacman, points))
-				move_pacman(&pacman);
 			move = 0;
+			if(kollision_richtung(pacman, input, points))
+			{
+				pacman.richtung = input;
+				move_pacman(&pacman);
+			}
+			else
+				if(kollision_move(pacman, points))
+					move_pacman(&pacman);
+			
 		}
 		//bewege Geister
 		
@@ -324,7 +327,7 @@ int kollision_move(pacman_t pacman, char **points)
 			pacman.x -= 1;
 			break;
 		case right:
-		pacman.x +=1;
+			pacman.x +=1;
 			break;
 	}
 	if(points[pacman.x][pacman.y] != '\0')
