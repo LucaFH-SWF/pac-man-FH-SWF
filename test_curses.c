@@ -84,7 +84,7 @@ int main()
 
 		// ===== Benutzereingaben =====
         pressed_key = getch(); // Eingabe einlesen
-		//flushinp();
+		
         switch(pressed_key)
         {
             case ERR:
@@ -106,7 +106,7 @@ int main()
                 run = 0;
                 break;
 		}
-
+		flushinp();
 		napms(100);
 		flushinp();
 
