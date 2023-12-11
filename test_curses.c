@@ -1,8 +1,8 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
-typedef enum {up, right, down, left} richtung_t;
-typedef enum {normal, frighten, scatter} state_t;//waiting?
+typedef enum {up, right, down, left} direction_t;
+typedef enum {chase, frightened, scatter} state_t;
 
 struct xy{
 	int x;
@@ -13,6 +13,7 @@ struct ghost{
 	int x;
 	int y;
 	state_t state;
+	direction_t direction;
 };
 
 typedef struct xy xy;
@@ -28,7 +29,7 @@ typedef struct{
 typedef struct{
 	int x;
 	int y;
-	richtung_t richtung;
+	direction_t richtung;
 }pacman_t;
 
 void print_background(xy size);
@@ -36,10 +37,10 @@ void print_points(char **points, xy size);
 char **create_points(xy size);
 void init_points(char **points, xy size);
 void print_pacman(pacman_t pacman);
-char richtungtochar(richtung_t richtung);
+char richtungtochar(direction_t richtung);
 void print_ghosts(ghosts_t ghosts);
 void move_pacman(pacman_t *pacman);
-int kollision_richtung(pacman_t pacman, richtung_t richtung, char **points);
+int kollision_richtung(pacman_t pacman, direction_t richtung, char **points);
 int kollision_move(pacman_t pacman, char **points);
 
 int main()
@@ -61,16 +62,16 @@ int main()
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
 	ghosts.red.y = 5;
-	ghosts.red.state = normal;
+	ghosts.red.state = chase;
 	ghosts.pink.x = 7;
 	ghosts.pink.y = 5;
-	ghosts.pink.state = normal;
+	ghosts.pink.state = chase;
 	ghosts.cyan.x = 9;
 	ghosts.cyan.y = 5;
-	ghosts.cyan.state = normal;
+	ghosts.cyan.state = chase;
 	ghosts.orange.x = 11;
 	ghosts.orange.y = 5;
-	ghosts.orange.state = normal;
+	ghosts.orange.state = chase;
 
 	initscr();
 	cbreak();
@@ -94,7 +95,7 @@ int main()
 
 	int move = 0;
 
-	richtung_t input;
+	direction_t input;
 
 	while(run) //action loop
 	{
@@ -239,7 +240,7 @@ void print_pacman(pacman_t pacman)
 	attroff(COLOR_PAIR(2));
 }
 
-char richtungtochar(richtung_t richtung)
+char richtungtochar(direction_t richtung)
 {
 	switch(richtung)
 	{
@@ -300,7 +301,7 @@ void move_pacman(pacman_t *pacman)
 	}
 }
 
-int kollision_richtung(pacman_t pacman, richtung_t richtung, char **points)
+int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 {
 	switch(richtung)
 	{
