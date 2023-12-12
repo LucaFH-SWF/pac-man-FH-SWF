@@ -124,6 +124,8 @@ int main()
             case 'q':
                 run = 0;
             	break;
+            case ERR:
+            	break;
 		}
 
 		flushinp();
