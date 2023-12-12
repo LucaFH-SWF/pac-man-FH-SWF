@@ -93,7 +93,7 @@ int main()
 	
 	int run = 1;
 
-	int pressed_key;
+	int pressed_key = 0;
 
 	int move = 0;
 
