@@ -60,7 +60,7 @@ int main()
 	pacman.x = 10;
 	pacman.y = 10;
 	pacman.speed = 15;
-	pacman.richtung = 5;
+	pacman.richtung = left;
 
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
