@@ -136,18 +136,15 @@ int main()
 		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
-			if(pacman.richtung != neutral)
+			if(kollision_richtung(pacman, input, points))
 			{
-				if(kollision_richtung(pacman, input, points))
-				{
-					pacman.richtung = input;
+				pacman.richtung = input;
+				move_pacman(&pacman);
+			}
+			else
+			{
+				if(kollision_move(pacman, points))
 					move_pacman(&pacman);
-				}
-				else
-				{
-					if(kollision_move(pacman, points))
-						move_pacman(&pacman);
-				}
 			}
 		}
 		//bewege Geister
@@ -326,6 +323,8 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 		case right:
 			pacman.x +=1;
 			break;
+		case neutral:
+			return 0;
 		default:
 			break;
 	}
