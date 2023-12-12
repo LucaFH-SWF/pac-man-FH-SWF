@@ -99,7 +99,6 @@ int main()
 
 	direction_t input;
 
-	flushinp();
 
 	while(run) //action loop
 	{
@@ -125,6 +124,7 @@ int main()
                 run = 0;
             	break;
             case ERR:
+				flushinp();
             	break;
 		}
 
