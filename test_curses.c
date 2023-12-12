@@ -1,7 +1,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
-typedef enum {up, right, down, left} direction_t;
+typedef enum {up, right, down, left, neutral} direction_t;
 typedef enum {chase, frightened, scatter} state_t;
 
 struct xy{
@@ -60,7 +60,7 @@ int main()
 	pacman.x = 10;
 	pacman.y = 10;
 	pacman.speed = 15;
-	pacman.richtung = down;
+	pacman.richtung = neutral;
 
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
@@ -301,6 +301,8 @@ void move_pacman(pacman_t *pacman)
 		case right:
 			pacman->x +=1;
 			break;
+		case neutral:
+			break;
 	}
 }
 
@@ -319,6 +321,8 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 			break;
 		case right:
 			pacman.x +=1;
+			break;
+		case neutral:
 			break;
 	}
 	if(points[pacman.x][pacman.y] != '\0')
@@ -342,6 +346,8 @@ int kollision_move(pacman_t pacman, char **points)
 			break;
 		case right:
 			pacman.x +=1;
+			break;
+		case neutral:
 			break;
 	}
 	if(points[pacman.x][pacman.y] != '\0')
