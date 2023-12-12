@@ -105,7 +105,6 @@ int main()
 		// ===== Benutzereingaben =====
 		
         pressed_key = getch();
-        flushinp();
 		
         switch(pressed_key)
         {
@@ -128,6 +127,7 @@ int main()
 
 		//flushinp();
 		napms(150);
+		flushinp();
 
 		move++;
 
