@@ -110,6 +110,8 @@ int main()
 		
         switch(pressed_key)
         {
+        	case ERR:
+        		break;
             case KEY_UP:
                 input = up;
             	break;
