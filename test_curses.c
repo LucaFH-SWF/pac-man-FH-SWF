@@ -127,7 +127,7 @@ int main()
 		}
 
 		//flushinp();
-		napms(10);
+		napms(150);
 
 		move++;
 
