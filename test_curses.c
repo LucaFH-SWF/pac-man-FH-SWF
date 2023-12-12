@@ -289,23 +289,24 @@ void print_ghosts(ghosts_t ghosts)
 
 void move_pacman(pacman_t *pacman)
 {
-	switch(pacman->richtung)
-	{
-		case up:
-			pacman->y -= 1;
-			break;
-		case down:
-			pacman->y += 1;
-			break;
-		case left:
-			pacman->x -= 1;
-			break;
-		case right:
-			pacman->x +=1;
-			break;
-		default:
-			break;
-	}
+	if(pacman->richtung != neutral)
+		switch(pacman->richtung)
+		{
+			case up:
+				pacman->y -= 1;
+				break;
+			case down:
+				pacman->y += 1;
+				break;
+			case left:
+				pacman->x -= 1;
+				break;
+			case right:
+				pacman->x +=1;
+				break;
+			default:
+				break;
+		}
 }
 
 int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
