@@ -325,6 +325,7 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 			break;
 		case neutral:
 			return 0;
+			break;
 		default:
 			break;
 	}
@@ -352,6 +353,7 @@ int kollision_move(pacman_t pacman, char **points)
 			break;
 		case neutral:
 			return 0;
+			break;
 		default:
 			break;
 	}
