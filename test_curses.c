@@ -103,7 +103,6 @@ int main()
 	{
 
 		// ===== Benutzereingaben =====
-		
         pressed_key = getch();
 		
         switch(pressed_key)
@@ -125,11 +124,10 @@ int main()
             	break;
 		}
 
-		flushinp();
 		napms(10);
+		flushinp();
 
 		move++;
-
 		//====Kolision + Geister====
 		if(move >= pacman.speed) //alle 150ms
 		{
