@@ -59,7 +59,7 @@ int main()
 	pacman_t pacman;
 	pacman.x = 10;
 	pacman.y = 10;
-	pacman.speed = 20;
+	pacman.speed = 15;
 
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
@@ -95,7 +95,7 @@ int main()
 
 	int pressed_key;
 
-	int move = 0;
+	int move = 15;
 
 	direction_t input;
 
@@ -103,6 +103,7 @@ int main()
 	{
 
 		// ===== Benutzereingaben =====
+		flushinp();
         pressed_key = getch();
 		
         switch(pressed_key)
@@ -124,7 +125,7 @@ int main()
             	break;
 		}
 
-		flushinp();
+		//flushinp();
 		napms(10);
 
 		move++;
@@ -132,7 +133,7 @@ int main()
 		//====Kolision + Geister====
 		if(move >= pacman.speed) //alle 150ms
 		{
-			move = 0;
+			move = 15;
 			if(kollision_richtung(pacman, input, points))
 			{
 				pacman.richtung = input;
