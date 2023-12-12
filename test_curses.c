@@ -99,6 +99,9 @@ int main()
 
 	direction_t input;
 
+	flushinp();
+
+
 	while(run) //action loop
 	{
 
