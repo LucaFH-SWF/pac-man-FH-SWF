@@ -101,7 +101,6 @@ int main()
 
 	flushinp();
 
-
 	while(run) //action loop
 	{
 
