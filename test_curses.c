@@ -136,17 +136,19 @@ int main()
 		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
-			if(kollision_richtung(pacman, input, points))
+			if(pacman.richtung != neutral)
 			{
-				pacman.richtung = input;
-				move_pacman(&pacman);
-			}
-			else
-			{
-				if(kollision_move(pacman, points))
+				if(kollision_richtung(pacman, input, points))
+				{
+					pacman.richtung = input;
 					move_pacman(&pacman);
+				}
+				else
+				{
+					if(kollision_move(pacman, points))
+						move_pacman(&pacman);
+				}
 			}
-			
 		}
 		//bewege Geister
 
@@ -289,24 +291,23 @@ void print_ghosts(ghosts_t ghosts)
 
 void move_pacman(pacman_t *pacman)
 {
-	if(pacman->richtung != neutral)
-		switch(pacman->richtung)
-		{
-			case up:
-				pacman->y -= 1;
-				break;
-			case down:
-				pacman->y += 1;
-				break;
-			case left:
-				pacman->x -= 1;
-				break;
-			case right:
-				pacman->x +=1;
-				break;
-			default:
-				break;
-		}
+	switch(pacman->richtung)
+	{
+		case up:
+			pacman->y -= 1;
+			break;
+		case down:
+			pacman->y += 1;
+			break;
+		case left:
+			pacman->x -= 1;
+			break;
+		case right:
+			pacman->x +=1;
+			break;
+		default:
+			break;
+	}
 }
 
 int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
