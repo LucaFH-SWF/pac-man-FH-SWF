@@ -95,7 +95,7 @@ int main()
 
 	int pressed_key;
 
-	int move = 15;
+	int move = 0;
 
 	direction_t input;
 
@@ -125,16 +125,15 @@ int main()
             	break;
 		}
 
-		//flushinp();
-		napms(150);
 		flushinp();
+		napms(10);
 
 		move++;
 
 		//====Kolision + Geister====
 		if(move >= pacman.speed) //alle 150ms
 		{
-			move = 15;
+			move = 0;
 			if(kollision_richtung(pacman, input, points))
 			{
 				pacman.richtung = input;
