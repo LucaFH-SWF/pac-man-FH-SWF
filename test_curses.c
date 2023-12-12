@@ -350,6 +350,8 @@ int kollision_move(pacman_t pacman, char **points)
 		case right:
 			pacman.x +=1;
 			break;
+		case neutral:
+			return 0;
 		default:
 			break;
 	}
