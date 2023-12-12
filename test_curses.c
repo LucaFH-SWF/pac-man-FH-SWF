@@ -30,6 +30,7 @@ typedef struct{
 	int x;
 	int y;
 	direction_t richtung;
+	int speed;
 }pacman_t;
 
 void print_background(xy size);
@@ -58,6 +59,7 @@ int main()
 	pacman_t pacman;
 	pacman.x = 10;
 	pacman.y = 10;
+	pacman.speed = 10;
 
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
@@ -128,7 +130,7 @@ int main()
 		move++;
 
 		//====Kolision + Geister====
-		if(move >= 15) //alle 150ms
+		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
 			if(kollision_richtung(pacman, input, points))
