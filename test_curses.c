@@ -60,6 +60,7 @@ int main()
 	pacman.x = 10;
 	pacman.y = 10;
 	pacman.speed = 15;
+	pacman.richtung = 5;
 
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
@@ -123,10 +124,6 @@ int main()
             	break;
             case 'q':
                 run = 0;
-            	break;
-            case ERR:
-				flushinp();
-            	break;
 		}
 
 		flushinp();
