@@ -98,7 +98,7 @@ int main()
 
 	int move = 0;
 
-	direction_t input;
+	direction_t input = neutral;
 
 	flushinp();
 
