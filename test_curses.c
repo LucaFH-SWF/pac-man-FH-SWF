@@ -303,7 +303,7 @@ void move_pacman(pacman_t *pacman)
 		case right:
 			pacman->x +=1;
 			break;
-		case neutral:
+		default:
 			break;
 	}
 }
@@ -324,7 +324,7 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 		case right:
 			pacman.x +=1;
 			break;
-		case neutral:
+		default:
 			break;
 	}
 	if(points[pacman.x][pacman.y] != '\0')
@@ -349,7 +349,7 @@ int kollision_move(pacman_t pacman, char **points)
 		case right:
 			pacman.x +=1;
 			break;
-		case neutral:
+		default:
 			break;
 	}
 	if(points[pacman.x][pacman.y] != '\0')
