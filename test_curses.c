@@ -38,6 +38,7 @@ void print_background(xy size);
 void print_points(char **points, xy size);
 char **create_points(xy size);
 void init_points(char **points, xy size);
+void pacman_start(pacman_t *pacman);
 void print_pacman(pacman_t pacman);
 char richtungtochar(direction_t richtung);
 void print_ghosts(ghosts_t ghosts);
@@ -59,11 +60,8 @@ int main()
 	init_points(points, size);
 
 	pacman_t pacman;
-	pacman.x = 10;
-	pacman.y = 10;
-	pacman.speed = 15;
-	pacman.richtung = neutral;
-
+	pacman_start(&pacman);
+	
 	ghosts_t ghosts;
 	ghosts.red.x = 5;
 	ghosts.red.y = 5;
@@ -337,4 +335,12 @@ xy next_move(pacman_t pacman, direction_t direction)
 		break;
 	}	
 	return pos;
+}
+
+void pacman_start(pacman_t *pacman)
+{
+	pacman->x = 10;
+	pacman->y = 10;
+	pacman->speed = 15;
+	pacman->richtung = neutral;	
 }
