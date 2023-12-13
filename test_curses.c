@@ -43,7 +43,7 @@ void print_ghosts(ghosts_t ghosts);
 void move_pacman(pacman_t *pacman);
 int kollision_richtung(pacman_t pacman, direction_t richtung, char **points);
 int kollision_move(pacman_t pacman, char **points);
-xy next_move(pacman_t pacman, direction_t direction);
+xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste position von pacman bei angegebener Richtung zurück
 
 int main()
 {
