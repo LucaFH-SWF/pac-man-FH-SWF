@@ -14,6 +14,7 @@ struct ghost{
 	int y;
 	state_t state;
 	direction_t direction;
+	int speed;
 };
 
 typedef struct xy xy;
