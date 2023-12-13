@@ -43,6 +43,7 @@ void print_ghosts(ghosts_t ghosts);
 void move_pacman(pacman_t *pacman);
 int kollision_richtung(pacman_t pacman, direction_t richtung, char **points);
 int kollision_move(pacman_t pacman, char **points);
+xy next_move(pacman_t pacman, direction_t direction);
 
 int main()
 {
@@ -337,6 +338,7 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 
 int kollision_move(pacman_t pacman, char **points)
 {
+	/*
 	switch(pacman.richtung)
 	{
 		case up:
@@ -356,9 +358,36 @@ int kollision_move(pacman_t pacman, char **points)
 			break;
 		default:
 			break;
-	}
+	}*/
+	pacman.x = next_move(pacman, pacman.richtung).x;
+	pacman.y = next_move(pacman, pacman.richtung).y;
 	if(points[pacman.x][pacman.y] != '\0')
 		return 1;
 	else
 		return 0;
+}
+
+xy next_move(pacman_t pacman, direction_t direction)
+{
+	xy pos;
+	pos.x = pacman.x;
+	pos.y = pacman.y;
+	switch(direction)
+	{
+	case up:
+		pos.y -= 1;
+		break;
+	case down:
+		pos.y += 1;
+		break;
+	case left:
+		pos.x -= 1;
+		break;
+	case right:
+		pos.x +=1;
+		break;
+	default:
+		break;
+	}	
+	return pos;
 }
