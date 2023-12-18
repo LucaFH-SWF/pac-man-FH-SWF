@@ -153,7 +153,7 @@ int main()
 		}
 
 		flushinp();
-		msleep(10);
+		napms(10);
 
 		move++;
 		//====Kolision + Geister====
