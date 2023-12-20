@@ -357,6 +357,6 @@ void pacman_start(pacman_t *pacman)
 {
 	pacman->x = 10;
 	pacman->y = 10;
-	pacman->speed = 15;
+	pacman->speed = 10;
 	pacman->richtung = neutral;	
 }
