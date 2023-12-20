@@ -210,7 +210,7 @@ char **create_points(xy size)
 
 void init_points(char **points, xy size)
 {
-	FILE *fp;
+/*	FILE *fp;
 	fp = fopen("map.txt", "r");
 	if(!fp)
 		return;
@@ -229,8 +229,8 @@ void init_points(char **points, xy size)
 		fgetc(fp);
 	}
 	fclose(fp);
+*/
 
-/*
 	for(int i = 0; i < size.x; ++i)
 	{
 		for(int j = 0; j < size.y; ++j)
@@ -249,7 +249,7 @@ void init_points(char **points, xy size)
 	points[3][2] = '.';
 	points[5][2] = 'o';
 	points[7][2] = ' ';
-*/
+
 
 }
 
