@@ -68,8 +68,8 @@ xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste positio
 int main()
 {
 	xy size;
-	size.x = 40;
-	size.y = 30;
+	size.x = 5;
+	size.y = 5;
 	
 	char **points = create_points(size);
 	if(!points)
@@ -210,6 +210,19 @@ char **create_points(xy size)
 
 void init_points(char **points, xy size)
 {
+	FILE *fp;
+	fp = fopen("map.txt", "r");
+	if(!fp)
+		return;
+	for(int i = 0; i < size.y; ++i)
+	{
+		for(int j = 0; j < size.x; ++j)
+		{
+			points[j][i] = fgetc(fp);
+		}
+	}
+	fclose(fp);
+	/*
 	for(int i = 0; i < size.x; ++i)
 	{
 		for(int j = 0; j < size.y; ++j)
@@ -228,6 +241,7 @@ void init_points(char **points, xy size)
 	points[3][2] = '.';
 	points[5][2] = 'o';
 	points[7][2] = ' ';
+	*/
 
 }
 
