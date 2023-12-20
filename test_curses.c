@@ -214,7 +214,7 @@ void init_points(char **points, xy size)
 	{
 		for(int j = 0; j < size.y; ++j)
 		{
-			points[i][j] = '.';
+			points[i][j] = '\0';
 		}
 	}
 
