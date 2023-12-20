@@ -223,12 +223,14 @@ void init_points(char **points, xy size)
 		for(int j = 0; j < x; ++j)
 		{
 			points[j][i] = fgetc(fp);
+			if(points[j][i] == 'W')
+				points[j][i] = 0;
 		}
 		fgetc(fp);
 	}
 	fclose(fp);
 
-	fp = fopen("test", "wb");
+/*
 	for(int i = 0; i < size.x; ++i)
 	{
 		for(int j = 0; j < size.y; ++j)
@@ -236,9 +238,7 @@ void init_points(char **points, xy size)
 			points[i][j] = '\0';
 		}
 	}
-	fwrite(points, sizeof(char), 25, fp);
-	fclose(fp);
-	/*
+	
 	for(int i = 2; i < size.x-2; ++i)
 	{
 		for(int j = 2; j < size.y-2; ++j)
@@ -249,7 +249,7 @@ void init_points(char **points, xy size)
 	points[3][2] = '.';
 	points[5][2] = 'o';
 	points[7][2] = ' ';
-	*/
+*/
 
 }
 
