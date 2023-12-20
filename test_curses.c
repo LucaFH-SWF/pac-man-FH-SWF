@@ -138,7 +138,7 @@ int main()
 		}
 
 		flushinp();
-		napms(10);
+		napms(12);
 
 		move++;
 		//====Kolision + Geister====
