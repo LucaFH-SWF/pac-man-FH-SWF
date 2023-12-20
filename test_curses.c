@@ -1,11 +1,11 @@
 #ifdef __unix__
 #include <unistd.h>
-#include<ncurses.h>
+#include <ncurses.h>
 #define SLEEP napms(15);
 #endif
 #ifdef WIN32
 #include <windows.h>
-#include<ncurses/ncurses.h>
+#include <ncurses/ncurses.h>
 #define SLEEP nsleep(1);
 #endif
 
@@ -13,7 +13,7 @@
 #include <time.h>
 #include <errno.h>    
 
-void nsleep(long miliseconds) {
+void nsleep(long miliseconds){
     struct timespec ts;
     ts.tv_sec = 0;
     ts.tv_nsec = miliseconds;
@@ -49,7 +49,7 @@ typedef struct{
 typedef struct{
 	int x;
 	int y;
-	direction_t richtung;
+	direction_t direction;
 	int speed;
 }pacman_t;
 
@@ -157,7 +157,7 @@ int main()
 			move = 0;
 			if(kollision_richtung(pacman, input, points))
 			{
-				pacman.richtung = input;
+				pacman.direction = input;
 				move_pacman(&pacman);
 			}
 			else
@@ -256,7 +256,7 @@ void print_points(char **points, xy size)
 void print_pacman(pacman_t pacman)
 {
 	attron(COLOR_PAIR(2));
-	mvprintw(pacman.y + 5, pacman.x + 5, "%c", richtungtochar(pacman.richtung));
+	mvprintw(pacman.y + 5, pacman.x + 5, "%c", richtungtochar(pacman.direction));
 	attroff(COLOR_PAIR(2));
 }
 
@@ -304,8 +304,8 @@ void print_ghosts(ghosts_t ghosts)
 
 void move_pacman(pacman_t *pacman)
 {
-	pacman->x = next_move(*pacman, pacman->richtung).x;
-	pacman->y = next_move(*pacman, pacman->richtung).y;
+	pacman->x = next_move(*pacman, pacman->direction).x;
+	pacman->y = next_move(*pacman, pacman->direction).y;
 }
 
 int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
@@ -320,8 +320,8 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 
 int kollision_move(pacman_t pacman, char **points)
 {
-	pacman.x = next_move(pacman, pacman.richtung).x;
-	pacman.y = next_move(pacman, pacman.richtung).y;
+	pacman.x = next_move(pacman, pacman.direction).x;
+	pacman.y = next_move(pacman, pacman.direction).y;
 	if(points[pacman.x][pacman.y] != '\0')
 		return 1;
 	else
@@ -358,5 +358,5 @@ void pacman_start(pacman_t *pacman)
 	pacman->x = 10;
 	pacman->y = 10;
 	pacman->speed = 15;
-	pacman->richtung = neutral;	
+	pacman->direction = neutral;	
 }
