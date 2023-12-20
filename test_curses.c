@@ -3,26 +3,11 @@
 #include <time.h>
 #include <errno.h>    
 
-/* msleep(): Sleep for the requested number of milliseconds. */
-int msleep(long msec)
-{
+void nsleep(long miliseconds) {
     struct timespec ts;
-    int res;
-
-    if (msec < 0)
-    {
-        errno = EINVAL;
-        return -1;
-    }
-
-    ts.tv_sec = msec / 1000;
-    ts.tv_nsec = (msec % 1000) * 1000000;
-
-    do {
-        res = nanosleep(&ts, &ts);
-    } while (res && errno == EINTR);
-
-    return res;
+    ts.tv_sec = 0;
+    ts.tv_nsec = miliseconds * 1000000L;
+    nanosleep(&ts, NULL);
 }
 
 typedef enum {up, right, down, left, neutral} direction_t;
@@ -153,7 +138,8 @@ int main()
 		}
 
 		flushinp();
-		napms(10);
+		//napms(10);
+		nsleep(10);
 
 		move++;
 		//====Kolision + Geister====
