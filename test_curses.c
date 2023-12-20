@@ -233,21 +233,12 @@ void init_points(char **points, xy size)
 		for(int j = 0; j < x; ++j)
 		{
 			points[j][i] = fgetc(fp);
-			if(points[j][i] == 'W')
+			if(points[j][i] == 'A')
 				points[j][i] = '\0';
 		}
 		fgetc(fp);
 	}
 	fclose(fp);
-
-	
-	for(int i = 0; i < size.x; ++i)
-	{
-		for(int j = 0; j < size.y; ++j)
-		{
-			points[i][j] = '\0';
-		}
-	}
 
 /*	
 	for(int i = 2; i < size.x-2; ++i)
