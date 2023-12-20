@@ -245,7 +245,7 @@ void print_background(xy size)
 	}*/
 	for(int i = 0; i < size.x; ++i)
 	{
-		mvvline(5+i, 5, ' ', size.y);
+		mvvline(5, 5+i, ' ', size.y);
 	}
 	attroff(COLOR_PAIR(1));
 }
