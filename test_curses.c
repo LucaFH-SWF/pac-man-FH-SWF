@@ -228,15 +228,15 @@ void init_points(char **points, xy size)
 	}
 	fclose(fp);
 
-	fp = fopen("test", "w");
+	fp = fopen("test", "wb");
 	for(int i = 0; i < size.x; ++i)
 	{
 		for(int j = 0; j < size.y; ++j)
 		{
 			points[i][j] = '\0';
-			fprintf(fp, "%c", points[i][j]);
 		}
 	}
+	fwrite(points, sizeof(char), 25, fp);
 	fclose(fp);
 	/*
 	for(int i = 2; i < size.x-2; ++i)
