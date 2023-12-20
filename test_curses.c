@@ -1,7 +1,7 @@
 #ifdef __unix__
 #include <unistd.h>
 #include<ncurses.h>
-#define SLEEP napms(12);
+#define SLEEP napms(15);
 #endif
 #ifdef WIN32
 #include <windows.h>
