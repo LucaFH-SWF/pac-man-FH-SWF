@@ -68,7 +68,7 @@ xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste positio
 int main()
 {
 	xy size;
-	size.x = 27;
+	size.x = 40;
 	size.y = 30;
 	
 	char **points = create_points(size);
