@@ -1,12 +1,12 @@
 #ifdef __unix__
 #include <unistd.h>
 #include<ncurses.h>
-#define SLEEP napms(20);
+#define SLEEP napms(10);
 #endif
 #ifdef WIN32
 #include <windows.h>
 #include<ncurses/ncurses.h>
-#define SLEEP nsleep(10);
+#define SLEEP nsleep(1);
 #endif
 
 #include <stdlib.h>
