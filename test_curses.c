@@ -1,4 +1,14 @@
-#include <ncurses.h>
+#ifdef __unix__
+#include <unistd.h>
+#include<ncurses.h>
+#define SLEEP napms(12);
+#endif
+#ifdef WIN32
+#include <windows.h>
+#include<ncurses/ncurses.h>
+#define nsleep(10);
+#endif
+
 #include <stdlib.h>
 #include <time.h>
 #include <errno.h>    
@@ -6,7 +16,7 @@
 void nsleep(long miliseconds) {
     struct timespec ts;
     ts.tv_sec = 0;
-    ts.tv_nsec = miliseconds * 100000L;
+    ts.tv_nsec = miliseconds;
     nanosleep(&ts, NULL);
 }
 
@@ -138,7 +148,7 @@ int main()
 		}
 
 		flushinp();
-		napms(12);
+		SLEEP;
 
 		move++;
 		//====Kolision + Geister====
