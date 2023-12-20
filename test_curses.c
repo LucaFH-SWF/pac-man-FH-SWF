@@ -6,7 +6,7 @@
 #ifdef WIN32
 #include <windows.h>
 #include<ncurses/ncurses.h>
-#define nsleep(10);
+#define SLEEP nsleep(10);
 #endif
 
 #include <stdlib.h>
