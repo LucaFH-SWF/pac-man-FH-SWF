@@ -138,8 +138,7 @@ int main()
 		}
 
 		flushinp();
-		//napms(10);
-		nsleep(10);
+		napms(10);
 
 		move++;
 		//====Kolision + Geister====
@@ -351,6 +350,6 @@ void pacman_start(pacman_t *pacman)
 {
 	pacman->x = 10;
 	pacman->y = 10;
-	pacman->speed = 150;
+	pacman->speed = 15;
 	pacman->richtung = neutral;	
 }
