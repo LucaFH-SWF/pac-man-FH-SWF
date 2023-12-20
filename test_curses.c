@@ -222,7 +222,7 @@ void init_points(char **points, xy size)
 	{
 		for(int j = 2; j < size.y-2; ++j)
 		{
-			points[i][j] = ' ';
+			points[i][j] = '.';
 		}
 	}
 	points[3][2] = '.';
