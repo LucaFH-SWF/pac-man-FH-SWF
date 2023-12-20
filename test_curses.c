@@ -11,7 +11,6 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include <errno.h>    
 
 void nsleep(long miliseconds){
     struct timespec ts;
