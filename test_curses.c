@@ -68,7 +68,7 @@ xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste positio
 int main()
 {
 	xy size;
-	size.x = 50;
+	size.x = 27;
 	size.y = 30;
 	
 	char **points = create_points(size);
@@ -214,7 +214,7 @@ void init_points(char **points, xy size)
 	{
 		for(int j = 0; j < size.y; ++j)
 		{
-			points[i][j] = '\0';
+			points[i][j] = '.';
 		}
 	}
 
@@ -228,8 +228,6 @@ void init_points(char **points, xy size)
 	points[3][2] = '.';
 	points[5][2] = 'o';
 	points[7][2] = ' ';
-	points[9][2] = 8;
-	points[11][2] = 8;
 
 }
 
