@@ -240,6 +240,15 @@ void init_points(char **points, xy size)
 	}
 	fclose(fp);
 
+	
+	for(int i = 0; i < size.x; ++i)
+	{
+		for(int j = 0; j < size.y; ++j)
+		{
+			points[i][j] = '\0';
+		}
+	}
+
 /*	
 	for(int i = 2; i < size.x-2; ++i)
 	{
