@@ -228,8 +228,8 @@ void init_points(char **points, xy size)
 	points[3][2] = '.';
 	points[5][2] = 'o';
 	points[7][2] = ' ';
-	points[9][2] = 1;
-	points[11][2] = 2;
+	points[9][2] = 8;
+	points[11][2] = 8;
 
 }
 
