@@ -6,7 +6,7 @@
 void nsleep(long miliseconds) {
     struct timespec ts;
     ts.tv_sec = 0;
-    ts.tv_nsec = miliseconds * 1000000L;
+    ts.tv_nsec = miliseconds * 100000L;
     nanosleep(&ts, NULL);
 }
 
@@ -351,6 +351,6 @@ void pacman_start(pacman_t *pacman)
 {
 	pacman->x = 10;
 	pacman->y = 10;
-	pacman->speed = 15;
+	pacman->speed = 150;
 	pacman->richtung = neutral;	
 }
