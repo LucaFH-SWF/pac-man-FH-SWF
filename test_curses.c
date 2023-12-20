@@ -224,7 +224,7 @@ void init_points(char **points, xy size)
 		{
 			points[j][i] = fgetc(fp);
 			if(points[j][i] == 'W')
-				points[j][i] = 0;
+				points[j][i] = '\0';
 		}
 		fgetc(fp);
 	}
