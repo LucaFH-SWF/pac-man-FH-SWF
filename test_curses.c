@@ -97,7 +97,7 @@ int main()
 	int x_max, y_max;
 	getmaxyx(stdscr, y_max, x_max);
 
-	WINDOW *game = newwin(size.y, size.x, y_max/2 - size.y, x_max/2 - size.x);
+	WINDOW *game = newwin(size.y, size.x, y_max/2 - size.y/2, x_max/2 - size.x/2);
 	refresh();//window auf stdscr "regestrieren?"
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
