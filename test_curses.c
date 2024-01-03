@@ -181,6 +181,7 @@ int main()
 			print_ghosts(ghosts, game);
 
 			wrefresh(game);
+			getchar();
 		}
 	}
 
