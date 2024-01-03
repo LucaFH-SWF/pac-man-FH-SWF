@@ -84,8 +84,8 @@ int main()
 
 	WINDOW *game = newwin(size.y, size.x, y_max/2 - size.y/2, x_max/2 - size.x/2);
 	refresh();//window auf stdscr "regestrieren?"
-	keypad(game, TRUE);
-	nodelay(game, TRUE);
+	keypad(stdscr, TRUE);
+	nodelay(stdscr, TRUE);
 
 	start_color();
 
