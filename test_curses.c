@@ -90,11 +90,12 @@ int main()
 	ghosts.orange.state = chase;
 
 	initscr();
-	cbreak();
+	cbreak();//strg - c zum beenden des programms
 	noecho();	
 	curs_set(0);
 
 	WINDOW *game = newwin(size.y, size.x, 0, 0);
+	refresh();//window auf stdscr "regestrieren?"
 	keypad(game, TRUE);
 	nodelay(game, TRUE);
 
@@ -118,8 +119,6 @@ int main()
 	direction_t input = neutral;
 
 	flushinp();
-
-	refresh();//window auf stdscr "regestrieren?"
 
 	while(run) //action loop
 	{
