@@ -110,7 +110,7 @@ int main()
 
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);
 
-	wbkgd(game, COLOR_PAIR(1));//stdscr blau färben
+//	wbkgd(stdscr, COLOR_PAIR(1));//stdscr blau färben
 	
 	int run = 1;
 
@@ -262,15 +262,15 @@ void print_board(char **points, xy size, WINDOW* win)
 		{
 			if(points[j][i] == 'W')
 			{
-				attron(COLOR_PAIR(1));
+				wattron(win, COLOR_PAIR(1));
 					mvwprintw(win, i, j, "%c", points[j][i]);
-				attroff(COLOR_PAIR(1));
+				wattroff(win, COLOR_PAIR(1));
 			}
 			else
 			{
-				attron(COLOR_PAIR(7));
+				wattron(win, COLOR_PAIR(7));
 					mvwprintw(win, i, j, "%c", points[j][i]);
-				attroff(COLOR_PAIR(7));
+				wattroff(win, COLOR_PAIR(7));
 			}
 		}
 	}
@@ -278,9 +278,9 @@ void print_board(char **points, xy size, WINDOW* win)
 
 void print_pacman(pacman_t pacman, WINDOW* win)
 {
-	attron(COLOR_PAIR(2));
+	wattron(win, COLOR_PAIR(2));
 	mvwprintw(win, pacman.y, pacman.x, "%c", richtungtochar(pacman.direction));
-	attroff(COLOR_PAIR(2));
+	wattroff(win, COLOR_PAIR(2));
 }
 
 char richtungtochar(direction_t richtung)
@@ -308,21 +308,21 @@ char richtungtochar(direction_t richtung)
 void print_ghosts(ghosts_t ghosts, WINDOW* win)
 {
 	//red
-	attron(COLOR_PAIR(3));
+	wattron(win, COLOR_PAIR(3));
 	mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
-	attroff(COLOR_PAIR(3));
+	wattroff(win, COLOR_PAIR(3));
 	//pink
-	attron(COLOR_PAIR(4));
+	wattron(win, COLOR_PAIR(4));
 	mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
-	attroff(COLOR_PAIR(4));
+	wattroff(win, COLOR_PAIR(4));
 	//cyan
-	attron(COLOR_PAIR(5));
+	wattron(win, COLOR_PAIR(5));
 	mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
-	attroff(COLOR_PAIR(5));
+	wattroff(win, COLOR_PAIR(5));
 	//orange
-	attron(COLOR_PAIR(6));
+	wattron(win, COLOR_PAIR(6));
 	mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
-	attroff(COLOR_PAIR(6));		
+	wattroff(win, COLOR_PAIR(6));		
 }
 
 void move_pacman(pacman_t *pacman)
