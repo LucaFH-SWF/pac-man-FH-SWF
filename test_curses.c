@@ -223,7 +223,7 @@ void init_points(char **points, xy size)
 		{
 			points[j][i] = fgetc(fp);
 		}
-		fgetc(fp);
+		//fgetc(fp);
 	}
 	fclose(fp);
 
