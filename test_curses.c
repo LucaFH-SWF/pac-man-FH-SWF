@@ -274,7 +274,7 @@ void print_points(char **points, xy size)
 	{
 		for(int j = 0; j < size.x; ++j)
 		{
-			if(points[j][i] != 0)
+//			if(points[j][i] != 0)
 				mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
 	}
