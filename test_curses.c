@@ -185,6 +185,7 @@ int main()
 		print_ghosts(ghosts);
 
 		refresh();
+		getchar();
 	}
 
 	endwin();
