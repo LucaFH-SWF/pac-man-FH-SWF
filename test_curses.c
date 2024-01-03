@@ -75,8 +75,8 @@ int main()
 		return -1;
 
 	initscr();
-	cbreak();//strg - c zum beenden des programms
-	noecho();	
+	cbreak();//strg - c zum beenden des Programms
+	noecho();
 	curs_set(0);
 
 	int x_max, y_max;
@@ -84,8 +84,8 @@ int main()
 
 	WINDOW *game = newwin(size.y, size.x, y_max/2 - size.y/2, x_max/2 - size.x/2);
 	refresh();//window auf stdscr "regestrieren?"
-	keypad(stdscr, TRUE);
-	nodelay(stdscr, TRUE);
+	keypad(game, TRUE);
+	nodelay(game, TRUE);
 
 	start_color();
 
