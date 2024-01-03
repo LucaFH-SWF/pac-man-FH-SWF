@@ -94,11 +94,10 @@ int main()
 	noecho();	
 	curs_set(0);
 
-	int x_min, x_max, y_min, y_max;
-	getbegyx(stdscr, y_min, x_min);
+	int x_max, y_max;
 	getmaxyx(stdscr, y_max, x_max);
 
-	WINDOW *game = newwin(size.y, size.x, y_max/2, x_max/2);
+	WINDOW *game = newwin(size.y, size.x, y_max/2 - size.y, x_max/2 - size.x);
 	refresh();//window auf stdscr "regestrieren?"
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
