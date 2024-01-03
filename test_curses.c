@@ -227,20 +227,6 @@ void init_points(char **points, xy size)
 		fgetc(fp);
 	}
 	fclose(fp);
-
-/*	
-	for(int i = 2; i < size.x-2; ++i)
-	{
-		for(int j = 2; j < size.y-2; ++j)
-		{
-			points[i][j] = ' ';
-		}
-	}
-	points[3][2] = '.';
-	points[5][2] = 'o';
-	points[7][2] = ' ';
-*/
-
 }
 
 void print_board(char **points, xy size)
@@ -324,7 +310,7 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 {
 	pacman.x = next_move(pacman, richtung).x;
 	pacman.y = next_move(pacman, richtung).y;
-	if(points[pacman.x][pacman.y] != '\0')
+	if(points[pacman.x][pacman.y] != 'W')
 		return 1;
 	else
 		return 0;
@@ -334,7 +320,7 @@ int kollision_move(pacman_t pacman, char **points)
 {
 	pacman.x = next_move(pacman, pacman.direction).x;
 	pacman.y = next_move(pacman, pacman.direction).y;
-	if(points[pacman.x][pacman.y] != '\0')
+	if(points[pacman.x][pacman.y] != 'W')
 		return 1;
 	else
 		return 0;
