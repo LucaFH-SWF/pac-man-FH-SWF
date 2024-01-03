@@ -60,7 +60,7 @@ void print_pacman(pacman_t pacman, WINDOW*);
 char richtungtochar(direction_t richtung);
 void print_ghosts(ghosts_t ghosts, WINDOW*);
 void move_pacman(pacman_t *pacman);
-int kollision_richtung(pacman_t pacman, direction_t richtung, char **points);
+int kollision_richtung(pacman_t *pacman, direction_t richtung, char **points);
 int kollision_move(pacman_t *pacman, char **points);
 int oob(pacman_t *pacman, direction_t richtung, xy size); //oob = out of bounds
 xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste position von pacman bei angegebener Richtung zurück
@@ -146,12 +146,7 @@ int main()
 			move = 0;
 			if(!oob(&pacman, input, size))
 			{
-				if(kollision_richtung(pacman, input, points))
-				{
-					pacman.direction = input;
-					move_pacman(&pacman);
-				}
-				else
+				if(!kollision_richtung(&pacman, input, points))
 				{
 					kollision_move(&pacman, points);
 				}
@@ -343,14 +338,17 @@ void move_pacman(pacman_t *pacman)
 	pacman->y = next_move(*pacman, pacman->direction).y;
 }
 
-int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
+int kollision_richtung(pacman_t *pacman, direction_t richtung, char **points)
 {
-	pacman.x = next_move(pacman, richtung).x;
-	pacman.y = next_move(pacman, richtung).y;
-	if(points[pacman.x][pacman.y] == 'W')
+	int x = next_move(*pacman, richtung).x;
+	int y = next_move(*pacman, richtung).y;
+	if(points[x][y] == 'W')
 		return 0;
 	else
-		return 1;
+	{
+		pacman->direction = richtung;
+		move_pacman(pacman);
+	}
 }
 
 int kollision_move(pacman_t *pacman, char **points)
