@@ -209,8 +209,6 @@ char **create_points(xy size)
 
 void init_points(char **points, xy size)
 {
-
-
 	for(int i = 0; i < size.x; ++i)
 	{
 		for(int j = 0; j < size.y; ++j)
@@ -225,7 +223,6 @@ void init_points(char **points, xy size)
 		return;
 	int x;
 	int y;
-	char r;
 	fscanf(fp, "%d", &x);
 	fscanf(fp, "%d", &y);
 	for(int i = 0; i < y; ++i)
