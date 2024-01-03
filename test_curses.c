@@ -171,7 +171,6 @@ int main()
 		//keine kollision -> geist bewegen
 		
 		//====PRINT====
-			erase();
 			werase(game);
 
 			print_board(points, size, game);
@@ -181,7 +180,6 @@ int main()
 			print_ghosts(ghosts, game);
 
 			wrefresh(game);
-			refresh();
 		}
 	}
 
@@ -251,13 +249,13 @@ void print_board(char **points, xy size, WINDOW* win)
 			if(points[j][i] == 'W')
 			{
 				attron(COLOR_PAIR(1));
-					mvwprintw(win, 5+i, 5+j, "%c", points[j][i]);
+					mvwprintw(win, i, j, "%c", points[j][i]);
 				attroff(COLOR_PAIR(1));
 			}
 			else
 			{
 				attron(COLOR_PAIR(7));
-					mvwprintw(win, 5+i, 5+j, "%c", points[j][i]);
+					mvwprintw(win, i, j, "%c", points[j][i]);
 				attroff(COLOR_PAIR(7));
 			}
 		}
@@ -267,7 +265,7 @@ void print_board(char **points, xy size, WINDOW* win)
 void print_pacman(pacman_t pacman, WINDOW* win)
 {
 	attron(COLOR_PAIR(2));
-	mvwprintw(win, pacman.y + 5, pacman.x + 5, "%c", richtungtochar(pacman.direction));
+	mvwprintw(win, pacman.y, pacman.x, "%c", richtungtochar(pacman.direction));
 	attroff(COLOR_PAIR(2));
 }
 
@@ -297,19 +295,19 @@ void print_ghosts(ghosts_t ghosts, WINDOW* win)
 {
 	//red
 	attron(COLOR_PAIR(3));
-	mvwprintw(win, ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
+	mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
 	attroff(COLOR_PAIR(3));
 	//pink
 	attron(COLOR_PAIR(4));
-	mvwprintw(win, ghosts.pink.y + 5, ghosts.pink.x + 5, "%c", 'P');
+	mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
 	attroff(COLOR_PAIR(4));
 	//cyan
 	attron(COLOR_PAIR(5));
-	mvwprintw(win, ghosts.cyan.y + 5, ghosts.cyan.x + 5, "%c", 'C');
+	mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
 	attroff(COLOR_PAIR(5));
 	//orange
 	attron(COLOR_PAIR(6));
-	mvwprintw(win, ghosts.orange.y + 5, ghosts.orange.x + 5, "%c", 'O');
+	mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
 	attroff(COLOR_PAIR(6));		
 }
 
