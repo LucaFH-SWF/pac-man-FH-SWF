@@ -230,26 +230,31 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 					pacman->y = i;
 					pacman->speed = 15;
 					pacman->direction = neutral;	
+					points[j][i] = ' ';
 					break;
 				case 'R':
 					ghosts->red.x = j;
 					ghosts->red.y = i;
 					ghosts->red.state = chase;				
+					points[j][i] = ' ';
 					break;
 				case 'P':
 					ghosts->pink.x = j;
 					ghosts->pink.y = i;
-					ghosts->pink.state = idle;										
+					ghosts->pink.state = idle;
+					points[j][i] = ' ';
 					break;
 				case 'C':
 					ghosts->cyan.x = j;
 					ghosts->cyan.y = i;
 					ghosts->cyan.state = idle;
+					points[j][i] = ' ';
 					break;
 				case 'O':
 					ghosts->orange.x = j;
 					ghosts->orange.y = i;
 					ghosts->orange.state = idle;
+					points[j][i] = ' ';
 					break;
 			} 
 		}
