@@ -110,7 +110,7 @@ int main()
 
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);
 
-	wbkgd(stdscr, COLOR_PAIR(1));//stdscr blau färben
+	wbkgd(game, COLOR_PAIR(1));//stdscr blau färben
 	
 	int run = 1;
 
