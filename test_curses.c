@@ -149,7 +149,7 @@ int main()
 
 		flushinp();
 		SLEEP
-	/*
+		
 		move++;
 		//====Kolision + Geister====
 		if(move >= pacman.speed) //alle 150ms
@@ -171,7 +171,7 @@ int main()
 		//kollision geist pacman?
 		//kollision -> game over
 		//keine kollision -> geist bewegen
-	*/	
+		
 		//====PRINT====
 		erase();
 
