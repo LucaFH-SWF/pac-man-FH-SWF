@@ -233,11 +233,12 @@ void init_points(char **points, xy size)
 	{
 		for(int j = 0; j < x; ++j)
 		{
-			r = fgetc(fp);
-			if(r == 'W')
+			points[j][i] = fgetc(fp);
+/*			if(r == 'W')
 				points[j][i]='W';
 			else
 				points[j][i] = r;
+*/
 		}
 		fgetc(fp);
 	}
@@ -274,8 +275,9 @@ void print_points(char **points, xy size)
 	{
 		for(int j = 0; j < size.x; ++j)
 		{
-			if(points[j][i] != 'W')
-				mvprintw(5+i, 5+j, "%c", points[j][i]);
+			if(points[j][i] == 'W')
+				continue;
+			mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
 	}
 }
