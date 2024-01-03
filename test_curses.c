@@ -132,7 +132,7 @@ int main()
 			refresh();
 			wrefresh(game);
 			getchar();
-/*
+
 	while(run) //action loop
 	{
 
@@ -196,7 +196,7 @@ int main()
 			wrefresh(game);
 		}
 	}
-*/
+
 	endwin();
 	return 0;
 }
