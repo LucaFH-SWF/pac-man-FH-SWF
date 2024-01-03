@@ -54,7 +54,7 @@ typedef struct{
 
 void print_board(char **points, xy size);
 char **create_points(xy *size);
-char **init_points(xy *size);
+char **init_points(xy *size, char *filename);
 void pacman_start(pacman_t *pacman);
 void print_pacman(pacman_t pacman);
 char richtungtochar(direction_t richtung);
@@ -67,13 +67,8 @@ xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste positio
 int main()
 {
 	xy size;
-	/*
-	char **points = create_points(size);
-	if(!points)
-		return -1;
-	*/
 	char **points = NULL;
-	points = init_points(&size);
+	points = init_points(&size, "map.txt");
 	if(!points)
 		return -1;
 
@@ -209,10 +204,10 @@ char **create_points(xy *size)
 	return points;
 }
 
-char ** init_points(xy *size)
+char ** init_points(xy *size, char* filename)
 {
 	FILE *fp;
-	fp = fopen("map.txt", "r");
+	fp = fopen(filename, "r");
 	if(!fp)
 	{
 		printf("FEHLER konnte map Datei nicht öffnen!");
