@@ -264,10 +264,19 @@ void init_points(char **points, xy size)
 void print_background(xy size)
 {
 	attron(COLOR_PAIR(1));
+	for(int i = 0; i < size.y; ++i)
+		{
+			for(int j = 0; j < size.x; ++j)
+			{
+				mvprintw(5+i, 5+j, "%c", 'W');
+			}
+		}
+/*
 	for(int i = 0; i < size.x; ++i)
 	{
 		mvvline(5, 5+i, ' ', size.y);
 	}
+*/
 	attroff(COLOR_PAIR(1));
 }
 
