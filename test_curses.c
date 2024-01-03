@@ -89,8 +89,8 @@ int main()
 	ghosts.orange.y = 5;
 	ghosts.orange.state = chase;
 
-	//initscr();
-	WINDOW *game = initscr();
+	initscr();
+	WINDOW *game = newwin(size.y, size.x, 5, 5);
 	cbreak();
 	noecho();
 	keypad(game, TRUE);
