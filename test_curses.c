@@ -144,13 +144,13 @@ int main()
 		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
-//			if(!oob(&pacman, input, size))
-//			{
+			if(!oob(&pacman, input, size))
+			{
 				if(!kollision_richtung(&pacman, input, points))
 				{
 					kollision_move(&pacman, points);
 				}
-//			}
+			}
 		
 		//bewege Geister
 
@@ -363,24 +363,24 @@ int kollision_move(pacman_t *pacman, char **points)
 
 int oob(pacman_t *pacman, direction_t richtung, xy size)
 {
-	pacman->x = next_move(*pacman, richtung).x;
-	pacman->y = next_move(*pacman, richtung).y;
-	if(pacman->x>size.x)
+	int x = next_move(*pacman, richtung).x;
+	int y = next_move(*pacman, richtung).y;
+	if(x>size.x)
 	{
 		pacman->x = 0;
 		return 1;
 	}
-	if(pacman->y>size.y)
+	if(y>size.y)
 	{
 		pacman->y = 0;
 		return 1;
 	}
-	if(pacman->x<0)
+	if(x<0)
 	{
 		pacman->x = size.x;
 		return 1;
 	}
-	if(pacman->y<0)
+	if(y<0)
 	{
 		pacman->y = size.x;
 		return 1;
