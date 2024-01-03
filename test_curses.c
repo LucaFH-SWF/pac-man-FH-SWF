@@ -90,7 +90,7 @@ int main()
 	ghosts.orange.state = chase;
 
 	initscr();
-	WINDOW *game = newwin(size.y, size.x, 5, 5);
+	WINDOW *game = newwin(size.y*2, size.x*2, 0, 0);
 	refresh();//window auf stdscr "regestrieren?"
 	cbreak();
 	noecho();
