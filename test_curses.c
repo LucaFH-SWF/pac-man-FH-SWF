@@ -217,13 +217,14 @@ void init_points(char **points, xy size)
 	int y;
 	fscanf(fp, "%d", &x);
 	fscanf(fp, "%d", &y);
+	fgetc(fp);
 	for(int i = 0; i < y; ++i)
 	{
 		for(int j = 0; j < x; ++j)
 		{
 			points[j][i] = fgetc(fp);
 		}
-		//fgetc(fp);
+		fgetc(fp);
 	}
 	fclose(fp);
 
