@@ -168,7 +168,6 @@ int main()
 			print_pacman(pacman, game);
 
 			print_ghosts(ghosts, game);
-			refresh();
 			wrefresh(game);
 		}
 	}
