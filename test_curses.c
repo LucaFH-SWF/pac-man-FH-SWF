@@ -185,7 +185,6 @@ int main()
 		print_ghosts(ghosts);
 
 		refresh();
-		getchar();
 	}
 
 	endwin();
@@ -289,7 +288,7 @@ void print_points(char **points, xy size)
 		for(int j = 0; j < size.x; ++j)
 		{
 			if(points[j][i] == 'W')
-				continue;
+				mvprintw(5+i, 5+j, "%c", points[j][i]);
 			else
 				mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
