@@ -91,6 +91,7 @@ int main()
 
 	initscr();
 	WINDOW *game = newwin(size.y, size.x, 5, 5);
+	refresh();//window auf stdscr "regestrieren?"
 	cbreak();
 	noecho();
 	keypad(game, TRUE);
@@ -178,7 +179,7 @@ int main()
 
 			print_ghosts(ghosts, game);
 
-			refresh();
+			wrefresh(game);
 		}
 	}
 
