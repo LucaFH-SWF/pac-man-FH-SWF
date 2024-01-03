@@ -94,7 +94,7 @@ int main()
 	noecho();	
 	curs_set(0);
 
-	WINDOW *game = newwin(size.y, size.x, 0, 0);
+	WINDOW *game = newwin(size.y, size.x, 5, 5);
 	refresh();//window auf stdscr "regestrieren?"
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
@@ -122,20 +122,8 @@ int main()
 
 	flushinp();
 
-			werase(game);
-
-			print_board(points, size, game);
-
-			print_pacman(pacman, game);
-
-			print_ghosts(ghosts, game);
-			refresh();
-			wrefresh(game);
-			getchar();
-
 	while(run) //action loop
 	{
-
 		// ===== Benutzereingaben =====
         pressed_key = getch();
 		
