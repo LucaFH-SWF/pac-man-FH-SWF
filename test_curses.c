@@ -20,7 +20,7 @@ void nsleep(long miliseconds){
 }
 
 typedef enum {up, right, down, left, neutral} direction_t;
-typedef enum {chase, frightened, scatter} state_t;
+typedef enum {chase, frightened, scatter, idle} state_t;
 
 struct xy{
 	int x;
@@ -54,7 +54,7 @@ typedef struct{
 
 void print_board(char **points, xy size, WINDOW*);
 char **create_points(xy *size);
-char **init_points(xy *size, char *filename);
+char **init_points(xy *size, char *filename, pacman_t *pacman, ghosts_t *ghosts);
 void pacman_start(pacman_t *pacman);
 void print_pacman(pacman_t pacman, WINDOW*);
 char richtungtochar(direction_t richtung);
@@ -67,27 +67,12 @@ xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste positio
 int main()
 {
 	xy size;
+	pacman_t pacman;
+	ghosts_t ghosts;
 	char **points = NULL;
-	points = init_points(&size, "map.txt");
+	points = init_points(&size, "map.txt", &pacman, &ghosts);
 	if(!points)
 		return -1;
-
-	pacman_t pacman;
-	pacman_start(&pacman);
-	
-	ghosts_t ghosts;
-	ghosts.red.x = 5;
-	ghosts.red.y = 5;
-	ghosts.red.state = chase;
-	ghosts.pink.x = 7;
-	ghosts.pink.y = 5;
-	ghosts.pink.state = chase;
-	ghosts.cyan.x = 9;
-	ghosts.cyan.y = 5;
-	ghosts.cyan.state = chase;
-	ghosts.orange.x = 11;
-	ghosts.orange.y = 5;
-	ghosts.orange.state = chase;
 
 	initscr();
 	cbreak();//strg - c zum beenden des programms
@@ -113,7 +98,7 @@ int main()
 
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);
 
-	wbkgd(stdscr, COLOR_PAIR(1));//stdscr blau färben
+//	wbkgd(stdscr, COLOR_PAIR(1));//stdscr blau färben
 	
 	int run = 1;
 
@@ -211,7 +196,7 @@ char **create_points(xy *size)
 	return points;
 }
 
-char **init_points(xy *size, char* filename)
+char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 {
 	FILE *fp;
 	fp = fopen(filename, "r");
@@ -238,6 +223,35 @@ char **init_points(xy *size, char* filename)
 		for(int j = 0; j < size->x; ++j)
 		{
 			points[j][i] = fgetc(fp);
+			switch(points[j][i])
+			{
+				case '$':
+					pacman->x = j;
+					pacman->y = i;
+					pacman->speed = 15;
+					pacman->direction = neutral;	
+					break;
+				case 'R':
+					ghosts->red.x = j;
+					ghosts->red.y = i;
+					ghosts->red.state = chase;				
+					break;
+				case 'P':
+					ghosts->pink.x = j;
+					ghosts->pink.y = i;
+					ghosts->pink.state = idle;										
+					break;
+				case 'C':
+					ghosts->cyan.x = j;
+					ghosts->cyan.y = i;
+					ghosts->cyan.state = idle;
+					break;
+				case 'O':
+					ghosts->orange.x = j;
+					ghosts->orange.y = i;
+					ghosts->orange.state = idle;
+					break;
+			} 
 		}
 		fgetc(fp);
 	}
@@ -365,12 +379,4 @@ xy next_move(pacman_t pacman, direction_t direction)
 		break;
 	}	
 	return pos;
-}
-
-void pacman_start(pacman_t *pacman)
-{
-	pacman->x = 10;
-	pacman->y = 10;
-	pacman->speed = 15;
-	pacman->direction = neutral;	
 }
