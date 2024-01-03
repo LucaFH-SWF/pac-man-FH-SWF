@@ -177,7 +177,6 @@ int main()
 		print_background(size);
 		
 		print_points(points, size);
-		print_background(size);
 
 		print_pacman(pacman);
 
@@ -236,7 +235,7 @@ void init_points(char **points, xy size)
 		{
 			r = fgetc(fp);
 			if(r == 'W')
-				points[j][i]=0;
+				points[j][i]='W';
 			else
 				points[j][i] = r;
 		}
@@ -275,7 +274,7 @@ void print_points(char **points, xy size)
 	{
 		for(int j = 0; j < size.x; ++j)
 		{
-			if(points[j][i] != 0)
+			if(points[j][i] != 'W')
 				mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
 	}
