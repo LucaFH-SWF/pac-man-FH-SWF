@@ -109,6 +109,8 @@ int main()
 	init_pair(4, COLOR_BLACK, COLOR_MAGENTA);
 	init_pair(5, COLOR_BLACK, COLOR_CYAN);
 	init_pair(6, COLOR_BLACK, COLOR_YELLOW);
+
+	init_pair(7, COLOR_WHITE, COLOR_RED);
 	
 	int run = 1;
 
@@ -271,6 +273,7 @@ void print_background(xy size)
 
 void print_points(char **points, xy size)
 {
+	attron(COLOR_PAIR(7));
 	for(int i = 0; i < size.y; ++i)
 	{
 		for(int j = 0; j < size.x; ++j)
@@ -281,6 +284,7 @@ void print_points(char **points, xy size)
 				mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
 	}
+	attron(COLOR_PAIR(7));
 }
 
 void print_pacman(pacman_t pacman)
