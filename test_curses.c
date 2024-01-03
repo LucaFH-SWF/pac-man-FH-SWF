@@ -282,18 +282,24 @@ void print_background(xy size)
 
 void print_points(char **points, xy size)
 {
-	attron(COLOR_PAIR(7));
 	for(int i = 0; i < size.y; ++i)
 	{
 		for(int j = 0; j < size.x; ++j)
 		{
 			if(points[j][i] == 'W')
-				mvprintw(5+i, 5+j, "%c", points[j][i]);
+			{
+				attron(COLOR_PAIR(1));
+					mvprintw(5+i, 5+j, "%c", points[j][i]);
+				attroff(COLOR_PAIR(1));
+			}
 			else
-				mvprintw(5+i, 5+j, "%c", points[j][i]);
+			{
+				attron(COLOR_PAIR(7));
+					mvprintw(5+i, 5+j, "%c", points[j][i]);
+				attroff(COLOR_PAIR(7));
+			}
 		}
 	}
-	attron(COLOR_PAIR(7));
 }
 
 void print_pacman(pacman_t pacman)
