@@ -62,6 +62,7 @@ void print_ghosts(ghosts_t ghosts, WINDOW*);
 void move_pacman(pacman_t *pacman);
 int kollision_richtung(pacman_t pacman, direction_t richtung, char **points);
 int kollision_move(pacman_t pacman, char **points);
+int oob(pacman_t *pacman, direction_t richtung, xy size); //oob = out of bounds
 xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste position von pacman bei angegebener Richtung zurück
 
 int main()
@@ -143,15 +144,17 @@ int main()
 		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
-			if(kollision_richtung(pacman, input, points))
+			if(!oob(&pacman, input, size))
 			{
-				pacman.direction = input;
-				move_pacman(&pacman);
-			}
-			else
-			{
-				if(kollision_move(pacman, points))
+				if(kollision_richtung(pacman, input, points))
+				{
+					pacman.direction = input;
 					move_pacman(&pacman);
+				}
+				else
+				{
+					kollision_move(pacman, points);
+				}
 			}
 		
 		//bewege Geister
@@ -344,20 +347,47 @@ int kollision_richtung(pacman_t pacman, direction_t richtung, char **points)
 {
 	pacman.x = next_move(pacman, richtung).x;
 	pacman.y = next_move(pacman, richtung).y;
-	if(points[pacman.x][pacman.y] != 'W')
-		return 1;
-	else
+	if(points[pacman.x][pacman.y] == 'W')
 		return 0;
+	else
+		return 1;
 }
 
 int kollision_move(pacman_t pacman, char **points)
 {
 	pacman.x = next_move(pacman, pacman.direction).x;
 	pacman.y = next_move(pacman, pacman.direction).y;
-	if(points[pacman.x][pacman.y] != 'W')
-		return 1;
-	else
+	if(points[pacman.x][pacman.y] == 'W')
 		return 0;
+	else
+		move_pacman(&pacman);
+}
+
+int oob(pacman_t *pacman, direction_t richtung, xy size)
+{
+	pacman->x = next_move(*pacman, richtung).x;
+	pacman->y = next_move(*pacman, richtung).y;
+	if(pacman->x>size.x)
+	{
+		pacman->x = 0;
+		return 1;
+	}
+	if(pacman->y>size.y)
+	{
+		pacman->y = 0;
+		return 1;
+	}
+	if(pacman->x<0)
+	{
+		pacman->x = size.x;
+		return 1;
+	}
+	if(pacman->y<0)
+	{
+		pacman->y = size.x;
+		return 1;
+	}
+	return 0;
 }
 
 xy next_move(pacman_t pacman, direction_t direction)
