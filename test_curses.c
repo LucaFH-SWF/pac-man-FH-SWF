@@ -165,7 +165,7 @@ int main()
 				if(kollision_move(pacman, points))
 					move_pacman(&pacman);
 			}
-		}
+		
 		//bewege Geister
 
 		//kollision geist pacman?
@@ -173,15 +173,16 @@ int main()
 		//keine kollision -> geist bewegen
 		
 		//====PRINT====
-		erase();
+			erase();
 
-		print_board(points, size);
+			print_board(points, size);
 
-		print_pacman(pacman);
+			print_pacman(pacman);
 
-		print_ghosts(ghosts);
+			print_ghosts(ghosts);
 
-		refresh();
+			refresh();
+		}
 	}
 
 	endwin();
