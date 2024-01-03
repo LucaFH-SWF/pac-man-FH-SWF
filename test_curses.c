@@ -89,12 +89,12 @@ int main()
 	ghosts.orange.y = 5;
 	ghosts.orange.state = chase;
 
-	initscr();
+	//initscr();
 	WINDOW *game = initscr();
 	cbreak();
 	noecho();
-	keypad(stdscr, TRUE);
-	nodelay(stdscr, TRUE);
+	keypad(game, TRUE);
+	nodelay(game, TRUE);
 	curs_set(0);
 
 	start_color();
