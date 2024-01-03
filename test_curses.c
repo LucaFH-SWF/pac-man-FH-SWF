@@ -144,13 +144,13 @@ int main()
 		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
-			if(!oob(&pacman, input, size))
-			{
+//			if(!oob(&pacman, input, size))
+//			{
 				if(!kollision_richtung(&pacman, input, points))
 				{
 					kollision_move(&pacman, points);
 				}
-			}
+//			}
 		
 		//bewege Geister
 
