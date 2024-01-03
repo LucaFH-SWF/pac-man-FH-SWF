@@ -172,6 +172,7 @@ int main()
 		
 		//====PRINT====
 			erase();
+			werase(game);
 
 			print_board(points, size, game);
 
@@ -180,6 +181,7 @@ int main()
 			print_ghosts(ghosts, game);
 
 			wrefresh(game);
+			refresh();
 		}
 	}
 
