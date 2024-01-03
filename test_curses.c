@@ -53,8 +53,8 @@ typedef struct{
 }pacman_t;
 
 void print_board(char **points, xy size);
-char **create_points(xy size);
-void init_points(char **points, xy size);
+char **create_points(xy *size);
+char **init_points(xy *size);
 void pacman_start(pacman_t *pacman);
 void print_pacman(pacman_t pacman);
 char richtungtochar(direction_t richtung);
@@ -67,14 +67,15 @@ xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste positio
 int main()
 {
 	xy size;
-	size.x = 40;
-	size.y = 20;
-	
+	/*
 	char **points = create_points(size);
 	if(!points)
 		return -1;
-	
-	init_points(points, size);
+	*/
+	char **points = NULL;
+	points = init_points(&size);
+	if(!points)
+		return -1;
 
 	pacman_t pacman;
 	pacman_start(&pacman);
@@ -189,18 +190,18 @@ int main()
 	return 0;
 }
 
-char **create_points(xy size)
+char **create_points(xy *size)
 {
 	char **points;
 	
-	points = (char **) malloc(size.x * sizeof(points)); //sizey viele pointer auf pointer
+	points = (char **) malloc(size->x * sizeof(points)); //sizey viele pointer auf pointer
 
 	if(!points)
 		return NULL;
 	
-	for(int i = 0; i < size.x; ++i) //sizex viele char reservieren für jeden pointer
+	for(int i = 0; i < size->x; ++i) //sizex viele char reservieren für jeden pointer
 	{
-		points[i] = (char *) malloc(size.y * sizeof(char));
+		points[i] = (char *) malloc(size->y * sizeof(char));
 		if(!points[i])
 			return NULL;
 	}
@@ -208,26 +209,38 @@ char **create_points(xy size)
 	return points;
 }
 
-void init_points(char **points, xy size)
+char ** init_points(xy *size)
 {
 	FILE *fp;
 	fp = fopen("map.txt", "r");
 	if(!fp)
-		return;
-	int x;
-	int y;
-	fscanf(fp, "%d", &x);
-	fscanf(fp, "%d", &y);
-	fgetc(fp);
-	for(int i = 0; i < y; ++i)
 	{
-		for(int j = 0; j < x; ++j)
+		printf("FEHLER konnte map Datei nicht öffnen!");
+		return NULL;
+	}
+		
+	fscanf(fp, "%d", &size->x);
+	fscanf(fp, "%d", &size->y);
+	fgetc(fp);
+	char **points = NULL;
+	points = create_points(size);
+	if(!points)
+	{
+		printf("FEHLER konnte Speicher für Spielfeld nicht allokieren!");
+		return NULL;
+	}
+
+
+	for(int i = 0; i < size->y; ++i)
+	{
+		for(int j = 0; j < size->x; ++j)
 		{
 			points[j][i] = fgetc(fp);
 		}
 		fgetc(fp);
 	}
 	fclose(fp);
+	return points;
 }
 
 void print_board(char **points, xy size)
