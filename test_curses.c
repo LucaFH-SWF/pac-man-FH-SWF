@@ -52,13 +52,13 @@ typedef struct{
 	int speed;
 }pacman_t;
 
-void print_board(char **points, xy size);
+void print_board(char **points, xy size, WINDOW*);
 char **create_points(xy *size);
 char **init_points(xy *size, char *filename);
 void pacman_start(pacman_t *pacman);
-void print_pacman(pacman_t pacman);
+void print_pacman(pacman_t pacman, WINDOW*);
 char richtungtochar(direction_t richtung);
-void print_ghosts(ghosts_t ghosts);
+void print_ghosts(ghosts_t ghosts, WINDOW*);
 void move_pacman(pacman_t *pacman);
 int kollision_richtung(pacman_t pacman, direction_t richtung, char **points);
 int kollision_move(pacman_t pacman, char **points);
@@ -90,6 +90,7 @@ int main()
 	ghosts.orange.state = chase;
 
 	initscr();
+	WINDOW *game = initscr();
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
@@ -171,11 +172,11 @@ int main()
 		//====PRINT====
 			erase();
 
-			print_board(points, size);
+			print_board(points, size, game);
 
-			print_pacman(pacman);
+			print_pacman(pacman, game);
 
-			print_ghosts(ghosts);
+			print_ghosts(ghosts, game);
 
 			refresh();
 		}
@@ -204,7 +205,7 @@ char **create_points(xy *size)
 	return points;
 }
 
-char ** init_points(xy *size, char* filename)
+char **init_points(xy *size, char* filename)
 {
 	FILE *fp;
 	fp = fopen(filename, "r");
@@ -238,7 +239,7 @@ char ** init_points(xy *size, char* filename)
 	return points;
 }
 
-void print_board(char **points, xy size)
+void print_board(char **points, xy size, WINDOW* win)
 {
 	for(int i = 0; i < size.y; ++i)
 	{
@@ -247,23 +248,23 @@ void print_board(char **points, xy size)
 			if(points[j][i] == 'W')
 			{
 				attron(COLOR_PAIR(1));
-					mvprintw(5+i, 5+j, "%c", points[j][i]);
+					mvwprintw(win, 5+i, 5+j, "%c", points[j][i]);
 				attroff(COLOR_PAIR(1));
 			}
 			else
 			{
 				attron(COLOR_PAIR(7));
-					mvprintw(5+i, 5+j, "%c", points[j][i]);
+					mvwprintw(win, 5+i, 5+j, "%c", points[j][i]);
 				attroff(COLOR_PAIR(7));
 			}
 		}
 	}
 }
 
-void print_pacman(pacman_t pacman)
+void print_pacman(pacman_t pacman, WINDOW* win)
 {
 	attron(COLOR_PAIR(2));
-	mvprintw(pacman.y + 5, pacman.x + 5, "%c", richtungtochar(pacman.direction));
+	mvwprintw(win, pacman.y + 5, pacman.x + 5, "%c", richtungtochar(pacman.direction));
 	attroff(COLOR_PAIR(2));
 }
 
@@ -289,23 +290,23 @@ char richtungtochar(direction_t richtung)
 	}
 }
 
-void print_ghosts(ghosts_t ghosts)
+void print_ghosts(ghosts_t ghosts, WINDOW* win)
 {
 	//red
 	attron(COLOR_PAIR(3));
-	mvprintw(ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
+	mvwprintw(win, ghosts.red.y + 5, ghosts.red.x + 5, "%c", 'R');
 	attroff(COLOR_PAIR(3));
 	//pink
 	attron(COLOR_PAIR(4));
-	mvprintw(ghosts.pink.y + 5, ghosts.pink.x + 5, "%c", 'P');
+	mvwprintw(win, ghosts.pink.y + 5, ghosts.pink.x + 5, "%c", 'P');
 	attroff(COLOR_PAIR(4));
 	//cyan
 	attron(COLOR_PAIR(5));
-	mvprintw(ghosts.cyan.y + 5, ghosts.cyan.x + 5, "%c", 'C');
+	mvwprintw(win, ghosts.cyan.y + 5, ghosts.cyan.x + 5, "%c", 'C');
 	attroff(COLOR_PAIR(5));
 	//orange
 	attron(COLOR_PAIR(6));
-	mvprintw(ghosts.orange.y + 5, ghosts.orange.x + 5, "%c", 'O');
+	mvwprintw(win, ghosts.orange.y + 5, ghosts.orange.x + 5, "%c", 'O');
 	attroff(COLOR_PAIR(6));		
 }
 
