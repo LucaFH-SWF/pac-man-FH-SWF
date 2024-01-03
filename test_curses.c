@@ -365,22 +365,22 @@ int oob(pacman_t *pacman, direction_t richtung, xy size)
 {
 	int x = next_move(*pacman, richtung).x;
 	int y = next_move(*pacman, richtung).y;
-	if(x>size.x-1)
+	if(x>=size.x)
 	{
 		pacman->x = 0;
 		return 1;
 	}
-	if(y>size.y-1)
+	if(y>=size.y)
 	{
 		pacman->y = 0;
 		return 1;
 	}
-	if(x<0)
+	if(x<=0)
 	{
 		pacman->x = size.x;
 		return 1;
 	}
-	if(y<0)
+	if(y<=0)
 	{
 		pacman->y = size.y;
 		return 1;
