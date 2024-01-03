@@ -277,7 +277,8 @@ void print_points(char **points, xy size)
 		{
 			if(points[j][i] == 'W')
 				continue;
-			mvprintw(5+i, 5+j, "%c", points[j][i]);
+			else
+				mvprintw(5+i, 5+j, "%c", points[j][i]);
 		}
 	}
 }
