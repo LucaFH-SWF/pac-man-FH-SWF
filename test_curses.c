@@ -68,7 +68,7 @@ int main()
 {
 	xy size;
 	size.x = 40;
-	size.y = 30;
+	size.y = 20;
 	
 	char **points = create_points(size);
 	if(!points)
