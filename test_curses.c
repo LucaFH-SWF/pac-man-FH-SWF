@@ -52,8 +52,7 @@ typedef struct{
 	int speed;
 }pacman_t;
 
-void print_background(xy size);
-void print_points(char **points, xy size);
+void print_board(char **points, xy size);
 char **create_points(xy size);
 void init_points(char **points, xy size);
 void pacman_start(pacman_t *pacman);
@@ -176,9 +175,7 @@ int main()
 		//====PRINT====
 		erase();
 
-		print_background(size);
-		
-		print_points(points, size);
+		print_board(points, size);
 
 		print_pacman(pacman);
 
@@ -236,11 +233,6 @@ void init_points(char **points, xy size)
 		for(int j = 0; j < x; ++j)
 		{
 			points[j][i] = fgetc(fp);
-/*			if(r == 'W')
-				points[j][i]='W';
-			else
-				points[j][i] = r;
-*/
 		}
 		fgetc(fp);
 	}
@@ -261,26 +253,7 @@ void init_points(char **points, xy size)
 
 }
 
-void print_background(xy size)
-{
-	attron(COLOR_PAIR(1));
-	for(int i = 0; i < size.y; ++i)
-		{
-			for(int j = 0; j < size.x; ++j)
-			{
-				mvprintw(5+i, 5+j, "%c", 'W');
-			}
-		}
-/*
-	for(int i = 0; i < size.x; ++i)
-	{
-		mvvline(5, 5+i, ' ', size.y);
-	}
-*/
-	attroff(COLOR_PAIR(1));
-}
-
-void print_points(char **points, xy size)
+void print_board(char **points, xy size)
 {
 	for(int i = 0; i < size.y; ++i)
 	{
