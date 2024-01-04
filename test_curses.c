@@ -368,23 +368,25 @@ int oob(pacman_t *pacman, xy size)
 {
 	int x = next_move(*pacman, pacman->direction).x;
 	int y = next_move(*pacman, pacman->direction).y;
+
+	mvwprintw(stdscr, 8 , 5, "nextx: %2d nexty: %2d", x, y);
 	
-	if(x==size.x-1)
+	if(x==size.x)
 	{
 		pacman->x = 0;
 		return 0;
 	}
-	if(y==size.y-1)
+	if(y==size.y)
 	{
 		pacman->y = 0;
 		return 0;
 	}
-	if(x==0)
+	if(x==-1)
 	{
 		pacman->x = size.x-1;
 		return 0;
 	}
-	if(y==0)
+	if(y==-1)
 	{
 		pacman->y = size.y-1;
 		return 1;
@@ -413,6 +415,6 @@ xy next_move(pacman_t pacman, direction_t direction)
 		break;
 	default:
 		break;
-	}	
+	}
 	return pos;
 }
