@@ -62,7 +62,7 @@ void print_ghosts(ghosts_t ghosts, WINDOW*);
 void move_pacman(pacman_t *pacman);
 int kollision_richtung(pacman_t *pacman, direction_t richtung, char **points);
 int kollision_move(pacman_t *pacman, char **points);
-int oob(pacman_t *pacman, direction_t richtung, xy size); //oob = out of bounds
+int oob(pacman_t *pacman, direction_t richtung, xy size, char** points); //oob = out of bounds
 xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste position von pacman bei angegebener Richtung zurück
 
 int main()
@@ -144,7 +144,7 @@ int main()
 		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
-			if(!oob(&pacman, input, size))
+			if(!oob(&pacman, input, size, points))
 			{
 				if(!kollision_richtung(&pacman, input, points))
 				{
@@ -361,10 +361,15 @@ int kollision_move(pacman_t *pacman, char **points)
 		move_pacman(pacman);
 }
 
-int oob(pacman_t *pacman, direction_t richtung, xy size)
+int oob(pacman_t *pacman, direction_t richtung, xy size, char** points)
 {
 	int x = next_move(*pacman, richtung).x;
 	int y = next_move(*pacman, richtung).y;
+	if(points[x][y] == 'W')
+	{
+		x = next_move(*pacman, pacman->direction).x;
+		y = next_move(*pacman, pacman->direction).y;
+	}
 	if(x>=size.x)
 	{
 		pacman->x = 0;
