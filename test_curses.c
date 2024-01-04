@@ -144,10 +144,10 @@ int main()
 		if(move >= pacman.speed) //alle 150ms
 		{
 			move = 0;
-			if(!kollision_richtung(&pacman, input, points))
-			{
-					kollision_move(&pacman, points, size);
-			}
+			
+			kollision_richtung(&pacman, input, points);
+			kollision_move(&pacman, points, size);
+			
 
 		mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);
 		mvwprintw(stdscr, 6, 5, "sizex: %2d sizey: %2d", size.x, size.y);
@@ -347,7 +347,7 @@ int kollision_richtung(pacman_t *pacman, direction_t richtung, char **points)
 	else
 	{
 		pacman->direction = richtung;
-		move_pacman(pacman);
+//		move_pacman(pacman);
 	}
 }
 
