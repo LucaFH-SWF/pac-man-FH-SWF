@@ -150,6 +150,7 @@ int main()
 			}
 
 		mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);
+		mvwprintw(stdscr, 6, 5, "sizex: %2d sizey: %2d", size.x, size.y);
 		
 		//bewege Geister
 
