@@ -148,6 +148,8 @@ int main()
 			{
 					kollision_move(&pacman, points, size);
 			}
+
+			mvwprintw(game, 0, 0, "x: %d y: %d", pacman.x, pacman.y);
 		
 		//bewege Geister
 
