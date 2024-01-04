@@ -369,22 +369,22 @@ int oob(pacman_t *pacman, xy size)
 	int x = next_move(*pacman, pacman->direction).x;
 	int y = next_move(*pacman, pacman->direction).y;
 	
-	if(x>size.x-1)
+	if(x==size.x-1)
 	{
 		pacman->x = 0;
 		return 0;
 	}
-	if(y>size.y-1)
+	if(y==size.y-1)
 	{
 		pacman->y = 0;
 		return 0;
 	}
-	if(x<0)
+	if(x==0)
 	{
 		pacman->x = size.x-1;
 		return 0;
 	}
-	if(y<0)
+	if(y==0)
 	{
 		pacman->y = size.y-1;
 		return 1;
