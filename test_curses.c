@@ -376,12 +376,12 @@ int oob(pacman_t *pacman, xy size)
 		pacman->y = 0;
 		return 1;
 	}
-	if(x<=0)
+	if(x<=1)
 	{
 		pacman->x = size.x-1;
 		return 1;
 	}
-	if(y<=0)
+	if(y<=1)
 	{
 		pacman->y = size.y-1;
 		return 1;
