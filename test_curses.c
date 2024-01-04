@@ -350,7 +350,7 @@ int kollision_richtung(pacman_t *pacman, direction_t richtung, char **points)
 
 int kollision_move(pacman_t *pacman, char **points, xy size)
 {
-	if(!oob(pacman, size))
+	if(oob(pacman, size))
 	{
 		int x = next_move(*pacman, pacman->direction).x;
 		int y = next_move(*pacman, pacman->direction).y;
@@ -369,24 +369,24 @@ int oob(pacman_t *pacman, xy size)
 	if(x>=size.x)
 	{
 		pacman->x = 0;
-		return 1;
+		return 0;
 	}
 	if(y>=size.y)
 	{
 		pacman->y = 0;
-		return 1;
+		return 0;
 	}
-	if(x<=1)
+	if(x<=0)
 	{
 		pacman->x = size.x-1;
-		return 1;
+		return 0;
 	}
-	if(y<=1)
+	if(y<=0)
 	{
 		pacman->y = size.y-1;
 		return 1;
 	}
-	return 0;
+	return 1;
 }
 
 xy next_move(pacman_t pacman, direction_t direction)
