@@ -371,22 +371,22 @@ int oob(pacman_t *pacman, xy size)
 
 	mvwprintw(stdscr, 8 , 5, "nextx: %2d nexty: %2d", x, y);
 	
-	if(x==size.x)
+	if(x>=size.x)
 	{
 		pacman->x = 0;
 		return 0;
 	}
-	if(y==size.y)
+	if(y>=size.y)
 	{
 		pacman->y = 0;
 		return 0;
 	}
-	if(x==-1)
+	if(x<0)
 	{
 		pacman->x = size.x-1;
 		return 0;
 	}
-	if(y==-1)
+	if(y<0)
 	{
 		pacman->y = size.y-1;
 		return 1;
