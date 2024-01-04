@@ -149,7 +149,7 @@ int main()
 					kollision_move(&pacman, points, size);
 			}
 
-			mvwprintw(stdscr, 5, 5, "x: %d y: %d", pacman.x, pacman.y);
+		mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);
 		
 		//bewege Geister
 
@@ -368,22 +368,22 @@ int oob(pacman_t *pacman, xy size)
 	int x = next_move(*pacman, pacman->direction).x;
 	int y = next_move(*pacman, pacman->direction).y;
 	
-	if(x>=size.x)
+	if(x>size.x)
 	{
 		pacman->x = 0;
 		return 0;
 	}
-	if(y>=size.y)
+	if(y>size.y)
 	{
 		pacman->y = 0;
 		return 0;
 	}
-	if(x<=0)
+	if(x<0)
 	{
 		pacman->x = size.x-1;
 		return 0;
 	}
-	if(y<=0)
+	if(y<0)
 	{
 		pacman->y = size.y-1;
 		return 1;
