@@ -30,6 +30,8 @@ struct xy{
 struct ghost{
 	int x;
 	int y;
+	int start_x;
+	int start_y;
 	state_t state;
 	direction_t direction;
 	int speed;
@@ -48,6 +50,8 @@ typedef struct{
 typedef struct{
 	int x;
 	int y;
+	int start_x;
+	int start_y;
 	direction_t direction;
 	int speed;
 }pacman_t;
@@ -55,15 +59,15 @@ typedef struct{
 void print_board(char **points, xy size, WINDOW*);
 char **create_points(xy *size);
 char **init_points(xy *size, char *filename, pacman_t *pacman, ghosts_t *ghosts);
-void pacman_start(pacman_t *pacman);
+void reset_pacman(pacman_t *pacman, direction_t *input);
+void reset_ghosts(ghosts_t *ghosts);
 void print_pacman(pacman_t pacman, WINDOW*);
-char richtungtochar(direction_t richtung);
 void print_ghosts(ghosts_t ghosts, WINDOW*);
-void move_pacman(pacman_t *pacman);
-int kollision_richtung(pacman_t *pacman, direction_t richtung, char **points);
-int kollision_move(pacman_t *pacman, char **points, xy size);
-int oob(pacman_t *pacman, xy size); //oob = out of bounds
+char richtungtochar(direction_t richtung);//pfeil pacman
 xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste position von pacman bei angegebener Richtung zurück
+void move_pacman(pacman_t *pacman);
+void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts);//zusammenfassen aller vorherigen kollisions funktionen
+int pacman_geist_kollision(pacman_t *pacman, ghosts_t *ghosts);
 
 int main()
 {
@@ -111,6 +115,9 @@ int main()
 
 	flushinp();
 
+	reset_pacman(&pacman, &input);
+	reset_ghosts(&ghosts);
+
 	while(run) //action loop
 	{
 		// ===== Benutzereingaben =====
@@ -145,12 +152,9 @@ int main()
 		{
 			move = 0;
 			
-			kollision_richtung(&pacman, input, points);
-			kollision_move(&pacman, points, size);
-			
+			pacman_kollision(&pacman, &input, points, size, &ghosts);
 
-		mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);
-		mvwprintw(stdscr, 6, 5, "sizex: %2d sizey: %2d", size.x, size.y);
+		mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);//============TEST-AUSGABE===========
 		
 		//bewege Geister
 
@@ -225,6 +229,8 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 				case '$':
 					pacman->x = j;
 					pacman->y = i;
+					pacman->start_x = j;
+					pacman->start_y = i;
 					pacman->speed = 15;
 					pacman->direction = neutral;	
 					points[j][i] = ' ';
@@ -232,24 +238,32 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 				case 'R':
 					ghosts->red.x = j;
 					ghosts->red.y = i;
+					ghosts->red.start_x = j;
+					ghosts->red.start_y = i;
 					ghosts->red.state = chase;				
 					points[j][i] = ' ';
 					break;
 				case 'P':
 					ghosts->pink.x = j;
 					ghosts->pink.y = i;
+					ghosts->pink.start_x = j;
+					ghosts->pink.start_y = i;
 					ghosts->pink.state = idle;
 					points[j][i] = ' ';
 					break;
 				case 'C':
 					ghosts->cyan.x = j;
 					ghosts->cyan.y = i;
+					ghosts->cyan.start_x = j;
+					ghosts->cyan.start_y = i;
 					ghosts->cyan.state = idle;
 					points[j][i] = ' ';
 					break;
 				case 'O':
 					ghosts->orange.x = j;
 					ghosts->orange.y = i;
+					ghosts->orange.start_x = j;
+					ghosts->orange.start_y = i;
 					ghosts->orange.state = idle;
 					points[j][i] = ' ';
 					break;
@@ -332,66 +346,41 @@ void print_ghosts(ghosts_t ghosts, WINDOW* win)
 	wattroff(win, COLOR_PAIR(6));		
 }
 
+void reset_pacman(pacman_t *pacman, direction_t *input)
+{
+	pacman->x = pacman->start_x;
+	pacman->y = pacman->start_y;
+	pacman->direction = neutral;
+	*input = neutral;
+}
+
+void reset_ghosts(ghosts_t *ghosts)
+{
+	ghosts->red.x = ghosts->red.start_x;
+	ghosts->red.y = ghosts->red.start_y;
+	ghosts->red.state = chase;
+	ghosts->red.speed = 12;
+
+	ghosts->pink.x = ghosts->pink.start_x;
+	ghosts->pink.y = ghosts->pink.start_y;
+	ghosts->pink.state = idle;
+	ghosts->pink.speed = 12;
+
+	ghosts->orange.x = ghosts->orange.start_x;
+	ghosts->orange.y = ghosts->orange.start_y;
+	ghosts->orange.state = idle;
+	ghosts->orange.speed = 12;
+
+	ghosts->cyan.x = ghosts->cyan.start_x;
+	ghosts->cyan.y = ghosts->cyan.start_y;
+	ghosts->cyan.state = idle;
+	ghosts->cyan.speed = 12;
+}
+
 void move_pacman(pacman_t *pacman)
 {
 	pacman->x = next_move(*pacman, pacman->direction).x;
 	pacman->y = next_move(*pacman, pacman->direction).y;
-}
-
-int kollision_richtung(pacman_t *pacman, direction_t richtung, char **points)
-{
-	int x = next_move(*pacman, richtung).x;
-	int y = next_move(*pacman, richtung).y;
-	if(points[x][y] == 'W')
-		return 0;
-	else
-	{
-		pacman->direction = richtung;
-//		move_pacman(pacman);
-	}
-}
-
-int kollision_move(pacman_t *pacman, char **points, xy size)
-{
-	if(oob(pacman, size))
-	{
-		int x = next_move(*pacman, pacman->direction).x;
-		int y = next_move(*pacman, pacman->direction).y;
-		if(points[x][y] == 'W')
-			return 0;
-		else
-			move_pacman(pacman);
-	}
-}
-
-int oob(pacman_t *pacman, xy size)
-{
-	int x = next_move(*pacman, pacman->direction).x;
-	int y = next_move(*pacman, pacman->direction).y;
-
-	mvwprintw(stdscr, 8 , 5, "nextx: %2d nexty: %2d", x, y);
-	
-	if(x>=size.x)
-	{
-		pacman->x = 0;
-		return 0;
-	}
-	if(y>=size.y)
-	{
-		pacman->y = 0;
-		return 0;
-	}
-	if(x<0)
-	{
-		pacman->x = size.x-1;
-		return 0;
-	}
-	if(y<0)
-	{
-		pacman->y = size.y-1;
-		return 1;
-	}
-	return 1;
 }
 
 xy next_move(pacman_t pacman, direction_t direction)
@@ -417,4 +406,59 @@ xy next_move(pacman_t pacman, direction_t direction)
 		break;
 	}
 	return pos;
+}
+
+
+void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts)
+{
+	int x = next_move(*pacman, pacman->direction).x;
+	int y = next_move(*pacman, pacman->direction).y;
+
+	//oob handeling
+	if(x>size.x-1)
+	{
+		pacman->x = 0;
+		return;
+	}
+	if(y>size.y-1)
+	{
+		pacman->y = 0;
+		return;
+	}
+	if(x<0)
+	{
+		pacman->x = size.x-1;
+		return;
+	}
+	if(y<0)
+	{
+		pacman->y = size.y;
+		return;
+	}
+
+	//input übernehmen?
+	if(points[ next_move(*pacman, *input).x ][ next_move(*pacman, *input).y ] != 'W')
+	{
+		pacman->direction = *input;
+		x = next_move(*pacman, *input).x;
+		y = next_move(*pacman, *input).y;
+	}	
+
+	//einfachste abbruch bedingung
+	if(points[x][y] == 'W')
+		return;
+
+	//geister kollision
+	if(pacman_geist_kollision(pacman, ghosts))
+		reset_pacman(pacman, input);
+
+	move_pacman(pacman);
+}
+
+int pacman_geist_kollision(pacman_t *pacman, ghosts_t *ghosts)
+{
+	if( (ghosts->red.x == pacman->x) && (ghosts->red.y == pacman->y) )
+		return 1;
+
+	return 0;
 }
