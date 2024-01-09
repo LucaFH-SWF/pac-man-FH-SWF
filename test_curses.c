@@ -48,6 +48,9 @@ typedef struct{
 } ghosts_t;
 
 typedef struct{
+	int lives;
+	int score;
+	int points_collected;
 	int x;
 	int y;
 	int start_x;
@@ -56,18 +59,19 @@ typedef struct{
 	int speed;
 }pacman_t;
 
-void print_board(char **points, xy size, WINDOW*);
-char **create_points(xy *size);
-char **init_points(xy *size, char *filename, pacman_t *pacman, ghosts_t *ghosts);
-void reset_pacman(pacman_t *pacman, direction_t *input);
-void reset_ghosts(ghosts_t *ghosts);
-void print_pacman(pacman_t pacman, WINDOW*);
-void print_ghosts(ghosts_t ghosts, WINDOW*);
-char richtungtochar(direction_t richtung);//pfeil pacman
-xy next_move(pacman_t pacman, direction_t direction);//gibt die nächste position von pacman bei angegebener Richtung zurück
-void move_pacman(pacman_t *pacman);
-void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts);//zusammenfassen aller vorherigen kollisions funktionen
-int pacman_geist_kollision(pacman_t *pacman, ghosts_t *ghosts);
+char **create_points(xy *size);//alokieren des Speichers für das Spielfeld
+char **init_points(xy *size, char *filename, pacman_t *pacman, ghosts_t *ghosts);//initialisieren von: Spielfeld, Pacman, Geister
+void reset_pacman(pacman_t *pacman, direction_t *input);//Pacman auf Startposition setzen und 1 Leben abziehen
+void reset_ghosts(ghosts_t *ghosts);//Geister auf Startposition setzen
+void print_pacman(pacman_t pacman, WINDOW*);//Ausgabe Pacman
+void print_ghosts(ghosts_t ghosts, WINDOW*);//Ausgabe Geister
+void print_board(char **points, xy size, WINDOW*);//Ausgabe des Spielfeldes
+char richtungtochar(direction_t richtung);//Pfeil Pacman
+xy next_move(int x, int y, direction_t direction);//gibt die nächste position bei angegebener Richtung zurück
+void move_pacman(pacman_t *pacman);//Verschiebt die x un y Werte von Pacman in seine Bewegungs Richtung
+void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts);//Kollisions abfrage Pacman
+int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts);//kollisons abfrage pacman und alle Geister
+int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost);//kollisons abfrage pacman und ein Geist
 
 int main()
 {
@@ -109,14 +113,15 @@ int main()
 
 	int pressed_key = 0;
 
-	int move = 0;
+	int move_pacman = 0;
+	
+	int move_geister = 0; //eigentlich aufteilenn in die 4 Geister
 
 	direction_t input = neutral;
 
 	flushinp();
 
-	reset_pacman(&pacman, &input);
-	reset_ghosts(&ghosts);
+	pacman.lives = 3;//in "init_pacman" oder vergleichbares verschieben
 
 	while(run) //action loop
 	{
@@ -143,26 +148,28 @@ int main()
                 run = 0;
 		}
 
-		flushinp();
+		flushinp();//bereits vorgemerkte eingaben löschen
 		SLEEP
 		
-		move++;
-		//====Kolision + Geister====
-		if(move >= pacman.speed) //alle 150ms
+		move_pacman++;
+
+		if(move_pacman >= pacman.speed) //alle 150ms
 		{
-			move = 0;
+			move_pacman = 0;
 			
 			pacman_kollision(&pacman, &input, points, size, &ghosts);
 
-		mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);//============TEST-AUSGABE===========
-		
+			mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);//============TEST-AUSGABE===========
+			mvwprintw(stdscr, 6, 5, "lives: %1d", pacman.lives);
+			mvwprintw(stdscr, 7, 5, "score: %6d", pacman.score);
+			mvwprintw(stdscr, 8, 5, "points_collected: %6d", pacman.points_collected);//============TEST-AUSGABE===========
 		//bewege Geister
 
 		//kollision geist pacman?
 		//kollision -> game over
 		//keine kollision -> geist bewegen
 		
-		//====PRINT====
+		//====PRINT / AUSGABE====
 			werase(game);
 
 			print_board(points, size, game);
@@ -171,6 +178,10 @@ int main()
 
 			print_ghosts(ghosts, game);
 			wrefresh(game);
+		}
+		if(pacman.lives < 0)
+		{
+			run = 0;
 		}
 	}
 
@@ -217,6 +228,10 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 		printf("FEHLER konnte Speicher für Spielfeld nicht allokieren!");
 		return NULL;
 	}
+
+	pacman->lives = 3;
+	pacman->score = 0;
+	pacman->points_collected = 0;
 
 
 	for(int i = 0; i < size->y; ++i)
@@ -266,6 +281,12 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 					ghosts->orange.start_y = i;
 					ghosts->orange.state = idle;
 					points[j][i] = ' ';
+					break;
+				case '.':
+					pacman->points_collected += 1;
+					break;
+				case 'o':
+					pacman->points_collected += 1;
 					break;
 			} 
 		}
@@ -351,6 +372,7 @@ void reset_pacman(pacman_t *pacman, direction_t *input)
 	pacman->x = pacman->start_x;
 	pacman->y = pacman->start_y;
 	pacman->direction = neutral;
+	pacman->lives -= 1;
 	*input = neutral;
 }
 
@@ -379,15 +401,15 @@ void reset_ghosts(ghosts_t *ghosts)
 
 void move_pacman(pacman_t *pacman)
 {
-	pacman->x = next_move(*pacman, pacman->direction).x;
-	pacman->y = next_move(*pacman, pacman->direction).y;
+	pacman->x = next_move(pacman->x, pacman->y, pacman->direction).x;
+	pacman->y = next_move(pacman->x, pacman->y, pacman->direction).y;
 }
 
-xy next_move(pacman_t pacman, direction_t direction)
+xy next_move(int x, int y, direction_t direction)
 {
 	xy pos;
-	pos.x = pacman.x;
-	pos.y = pacman.y;
+	pos.x = x;
+	pos.y = y;
 	switch(direction)
 	{
 	case up:
@@ -411,8 +433,8 @@ xy next_move(pacman_t pacman, direction_t direction)
 
 void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts)
 {
-	int x = next_move(*pacman, pacman->direction).x;
-	int y = next_move(*pacman, pacman->direction).y;
+	int x = next_move(*pacman, *input).x;
+	int y = next_move(*pacman, *input).y;
 
 	//oob handeling
 	if(x>size.x-1)
@@ -436,29 +458,87 @@ void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy si
 		return;
 	}
 
+	
+
 	//input übernehmen?
-	if(points[ next_move(*pacman, *input).x ][ next_move(*pacman, *input).y ] != 'W')
+	if(points[ next_move(pacman->x, pacman->y, *input).x ][ next_move(pacman->x, pacman->y, *input).y ] != 'W')
 	{
 		pacman->direction = *input;
-		x = next_move(*pacman, *input).x;
-		y = next_move(*pacman, *input).y;
-	}	
+	}
+	else
+	{
+		//oob 2 mit nicht geänderter richtung
+		x = next_move(pacman->x, pacman->y, pacman->direction).x;
+		y = next_move(pacman->x, pacman->y, pacman->direction).y;
+		if(x>size.x-1)
+		{
+			pacman->x = 0;
+			return;
+		}
+		if(y>size.y-1)
+		{
+			pacman->y = 0;
+			return;
+		}
+		if(x<0)
+		{
+			pacman->x = size.x-1;
+			return;
+		}
+		if(y<0)
+		{
+			pacman->y = size.y;
+			return;
+		}
 
-	//einfachste abbruch bedingung
-	if(points[x][y] == 'W')
-		return;
+		if(points[x][y] == 'W')
+			return;
+	}
+	
+	//punkte essen
+	if(points[x][y] == '.')
+	{
+		pacman->score += 100;
+		pacman->points_collected -= 1;
+		points[x][y] = ' ';
+	}
+	//super punkte essen
+	if(points[x][y] == 'o')
+	{
+		pacman->score += 250;
+		pacman->points_collected -= 1;
+		points[x][y] = ' ';
+		//frighten ghosts 
+		//geschwindigkeit pacman anheben? 
+	}
+	//erst bewegen, dann kollision mit Geister bestimmen
+	move_pacman(pacman);
 
 	//geister kollision
-	if(pacman_geist_kollision(pacman, ghosts))
+	if(pacman_geister_kollision(pacman, ghosts))
+	{
 		reset_pacman(pacman, input);
-
-	move_pacman(pacman);
+		reset_ghosts(ghosts);
+	}	
 }
 
-int pacman_geist_kollision(pacman_t *pacman, ghosts_t *ghosts)
+int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts)
 {
-	if( (ghosts->red.x == pacman->x) && (ghosts->red.y == pacman->y) )
+	if(pacman_geist_kollision(pacman, ghosts->red))
+		return 1;
+	if(pacman_geist_kollision(pacman, ghosts->pink))
+		return 1;
+	if(pacman_geist_kollision(pacman, ghosts->orange))
+		return 1;
+	if(pacman_geist_kollision(pacman, ghosts->cyan))
 		return 1;
 
+	return 0;
+}
+
+int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost)
+{
+	if( (ghost.x == pacman->x) && (ghost.y == pacman->y) )
+		return 1;
 	return 0;
 }
