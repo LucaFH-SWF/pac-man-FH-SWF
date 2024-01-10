@@ -68,10 +68,14 @@ void print_ghosts(ghosts_t ghosts, WINDOW*);//Ausgabe Geister
 void print_board(char **points, xy size, WINDOW*);//Ausgabe des Spielfeldes
 char richtungtochar(direction_t richtung);//Pfeil Pacman
 xy next_move(int x, int y, direction_t direction);//gibt die nächste position bei angegebener Richtung zurück
+xy next_move_left(int x, int y, direction_t direction);//gibt die nächste position links bei angegebener Richtung zurück
+xy next_move_right(int x, int y, direction_t direction);//gibt die nächste position rechts bei angegebener Richtung zurück
 void move_pacman(pacman_t *pacman);//Verschiebt die x un y Werte von Pacman in seine Bewegungs Richtung
 void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts);//Kollisions abfrage Pacman
+int oob(pacman_t *pacman, int x, int y, xy size);//pacman außerhalb des Spielfeldes ( oob = out of bounds )
 int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts);//kollisons abfrage pacman und alle Geister
 int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost);//kollisons abfrage pacman und ein Geist
+void move_ghost_red(ghost_t *red);
 
 int main()
 {
@@ -114,8 +118,7 @@ int main()
 	int pressed_key = 0;
 
 	int move_pacman = 0;
-	
-	int move_geister = 0; //eigentlich aufteilenn in die 4 Geister
+	int move_red = 0; //eigentlich aufteilenn in die 4 Geister
 
 	direction_t input = neutral;
 
@@ -163,22 +166,28 @@ int main()
 			mvwprintw(stdscr, 6, 5, "lives: %1d", pacman.lives);
 			mvwprintw(stdscr, 7, 5, "score: %6d", pacman.score);
 			mvwprintw(stdscr, 8, 5, "points_collected: %6d", pacman.points_collected);//============TEST-AUSGABE===========
-		//bewege Geister
-
-		//kollision geist pacman?
-		//kollision -> game over
-		//keine kollision -> geist bewegen
-		
-		//====PRINT / AUSGABE====
-			werase(game);
-
-			print_board(points, size, game);
-
-			print_pacman(pacman, game);
-
-			print_ghosts(ghosts, game);
-			wrefresh(game);
 		}
+		
+		move_red++;
+		if(move_red >= ghosts.red.speed)
+		{
+			move_red = 0;
+			//bewege Geister
+			move_ghost_red(&ghosts.red);
+			//kollision geist pacman?
+			//kollision -> game over
+			//keine kollision -> geist bewegen
+		}
+		//====PRINT / AUSGABE====
+		werase(game);
+
+		print_board(points, size, game);
+
+		print_pacman(pacman, game);
+
+		print_ghosts(ghosts, game);
+		wrefresh(game);
+	
 		if(pacman.lives < 0)
 		{
 			run = 0;
@@ -412,53 +421,77 @@ xy next_move(int x, int y, direction_t direction)
 	pos.y = y;
 	switch(direction)
 	{
-	case up:
-		pos.y -= 1;
-		break;
-	case down:
-		pos.y += 1;
-		break;
-	case left:
-		pos.x -= 1;
-		break;
-	case right:
-		pos.x +=1;
-		break;
-	default:
-		break;
-	}
+		case up:
+			pos.y -= 1;
+			break;
+		case down:
+			pos.y += 1;
+			break;
+		case left:
+			pos.x -= 1;
+			break;
+		case right:
+			pos.x +=1;
+			break;
+		default:
+			break;
+		}
 	return pos;
 }
 
+xy next_move_left(int x, int y, direction_t direction)
+{
+	switch(direction)
+	{
+		case up:
+			return next_move(x, y, left);
+			break;
+		case down:
+			return next_move(x, y, right);
+			break;
+		case left:
+			return next_move(x, y, right);
+			break;
+		case right:
+			return next_move(x, y, up);
+			break;
+		default:
+			return next_move(x,y,direction);
+			break;
+		
+	}
+}
+xy next_move_right(int x, int y, direction_t direction)
+{
+	switch(direction)
+	{
+		case up:
+			return next_move(x, y, right);
+			break;
+		case down:
+			return next_move(x, y, left);
+			break;
+		case left:
+			return next_move(x, y, up);
+			break;
+		case right:
+			return next_move(x, y, down);
+			break;
+		default:
+			return next_move(x,y,direction);
+			break;
+		
+	}
+}
 
 void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts)
 {
-	int x = next_move(*pacman, *input).x;
-	int y = next_move(*pacman, *input).y;
+	int x = next_move(pacman->x, pacman->y, *input).x;
+	int y = next_move(pacman->x, pacman->y, *input).y;
 
 	//oob handeling
-	if(x>size.x-1)
-	{
-		pacman->x = 0;
+	if(oob(pacman, x, y, size))
 		return;
-	}
-	if(y>size.y-1)
-	{
-		pacman->y = 0;
-		return;
-	}
-	if(x<0)
-	{
-		pacman->x = size.x-1;
-		return;
-	}
-	if(y<0)
-	{
-		pacman->y = size.y;
-		return;
-	}
-
-	
 
 	//input übernehmen?
 	if(points[ next_move(pacman->x, pacman->y, *input).x ][ next_move(pacman->x, pacman->y, *input).y ] != 'W')
@@ -467,42 +500,24 @@ void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy si
 	}
 	else
 	{
-		//oob 2 mit nicht geänderter richtung
 		x = next_move(pacman->x, pacman->y, pacman->direction).x;
 		y = next_move(pacman->x, pacman->y, pacman->direction).y;
-		if(x>size.x-1)
-		{
-			pacman->x = 0;
+		//oob 2 mit nicht geänderter richtung
+		if(oob(pacman, x, y, size))
 			return;
-		}
-		if(y>size.y-1)
-		{
-			pacman->y = 0;
-			return;
-		}
-		if(x<0)
-		{
-			pacman->x = size.x-1;
-			return;
-		}
-		if(y<0)
-		{
-			pacman->y = size.y;
-			return;
-		}
 
 		if(points[x][y] == 'W')
 			return;
 	}
 	
-	//punkte essen
+	//Punkte essen
 	if(points[x][y] == '.')
 	{
 		pacman->score += 100;
 		pacman->points_collected -= 1;
 		points[x][y] = ' ';
 	}
-	//super punkte essen
+	//enegizer Punkte essen
 	if(points[x][y] == 'o')
 	{
 		pacman->score += 250;
@@ -520,6 +535,31 @@ void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy si
 		reset_pacman(pacman, input);
 		reset_ghosts(ghosts);
 	}	
+}
+
+int oob(pacman_t *pacman, int x, int y, xy size)
+{
+	if(x>size.x-1)
+		{
+			pacman->x = 0;
+			return 1;
+		}
+		if(y>size.y-1)
+		{
+			pacman->y = 0;
+			return 1;
+		}
+		if(x<0)
+		{
+			pacman->x = size.x-1;
+			return 1;
+		}
+		if(y<0)
+		{
+			pacman->y = size.y;
+			return 1;
+		}
+		return 0;
 }
 
 int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts)
@@ -541,4 +581,20 @@ int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost)
 	if( (ghost.x == pacman->x) && (ghost.y == pacman->y) )
 		return 1;
 	return 0;
+}
+
+void move_ghost_red(ghost_t *red)
+{
+	switch(red->state)
+	{
+		case chase:
+			break;
+		case frightened:
+			break;
+		case scatter:
+			break;
+		case idle:
+			return;
+			break;
+	}
 }
