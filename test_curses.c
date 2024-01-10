@@ -76,6 +76,8 @@ void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy si
 int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts);//kollisons abfrage pacman und alle Geister
 int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost);//kollisons abfrage pacman und ein Geist
 void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size);
+direction_t get_next_move_ghost(int x, int y, direction_t direction,pacman_t *pacman, char **points, xy size);
+double get_next_next_move_ghost(int x, int y, direction_t direction,pacman_t *pacman, char **points, xy size);
 direction_t direction_left(direction_t direction);
 direction_t direction_right(direction_t direction);
 
@@ -85,6 +87,11 @@ int absolut(int number)
 		return number;
 	else
 		return ( number * (-1) );
+}
+
+double distance_pacman(int x, int y, pacman_t *pacman)
+{
+	return sqrt (  pow( absolut(pacman->x - x), 2 ) + pow( absolut(pacman->y - y), 2 )  );
 }
 
 int main()
@@ -641,9 +648,9 @@ int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost)
 
 void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 {
-	double distance_move = 0.0;
-	double distance_left = 0.0;
-	double distance_right = 0.0;
+	//double distance_move = 0.0;
+	//double distance_left = 0.0;
+	//double distance_right = 0.0;
 	xy move;
 	xy left;
 	xy right;
@@ -654,8 +661,11 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 			move = next_move(red->x, red->y, red->direction, size);
 			left = next_move_left(red->x, red->y, red->direction, size);
 			right = next_move_right(red->x, red->y, red->direction, size);
+
+		//	get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size);
 			
 			//==================================================
+			/*
 			if(points[move.x][move.y] != 'W')
 				distance_move = sqrt (  pow( absolut(pacman->x - move.x), 2 ) + pow( absolut(pacman->y - move.y), 2 )  );
 			else
@@ -670,8 +680,10 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 				distance_right = sqrt (  pow( absolut(pacman->x - right.x), 2 ) + pow( absolut(pacman->y - right.y), 2 )  );
 			else
 				distance_right = 1000;
+			//==================================================
+			*/
 
-			if( distance_move < distance_left && distance_move < distance_right )
+			if(get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size) == red->direction )
 			{
 				//gerade aus
 				red->x = move.x;
@@ -679,7 +691,7 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 				return;
 			}
 			
-			if( distance_left < distance_move && distance_left<distance_right )
+			if(get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size) == direction_left(red->direction))
 			{
 				//links
 				red->x = left.x;
@@ -688,7 +700,7 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 				return;
 			}
 
-			if( distance_right < distance_move && distance_right < distance_left )
+			if(get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size) == direction_right(red->direction))
 			{
 				//rechts
 				red->x = right.x;
@@ -706,4 +718,124 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 			return;
 			break;
 	}
+}
+
+direction_t get_next_move_ghost(int x, int y, direction_t direction, pacman_t *pacman, char **points, xy size)
+{
+	double distance_move = 0.0;
+	double distance_left = 0.0;
+	double distance_right = 0.0;
+	xy move = next_move(x, y, direction, size);
+	xy left = next_move_left(x,y, direction, size);
+	xy right = next_move_right(x, y, direction, size);
+	xy move_2;
+	xy left_2;
+	xy right_2;
+
+	if(points[move.x][move.y] != 'W')
+	{
+		distance_move = get_next_next_move_ghost(move.x, move.y, direction, pacman, points, size);
+	}
+	else
+		distance_move = 1000;
+
+	if(points[left.x][left.y] != 'W')
+	{
+		distance_left = get_next_next_move_ghost(left.x, left.y, direction_left(direction), pacman, points, size);
+	}
+	else
+		distance_left = 1000;
+
+	if(points[right.x][right.y] != 'W')
+	{
+		distance_right = get_next_next_move_ghost(right.x, right.y, direction_right(direction), pacman, points, size);
+	}
+	else
+		distance_right = 1000;
+
+	if( distance_move < distance_left && distance_move < distance_right )
+	{
+		//gerade aus
+		return direction;
+	}
+	
+	if( distance_left < distance_move && distance_left<distance_right )
+	{
+		//links
+		return direction_left(direction);
+	}
+
+	if( distance_right < distance_move && distance_right < distance_left )
+	{
+		//rechts
+		return direction_right(direction);
+	}
+
+
+	//konnte keine Richtung bestimmen
+	if( distance_move != 1000 )
+	{
+		//gerade aus
+		return direction;
+	}
+	
+	if( distance_left != 1000 )
+	{
+		//links
+		return direction_left(direction);
+	}
+
+	if( distance_right != 1000 )
+	{
+		//rechts
+		return direction_right(direction);
+	}
+
+
+}
+
+double get_next_next_move_ghost(int x, int y, direction_t direction, pacman_t *pacman, char **points, xy size)
+{
+	double distance_move = 0.0;
+	double distance_left = 0.0;
+	double distance_right = 0.0;
+	xy move = next_move(x, y, direction, size);
+	xy left = next_move_left(x,y, direction, size);
+	xy right = next_move_right(x, y, direction, size);
+	
+	//=====Distanz======================================
+	if(points[move.x][move.y] != 'W')
+		distance_move = distance_pacman(move.x, move.y, pacman);
+	else
+		distance_move = 1000;
+
+	if(points[left.x][left.y] != 'W')
+		distance_left =  distance_pacman(left.x, left.y, pacman);
+	else
+		distance_left = 1000;
+
+	if(points[right.x][right.y] != 'W')
+		distance_right =  distance_pacman(right.x, right.y, pacman);
+	else
+		distance_right = 1000;
+	//==================================================
+
+	//===kleinste Distanz zurück geben==================
+	if( distance_move < distance_left && distance_move < distance_right )
+	{
+		//gerade aus
+		return distance_move;
+	}
+	if( distance_left < distance_move && distance_left<distance_right )
+	{
+		//links
+		return distance_left;
+	}
+
+	if( distance_right < distance_move && distance_right < distance_left )
+	{
+		//rechts
+		return distance_right;
+	}
+	//==================================================
 }
