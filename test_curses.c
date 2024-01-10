@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 void nsleep(long miliseconds){
     struct timespec ts;
@@ -67,17 +68,14 @@ void print_pacman(pacman_t pacman, WINDOW*);//Ausgabe Pacman
 void print_ghosts(ghosts_t ghosts, WINDOW*);//Ausgabe Geister
 void print_board(char **points, xy size, WINDOW*);//Ausgabe des Spielfeldes
 char richtungtochar(direction_t richtung);//Pfeil Pacman
-xy next_move(int x, int y, direction_t direction);//gibt die nächste position bei angegebener Richtung zurück
-xy next_move_left(int x, int y, direction_t direction);//gibt die nächste position links bei angegebener Richtung zurück
-xy next_move_right(int x, int y, direction_t direction);//gibt die nächste position rechts bei angegebener Richtung zurück
-void move_pacman(pacman_t *pacman);//Verschiebt die x un y Werte von Pacman in seine Bewegungs Richtung
+xy next_move(int x, int y, direction_t direction, xy size);//gibt die nächste position bei angegebener Richtung zurück
+xy next_move_left(int x, int y, direction_t direction, xy size);//gibt die nächste position links bei angegebener Richtung zurück
+xy next_move_right(int x, int y, direction_t direction, xy size);//gibt die nächste position rechts bei angegebener Richtung zurück
+void move_pacman(pacman_t *pacman, xy size);//Verschiebt die x un y Werte von Pacman in seine Bewegungs Richtung
 void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts);//Kollisions abfrage Pacman
-int oob(pacman_t *pacman, int x, int y, xy size);//pacman außerhalb des Spielfeldes ( oob = out of bounds )
 int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts);//kollisons abfrage pacman und alle Geister
 int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost);//kollisons abfrage pacman und ein Geist
 void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size);
-int oob_ghost(ghost_t *ghost, int x, int y, xy size);//Geist außerhalb des Spielfeldes ( oob = out of bounds )
-int move_ghost_to_junktion(ghost_t *ghost, char **points);//geist zu einer Kreuzung bewegen
 direction_t direction_left(direction_t direction);
 direction_t direction_right(direction_t direction);
 
@@ -186,9 +184,12 @@ int main()
 			move_red = 0;
 			//bewege Geister
 			move_ghost_red(&ghosts.red, &pacman, points, size);
-			//kollision geist pacman?
-			//kollision -> game over
-			//keine kollision -> geist bewegen
+			//kollision
+			if(pacman_geister_kollision(&pacman, &ghosts))
+			{
+				reset_pacman(&pacman, &input);
+				reset_ghosts(&ghosts);
+			}
 		}
 		//====PRINT / AUSGABE====
 		werase(game);
@@ -410,31 +411,31 @@ void reset_ghosts(ghosts_t *ghosts)
 	ghosts->red.x = ghosts->red.start_x;
 	ghosts->red.y = ghosts->red.start_y;
 	ghosts->red.state = chase;
-	ghosts->red.speed = 12;
+	ghosts->red.speed = 20;
 
 	ghosts->pink.x = ghosts->pink.start_x;
 	ghosts->pink.y = ghosts->pink.start_y;
 	ghosts->pink.state = idle;
-	ghosts->pink.speed = 12;
+	ghosts->pink.speed = 20;
 
 	ghosts->orange.x = ghosts->orange.start_x;
 	ghosts->orange.y = ghosts->orange.start_y;
 	ghosts->orange.state = idle;
-	ghosts->orange.speed = 12;
+	ghosts->orange.speed = 20;
 
 	ghosts->cyan.x = ghosts->cyan.start_x;
 	ghosts->cyan.y = ghosts->cyan.start_y;
 	ghosts->cyan.state = idle;
-	ghosts->cyan.speed = 12;
+	ghosts->cyan.speed = 20;
 }
 
-void move_pacman(pacman_t *pacman)
+void move_pacman(pacman_t *pacman, xy size)
 {
-	pacman->x = next_move(pacman->x, pacman->y, pacman->direction).x;
-	pacman->y = next_move(pacman->x, pacman->y, pacman->direction).y;
+	pacman->x = next_move(pacman->x, pacman->y, pacman->direction, size).x;
+	pacman->y = next_move(pacman->x, pacman->y, pacman->direction, size).y;
 }
 
-xy next_move(int x, int y, direction_t direction)
+xy next_move(int x, int y, direction_t direction, xy size)
 {
 	xy pos;
 	pos.x = x;
@@ -455,50 +456,71 @@ xy next_move(int x, int y, direction_t direction)
 			break;
 		default:
 			break;
-		}
+	}
+	//außerhalb des Bereichs
+	if(pos.x>size.x-1)
+	{
+		pos.x = 0;
+		return pos;
+	}
+	if(pos.y>size.y-1)
+	{
+		pos.y = 0;
+		return pos;
+	}
+	if(pos.x<0)
+	{
+		pos.x = size.x-1;
+		return pos;
+	}
+	if(pos.y<0)
+	{
+		pos.y = size.y;
+		return pos;
+	}
 	return pos;
 }
 
-xy next_move_left(int x, int y, direction_t direction)
+xy next_move_left(int x, int y, direction_t direction, xy size)
 {
 	switch(direction)
 	{
 		case up:
-			return next_move(x, y,direction_left(up));
+			return next_move(x, y,direction_left(up), size);
 			break;
 		case down:
-			return next_move(x, y, direction_left(down));
+			return next_move(x, y, direction_left(down), size);
 			break;
 		case left:
-			return next_move(x, y, direction_left(left));
+			return next_move(x, y, direction_left(left), size);
 			break;
 		case right:
-			return next_move(x, y, direction_left(right));
+			return next_move(x, y, direction_left(right), size);
 			break;
 		default:
-			return next_move(x,y,direction);
+			return next_move(x,y,direction, size);
 			break;
 		
 	}
 }
-xy next_move_right(int x, int y, direction_t direction)
+xy next_move_right(int x, int y, direction_t direction, xy size)
 {
 	switch(direction)
 	{
 		case up:
-			return next_move(x, y,direction_right(up));
+			return next_move(x, y,direction_right(up), size);
 			break;
 		case down:
-			return next_move(x, y, direction_right(down));
+			return next_move(x, y, direction_right(down), size);
 			break;
 		case left:
-			return next_move(x, y, direction_right(left));
+			return next_move(x, y, direction_right(left), size);
 			break;
 		case right:
-			return next_move(x, y, direction_right(right));
+			return next_move(x, y, direction_right(right), size);
 			break;
 		default:
-			return next_move(x,y,direction);
+			return next_move(x,y,direction,size);
 			break;
 		
 	}
@@ -552,25 +574,18 @@ direction_t direction_right(direction_t direction)
 
 void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts)
 {
-	int x = next_move(pacman->x, pacman->y, *input).x;
-	int y = next_move(pacman->x, pacman->y, *input).y;
-
-	//oob handeling
-	if(oob(pacman, x, y, size))
-		return;
+	int x = next_move(pacman->x, pacman->y, *input, size).x;
+	int y = next_move(pacman->x, pacman->y, *input, size).y;
 
 	//input übernehmen?
-	if(points[ next_move(pacman->x, pacman->y, *input).x ][ next_move(pacman->x, pacman->y, *input).y ] != 'W')
+	if(points[ next_move(pacman->x, pacman->y, *input, size).x ][ next_move(pacman->x, pacman->y, *input,size).y ] != 'W')
 	{
 		pacman->direction = *input;
 	}
 	else
 	{
-		x = next_move(pacman->x, pacman->y, pacman->direction).x;
-		y = next_move(pacman->x, pacman->y, pacman->direction).y;
-		//oob 2 mit nicht geänderter richtung
-		if(oob(pacman, x, y, size))
-			return;
+		x = next_move(pacman->x, pacman->y, pacman->direction, size).x;
+		y = next_move(pacman->x, pacman->y, pacman->direction, size).y;
 
 		if(points[x][y] == 'W')
 			return;
@@ -593,7 +608,7 @@ void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy si
 		//geschwindigkeit pacman anheben? 
 	}
 	//erst bewegen, dann kollision mit Geister bestimmen
-	move_pacman(pacman);
+	move_pacman(pacman, size);
 
 	//geister kollision
 	if(pacman_geister_kollision(pacman, ghosts))
@@ -601,31 +616,6 @@ void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy si
 		reset_pacman(pacman, input);
 		reset_ghosts(ghosts);
 	}	
-}
-
-int oob(pacman_t *pacman, int x, int y, xy size)
-{
-	if(x>size.x-1)
-	{
-		pacman->x = 0;
-		return 1;
-	}
-	if(y>size.y-1)
-	{
-		pacman->y = 0;
-		return 1;
-	}
-	if(x<0)
-	{
-		pacman->x = size.x-1;
-		return 1;
-	}
-	if(y<0)
-	{
-		pacman->y = size.y;
-		return 1;
-	}
-	return 0;
 }
 
 int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts)
@@ -651,61 +641,62 @@ int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost)
 
 void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 {
+	double distance_move = 0.0;
+	double distance_left = 0.0;
+	double distance_right = 0.0;
+	xy move;
+	xy left;
+	xy right;
 	switch(red->state)
 	{
 		case chase:
-			//oob
-			if( oob_ghost(red, next_move(red->x, red->y, red->direction).x, next_move(red->x, red->y, red->direction).y, size) )
-				return;
-			//zu einer Kreuzung bewegen
-			if(move_ghost_to_junktion(red, points))
-				return;
 
-			//entfernungen nach laufen in jeweiliger Richtung
-			int move;
-			int left;
-			int right;
-
-			if(points[next_move(red->x, red->y, red->direction).x][next_move(red->x, red->y, red->direction).y] != 'W')
-				move = absolut( next_move(red->x, red->y, red->direction).x - pacman->x ) + absolut( next_move(red->x, red->y, red->direction).y - pacman->y );
-			else 
-				move = 1000;
-
-			if(points[next_move_left(red->x, red->y, red->direction).x][next_move_left(red->x, red->y, red->direction).y] != 'W')
-				left = absolut( next_move_left(red->x, red->y, red->direction).x - pacman->x ) + absolut( next_move_left(red->x, red->y, red->direction).y - pacman->y );
+			move = next_move(red->x, red->y, red->direction, size);
+			left = next_move_left(red->x, red->y, red->direction, size);
+			right = next_move_right(red->x, red->y, red->direction, size);
+			
+			//==================================================
+			if(points[move.x][move.y] != 'W')
+				distance_move = sqrt (  pow( absolut(pacman->x - move.x), 2 ) + pow( absolut(pacman->y - move.y), 2 )  );
 			else
-				left = 1000;
+				distance_move = 1000;
 
-			if(points[next_move_right(red->x, red->y, red->direction).x][next_move_right(red->x, red->y, red->direction).y] != 'W')
-				right = absolut( next_move_right(red->x, red->y, red->direction).x - pacman->x ) + absolut( next_move_right(red->x, red->y, red->direction).y - pacman->y );
+			if(points[left.x][left.y] != 'W')
+				distance_left = sqrt (  pow( absolut(pacman->x - left.x), 2 ) + pow( absolut(pacman->y - left.y), 2 )  );
 			else
-				right = 1000;
+				distance_left = 1000;
 
-			if( move<left && move<right )
+			if(points[right.x][right.y] != 'W')
+				distance_right = sqrt (  pow( absolut(pacman->x - right.x), 2 ) + pow( absolut(pacman->y - right.y), 2 )  );
+			else
+				distance_right = 1000;
+
+			if( distance_move < distance_left && distance_move < distance_right )
 			{
-				//move
-				red->x = next_move(red->x, red->y, red->direction).x;
-				red->y = next_move(red->x, red->y, red->direction).y;
+				//gerade aus
+				red->x = move.x;
+				red->y = move.y;
 				return;
 			}
 			
-			if( left<move && left<right )
+			if( distance_left < distance_move && distance_left<distance_right )
 			{
-				//left
-				red->x = next_move_left(red->x, red->y, red->direction).x;
-				red->y = next_move_left(red->x, red->y, red->direction).y;
+				//links
+				red->x = left.x;
+				red->y = left.y;
 				red->direction = direction_left(red->direction);
 				return;
 			}
 
-			if( right<move && right<left )
+			if( distance_right < distance_move && distance_right < distance_left )
 			{
-				//right
-				red->x = next_move_right(red->x, red->y, red->direction).x;
-				red->y = next_move_right(red->x, red->y, red->direction).y;
+				//rechts
+				red->x = right.x;
+				red->y = right.y;
 				red->direction = direction_right(red->direction);
 				return;
 			}
+			//======================================================
 			break;
 		case frightened:
 			break;
@@ -715,54 +706,4 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 			return;
 			break;
 	}
-}
-
-int move_ghost_to_junktion(ghost_t *ghost, char **points)
-{
-	if( (points[next_move_left(ghost->x, ghost->y, ghost->direction).x][next_move_left(ghost->x, ghost->y, ghost->direction).y] == 'W') && (points[next_move_right(ghost->x, ghost->y, ghost->direction).x][next_move_right(ghost->x, ghost->y, ghost->direction).y] == 'W') )
-	{
-		ghost->x = next_move(ghost->x, ghost->y, ghost->direction).x;
-		ghost->y = next_move(ghost->x, ghost->y, ghost->direction).y;
-		return 1;
-	}
-	if( (points[next_move(ghost->x, ghost->y, ghost->direction).x][next_move(ghost->x, ghost->y, ghost->direction).y] == 'W') && (points[next_move_right(ghost->x, ghost->y, ghost->direction).x][next_move_right(ghost->x, ghost->y, ghost->direction).y] == 'W') )
-	{
-		ghost->x = next_move_left(ghost->x, ghost->y, ghost->direction).x;
-		ghost->y = next_move_left(ghost->x, ghost->y, ghost->direction).y;
-		ghost->direction = direction_left(ghost->direction);
-		return 1;
-	}
-	if( (points[next_move_left(ghost->x, ghost->y, ghost->direction).x][next_move_left(ghost->x, ghost->y, ghost->direction).y] == 'W') && (points[next_move(ghost->x, ghost->y, ghost->direction).x][next_move(ghost->x, ghost->y, ghost->direction).y] == 'W') )
-	{
-		ghost->x = next_move_right(ghost->x, ghost->y, ghost->direction).x;
-		ghost->y = next_move_right(ghost->x, ghost->y, ghost->direction).y;
-		ghost->direction = direction_right(ghost->direction);
-		return 1;
-	}
-	return 0;
-}
-
-int oob_ghost(ghost_t *ghost, int x, int y, xy size)
-{
-	if(x>size.x-1)
-	{
-		ghost->x = 0;
-		return 1;
-	}
-	if(y>size.y-1)
-	{
-		ghost->y = 0;
-		return 1;
-	}
-	if(x<0)
-	{
-		ghost->x = size.x-1;
-		return 1;
-	}
-	if(y<0)
-	{
-		ghost->y = size.y;
-		return 1;
-	}
-	return 0;
 }
