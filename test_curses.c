@@ -50,6 +50,7 @@ double get_next_next_move_ghost(int x, int y, direction_t direction,int to_x, in
 direction_t direction_left(direction_t direction);
 direction_t direction_right(direction_t direction);
 void reverse_direction(direction_t *direction);
+xy get_move_ahead(int x, int y, direction_t direction, int n);
 
 int absolut(int number)
 {
@@ -213,19 +214,36 @@ int main()
 		}
 
 		//==Spielverlauf==beeinflussend=====
-		spawn_ghost(&ghosts.red, &game.sp_ghohsts);
-		
-		if(pacman.dots_collected > 30)
-		{
+		//Red
+		if(ghosts.red.traped <= 0)
+			spawn_ghost(&ghosts.red, &game.sp_ghohsts);
+		//Pink
+		if(ghosts.pink.traped <= 0 && pacman.dots_collected > 30)
 			spawn_ghost(&ghosts.pink, &game.sp_ghohsts);
-		}
-
-		//spawn_ghost(&ghosts.cyan, &game.sp_ghohsts);
-		if(game.level > 0 && pacman.dots_collected > 60)
-		{
+		//Cyan
+		if(ghosts.cyan.traped <= 0 && pacman.dots_collected > 60)
+			spawn_ghost(&ghosts.cyan, &game.sp_ghohsts);
+		//Orange
+		if(ghosts.orange.traped <= 0 && game.level > 0 && pacman.dots_collected > 60)
 			spawn_ghost(&ghosts.orange, &game.sp_ghohsts);
-		}
 
+
+
+		if(time(0) % 2)
+		{
+			if(ghosts.red.traped >0)
+				ghosts.red.traped--;
+
+			if(ghosts.pink.traped >0)
+				ghosts.pink.traped--;
+
+			if(ghosts.orange.traped >0)
+				ghosts.orange.traped--;
+
+			if(ghosts.cyan.traped >0)
+				ghosts.cyan.traped--;
+		}
+		
 		//====PRINT / AUSGABE====
 		werase(game_win);
 
@@ -324,6 +342,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->red.state = idle;			
 					ghosts->red.direction = left;
 					ghosts->red.speed = 20;
+					ghosts->red.traped = 0;
 					game->field[j][i] = ' ';
 					break;
 				case 'P':
@@ -334,6 +353,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->pink.direction = left;
 					ghosts->pink.state = idle;
 					ghosts->pink.speed = 20;
+					ghosts->pink.traped = 0;
 					game->field[j][i] = ' ';
 					break;
 				case 'C':
@@ -344,6 +364,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->cyan.direction = left;
 					ghosts->cyan.state = idle;
 					ghosts->cyan.speed = 20;
+					ghosts->cyan.traped = 20;
 					game->field[j][i] = ' ';
 					break;
 				case 'O':
@@ -354,6 +375,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->orange.direction = left;
 					ghosts->orange.state = idle;
 					ghosts->orange.speed = 20;
+					ghosts->orange.traped = 60;
 					game->field[j][i] = ' ';
 					break;
 				case '.':
@@ -517,6 +539,7 @@ void reset_pacman(pacman_t *pacman, direction_t *input)
 {
 	pacman->x = pacman->start_x;
 	pacman->y = pacman->start_y;
+	pacman->dots_collected = 0;
 	pacman->direction = neutral;
 	pacman->lives -= 1;
 	*input = neutral;
@@ -526,7 +549,7 @@ void reset_ghosts(ghosts_t *ghosts)
 {
 	ghosts->red.x = ghosts->red.start_x;
 	ghosts->red.y = ghosts->red.start_y;
-	ghosts->red.state = chase;
+	ghosts->red.state = idle;
 	ghosts->red.speed = 20;
 
 	ghosts->pink.x = ghosts->pink.start_x;
@@ -787,18 +810,13 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size)
 
 void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size)
 {
-	xy nxt;
+	xy pos;
 	switch(pink->state)
 	{
-		pos.x = pacman->x;
-		pos.y = pacman->y;
-
 		case chase:
-			nxt = next_move(pacman->x, pacman->y, pacman->direction, size);
-			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
-			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
-			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
-			path_ghost_to_xy(pink, nxt.x, nxt.y, field, size);
+			pos = get_move_ahead(pacman->x, pacman->y, pacman->direction, 4);
+			mvprintw(0,0,"%d %d", pos.x, pos.y);
+			path_ghost_to_xy(pink, pos.x, pos.y, field, size);
 			break;
 		case frightened:
 			path_ghost_to_xy(pink, rand() % size.x, rand() % size.y, field, size);
@@ -1008,6 +1026,7 @@ void reset_ghost(ghost_t *ghost)
 {
 	ghost->x = ghost->start_x;
 	ghost->y = ghost->start_y;
+	ghost->traped = 200;
 	if(ghost->state == frightened)
 		ghost->speed = ghost->speed / 2;
 	else
@@ -1053,4 +1072,29 @@ void spawn_ghost(ghost_t *ghost, xy *pos)
 	}
 	else
 		return;
+}
+
+xy get_move_ahead(int x, int y, direction_t direction, int n)
+{
+	xy pos;
+	pos.x = x;
+	pos.y = y;
+	switch(direction)
+	{
+		case up:
+			pos.y -= n;
+			break;
+		case down:
+			pos.y += n;
+			break;
+		case left:
+			pos.x -= n;
+			break;
+		case right:
+			pos.x += n;
+			break;
+		default:
+			break;
+	}
+	return pos;
 }
