@@ -852,12 +852,13 @@ void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size)
 	}
 }
 
-void move_ghost_cyan(ghost_t *cyan, pacman_t *pacman, char **field, xy size)
+void move_ghost_cyan(ghost_t *cyan,*red, pacman_t *pacman, char **field, xy size)
 {
 	switch(cyan->state)
 	{
 		case chase:
-			path_ghost_to_xy(cyan, pacman->x, pacman->y, field, size);
+
+		path_ghost_to_xy(cyan, cyan_chase(pacman,red).x, cyan_chase(pacman,red).y, field, size);
 			break;
 		case frightened:
 			path_ghost_to_xy(cyan, rand() % size.x, rand() % size.y, field, size);
@@ -1072,6 +1073,55 @@ void spawn_ghost(ghost_t *ghost, xy *pos)
 	}
 	else
 		return;
+}
+
+
+xy cyan_chase(pacman_t *pacman, ghost_t *red_ghost){
+
+xy pos;
+pos.x = pacman->x;
+pos.y = pacman->y;
+xy vec;
+
+	switch(pacman->direction)
+	{
+		case up:
+			pos.y -= 2;
+			break;
+		case down:
+			pos.y += 2;
+			break;
+		case left:
+			pos.x -= 2;
+			break;
+		case right:
+			pos.x += 2;
+			break;
+		default:
+			break;
+	}
+
+	if(red_ghost.x < pos.x){
+		vec.x = pos.x - red_ghost.x;
+		vec.x = vec.x *2;
+		pos.x += vec.x;
+	}
+	else(){
+		vec.x = redghost.x - pos.x;
+		vec.x = vec.x *2;
+		pos.x -= vec.x;
+	}
+	if(red_ghost.y < pos.y){
+		vec.y = pos.y - redghost.y;
+		vec.y = vec.y *2;
+		pos.y += vec.y;
+	}
+	else(){
+		vec.y = redghost.y - pos.y;
+		vec.y = vec.y *2;
+		pos.y -= vec.y;
+	}
+ return vec;
 }
 
 xy get_move_ahead(int x, int y, direction_t direction, int n)
