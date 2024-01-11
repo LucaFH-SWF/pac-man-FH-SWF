@@ -13,6 +13,8 @@
 #include <time.h>
 #include <math.h>
 
+#include "pac_types.h"
+
 void nsleep(long miliseconds){
     struct timespec ts;
     ts.tv_sec = 0;
@@ -20,66 +22,33 @@ void nsleep(long miliseconds){
     nanosleep(&ts, NULL);
 }
 
-typedef enum {up, right, down, left, neutral} direction_t;
-typedef enum {chase, frightened, scatter, idle} state_t;
-
-struct xy{
-	int x;
-	int y;
-};
-
-struct ghost{
-	int x;
-	int y;
-	int start_x;
-	int start_y;
-	state_t state;
-	direction_t direction;
-	int speed;
-};
-
-typedef struct xy xy;
-typedef struct ghost ghost_t;
-
-typedef struct{
-	ghost_t red;
-	ghost_t pink;
-	ghost_t orange;
-	ghost_t cyan;
-} ghosts_t;
-
-typedef struct{
-	int lives;
-	int score;
-	int points_collected;
-	int x;
-	int y;
-	int start_x;
-	int start_y;
-	direction_t direction;
-	int speed;
-}pacman_t;
-
-char **create_points(xy *size);//alokieren des Speichers für das Spielfeld
-char **init_points(xy *size, char *filename, pacman_t *pacman, ghosts_t *ghosts);//initialisieren von: Spielfeld, Pacman, Geister
+char **create_field(xy size);//alokieren des Speichers für das Spielfeld
+void init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game);//initialisieren von: Spielfeld, Pacman, Geister
 void reset_pacman(pacman_t *pacman, direction_t *input);//Pacman auf Startposition setzen und 1 Leben abziehen
 void reset_ghosts(ghosts_t *ghosts);//Geister auf Startposition setzen
+void reset_ghost(ghost_t *ghost);//einen Geist auf Startposition setzen
 void print_pacman(pacman_t pacman, WINDOW*);//Ausgabe Pacman
 void print_ghosts(ghosts_t ghosts, WINDOW*);//Ausgabe Geister
-void print_board(char **points, xy size, WINDOW*);//Ausgabe des Spielfeldes
+void print_board(char **field, xy size, WINDOW*);//Ausgabe des Spielfeldes
 char richtungtochar(direction_t richtung);//Pfeil Pacman
 xy next_move(int x, int y, direction_t direction, xy size);//gibt die nächste position bei angegebener Richtung zurück
 xy next_move_left(int x, int y, direction_t direction, xy size);//gibt die nächste position links bei angegebener Richtung zurück
 xy next_move_right(int x, int y, direction_t direction, xy size);//gibt die nächste position rechts bei angegebener Richtung zurück
 void move_pacman(pacman_t *pacman, xy size);//Verschiebt die x un y Werte von Pacman in seine Bewegungs Richtung
-void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts);//Kollisions abfrage Pacman
+void pacman_kollision(pacman_t *pacman, direction_t *input, ghosts_t *ghosts, game_t *game);//Kollisions abfrage Pacman
 int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts);//kollisons abfrage pacman und alle Geister
-int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost);//kollisons abfrage pacman und ein Geist
-void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size);
-direction_t get_next_move_ghost(int x, int y, direction_t direction,pacman_t *pacman, char **points, xy size);
-double get_next_next_move_ghost(int x, int y, direction_t direction,pacman_t *pacman, char **points, xy size);
+int pacman_geist_kollision(pacman_t *pacman, ghost_t *ghost);//kollisons abfrage pacman und ein Geist
+void frighten_ghosts(ghosts_t *ghosts);//Geister Richtung umkehren und state ändern
+void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size);
+void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size);
+void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size);
+void move_ghost_cyan(ghost_t *cyan, pacman_t *pacman, char **field, xy size);
+void path_ghost_to_xy(ghost_t *ghost, int x, int y, char **field, xy size);
+direction_t get_next_direction_ghost(int x, int y, direction_t direction, int to_x, int to_y, char **field, xy size);
+double get_next_next_move_ghost(int x, int y, direction_t direction,int to_x, int to_y, char **field, xy size);
 direction_t direction_left(direction_t direction);
 direction_t direction_right(direction_t direction);
+void reverse_direction(direction_t *direction);
 
 int absolut(int number)
 {
@@ -89,19 +58,20 @@ int absolut(int number)
 		return ( number * (-1) );
 }
 
-double distance_pacman(int x, int y, pacman_t *pacman)
+double distance_xy(int x, int y, int to_x, int to_y)
 {
-	return sqrt (  pow( absolut(pacman->x - x), 2 ) + pow( absolut(pacman->y - y), 2 )  );
+	return sqrt (  pow( absolut(to_x - x), 2 ) + pow( absolut(to_y - y), 2 )  );
 }
 
 int main()
 {
+	game_t game;
 	xy size;
 	pacman_t pacman;
 	ghosts_t ghosts;
-	char **points = NULL;
-	points = init_points(&size, "map.txt", &pacman, &ghosts);
-	if(!points)
+	game.field = NULL;
+	init_field("map.txt", &pacman, &ghosts, &game);
+	if(!game.field)
 		return -1;
 
 	initscr();
@@ -112,7 +82,7 @@ int main()
 	int x_max, y_max;
 	getmaxyx(stdscr, y_max, x_max);
 
-	WINDOW *game = newwin(size.y, size.x, y_max/2 - size.y/2, x_max/2 - size.x/2);
+	WINDOW *game_win = newwin(game.size.y, game.size.x, y_max/2 - game.size.y/2, x_max/2 - game.size.x/2);
 	refresh();//window auf stdscr "regestrieren?"
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
@@ -126,22 +96,23 @@ int main()
 	init_pair(5, COLOR_BLACK, COLOR_CYAN);
 	init_pair(6, COLOR_BLACK, COLOR_YELLOW);
 
-	init_pair(7, COLOR_WHITE, COLOR_BLACK);
-
-//	wbkgd(stdscr, COLOR_PAIR(1));//stdscr blau färben
+	init_pair(7, COLOR_WHITE, COLOR_BLACK); //spielfeld
+	init_pair(8, COLOR_WHITE, COLOR_BLUE);
+	init_pair(8, COLOR_BLUE, COLOR_WHITE);
 	
 	int run = 1;
 
 	int pressed_key = 0;
 
 	int move_pacman = 0;
-	int move_red = 0; //eigentlich aufteilenn in die 4 Geister
+	int move_red = 0;
+	int move_pink = 0;
+	int move_orange = 0;
+	int move_cyan = 0;
 
 	direction_t input = neutral;
 
 	flushinp();
-
-	pacman.lives = 3;//in "init_pacman" oder vergleichbares verschieben
 
 	while(run) //action loop
 	{
@@ -170,27 +141,28 @@ int main()
 
 		flushinp();//bereits vorgemerkte eingaben löschen
 		SLEEP
-		
+		//PACMAN
 		move_pacman++;
 
 		if(move_pacman >= pacman.speed) //alle 150ms
 		{
 			move_pacman = 0;
 			
-			pacman_kollision(&pacman, &input, points, size, &ghosts);
+			pacman_kollision(&pacman, &input, &ghosts, &game);
 
 			mvwprintw(stdscr, 5, 5, "x: %2d y: %2d", pacman.x, pacman.y);//============TEST-AUSGABE===========
 			mvwprintw(stdscr, 6, 5, "lives: %1d", pacman.lives);
-			mvwprintw(stdscr, 7, 5, "score: %6d", pacman.score);
-			mvwprintw(stdscr, 8, 5, "points_collected: %6d", pacman.points_collected);//============TEST-AUSGABE===========
+			mvwprintw(stdscr, 7, 5, "score: %6d", game.score);
+			mvwprintw(stdscr, 8, 5, "dots_collected: %6d", pacman.dots_collected);//============TEST-AUSGABE===========
 		}
 		
+		//===GEISTER===
 		move_red++;
 		if(move_red >= ghosts.red.speed)
 		{
 			move_red = 0;
-			//bewege Geister
-			move_ghost_red(&ghosts.red, &pacman, points, size);
+			//bewege Geist
+			move_ghost_red(&ghosts.red, &pacman, game.field, game.size);
 			//kollision
 			if(pacman_geister_kollision(&pacman, &ghosts))
 			{
@@ -198,15 +170,57 @@ int main()
 				reset_ghosts(&ghosts);
 			}
 		}
+		move_pink++;
+		if(move_pink >= ghosts.pink.speed)
+		{
+			move_pink = 0;
+			//bewege Geist
+			move_ghost_pink(&ghosts.pink, &pacman, game.field, game.size);
+			//kollision
+			if(pacman_geister_kollision(&pacman, &ghosts))
+			{
+				reset_pacman(&pacman, &input);
+				reset_ghosts(&ghosts);
+			}
+		}
+		move_orange++;
+		if(move_orange >= ghosts.orange.speed)
+		{
+			move_orange = 0;
+			//bewege Geist
+			move_ghost_orange(&ghosts.orange, &pacman, game.field, game.size);
+			//kollision
+			if(pacman_geister_kollision(&pacman, &ghosts))
+			{
+				reset_pacman(&pacman, &input);
+				reset_ghosts(&ghosts);
+			}
+		}
+		move_cyan++;
+		if(move_cyan >= ghosts.cyan.speed)
+		{
+			move_cyan = 0;
+			//bewege Geist
+			move_ghost_cyan(&ghosts.cyan, &pacman, game.field, game.size);
+			//kollision
+			if(pacman_geister_kollision(&pacman, &ghosts))
+			{
+				reset_pacman(&pacman, &input);
+				reset_ghosts(&ghosts);
+			}
+		}
+
+		//==Spielverlauf==beeinflussend 
+
 		//====PRINT / AUSGABE====
-		werase(game);
+		werase(game_win);
 
-		print_board(points, size, game);
+		print_board(game.field, game.size, game_win);
 
-		print_pacman(pacman, game);
+		print_pacman(pacman, game_win);
 
-		print_ghosts(ghosts, game);
-		wrefresh(game);
+		print_ghosts(ghosts, game_win);
+		wrefresh(game_win);
 	
 		if(pacman.lives < 0)
 		{
@@ -218,57 +232,61 @@ int main()
 	return 0;
 }
 
-char **create_points(xy *size)
+char **create_field(xy size)
 {
-	char **points;
+	char **field;
 	
-	points = (char **) malloc(size->x * sizeof(points)); //sizey viele pointer auf pointer
+	field = (char **) malloc(size.x * sizeof(field)); //sizey viele pointer auf pointer
 
-	if(!points)
+	if(!field)
 		return NULL;
 	
-	for(int i = 0; i < size->x; ++i) //sizex viele char reservieren für jeden pointer
+	for(int i = 0; i < size.x; ++i) //sizex viele char reservieren für jeden pointer
 	{
-		points[i] = (char *) malloc(size->y * sizeof(char));
-		if(!points[i])
+		field[i] = (char *) malloc(size.y * sizeof(char));
+		if(!field[i])
 			return NULL;
 	}
 
-	return points;
+	return field;
 }
 
-char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
+void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game)
 {
 	FILE *fp;
 	fp = fopen(filename, "r");
 	if(!fp)
 	{
 		printf("FEHLER konnte map Datei nicht öffnen!");
-		return NULL;
+		return;
 	}
 		
-	fscanf(fp, "%d", &size->x);
-	fscanf(fp, "%d", &size->y);
+	fscanf(fp, "%d", &game->size.x);
+	fscanf(fp, "%d", &game->size.y);
 	fgetc(fp);
-	char **points = NULL;
-	points = create_points(size);
-	if(!points)
+
+	game->field = create_field(game->size);
+
+	if(!game->field)
 	{
 		printf("FEHLER konnte Speicher für Spielfeld nicht allokieren!");
-		return NULL;
+		game->field = NULL;
+		return;
 	}
 
 	pacman->lives = 3;
-	pacman->score = 0;
-	pacman->points_collected = 0;
+	pacman->dots_collected = 0;
+	pacman->dots_tocollect = 0;
+	game->score = 0;
+	game->level = 0;
 
 
-	for(int i = 0; i < size->y; ++i)
+	for(int i = 0; i < game->size.y; ++i)
 	{
-		for(int j = 0; j < size->x; ++j)
+		for(int j = 0; j < game->size.x; ++j)
 		{
-			points[j][i] = fgetc(fp);
-			switch(points[j][i])
+			game->field[j][i] = fgetc(fp);
+			switch(game->field[j][i])
 			{
 				case '$':
 					pacman->x = j;
@@ -277,17 +295,22 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 					pacman->start_y = i;
 					pacman->speed = 15;
 					pacman->direction = neutral;	
-					points[j][i] = ' ';
+					game->field[j][i] = ' ';
+					break;
+				case 'S':
+					game->sp_ghohsts.x = j;
+					game->sp_ghohsts.y = i;	
+					game->field[j][i] = ' ';
 					break;
 				case 'R':
 					ghosts->red.x = j;
 					ghosts->red.y = i;
 					ghosts->red.start_x = j;
 					ghosts->red.start_y = i;
-					ghosts->red.state = chase;			
+					ghosts->red.state = idle;			
 					ghosts->red.direction = left;
-					ghosts->red.speed = 20;	
-					points[j][i] = ' ';
+					ghosts->red.speed = 20;
+					game->field[j][i] = ' ';
 					break;
 				case 'P':
 					ghosts->pink.x = j;
@@ -297,7 +320,7 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 					ghosts->pink.direction = left;
 					ghosts->pink.state = idle;
 					ghosts->pink.speed = 20;
-					points[j][i] = ' ';
+					game->field[j][i] = ' ';
 					break;
 				case 'C':
 					ghosts->cyan.x = j;
@@ -307,7 +330,7 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 					ghosts->cyan.direction = left;
 					ghosts->cyan.state = idle;
 					ghosts->cyan.speed = 20;
-					points[j][i] = ' ';
+					game->field[j][i] = ' ';
 					break;
 				case 'O':
 					ghosts->orange.x = j;
@@ -317,38 +340,38 @@ char **init_points(xy *size, char* filename, pacman_t *pacman, ghosts_t *ghosts)
 					ghosts->orange.direction = left;
 					ghosts->orange.state = idle;
 					ghosts->orange.speed = 20;
-					points[j][i] = ' ';
+					game->field[j][i] = ' ';
 					break;
 				case '.':
-					pacman->points_collected += 1;
+					pacman->dots_tocollect += 1;
 					break;
 				case 'o':
-					pacman->points_collected += 1;
+					pacman->dots_tocollect += 1;
 					break;
 			} 
 		}
 		fgetc(fp);
 	}
 	fclose(fp);
-	return points;
+	return;
 }
 
-void print_board(char **points, xy size, WINDOW* win)
+void print_board(char **field, xy size, WINDOW* win)
 {
 	for(int i = 0; i < size.y; ++i)
 	{
 		for(int j = 0; j < size.x; ++j)
 		{
-			if(points[j][i] == 'W')
+			if(field[j][i] == 'W')
 			{
 				wattron(win, COLOR_PAIR(1));
-					mvwprintw(win, i, j, "%c", points[j][i]);
+					mvwprintw(win, i, j, "%c", field[j][i]);
 				wattroff(win, COLOR_PAIR(1));
 			}
 			else
 			{
 				wattron(win, COLOR_PAIR(7));
-					mvwprintw(win, i, j, "%c", points[j][i]);
+					mvwprintw(win, i, j, "%c", field[j][i]);
 				wattroff(win, COLOR_PAIR(7));
 			}
 		}
@@ -387,21 +410,93 @@ char richtungtochar(direction_t richtung)
 void print_ghosts(ghosts_t ghosts, WINDOW* win)
 {
 	//red
-	wattron(win, COLOR_PAIR(3));
-	mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
-	wattroff(win, COLOR_PAIR(3));
+	if(ghosts.red.state != frightened)
+	{
+		wattron(win, COLOR_PAIR(3));
+		mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
+		wattroff(win, COLOR_PAIR(3));
+	}
+	else
+	{
+		if(time(0) % 2)
+		{
+			wattron(win, COLOR_PAIR(8));
+			mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
+			wattroff(win, COLOR_PAIR(8));
+		}
+		else
+		{
+			wattron(win, COLOR_PAIR(9));
+			mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
+			wattroff(win, COLOR_PAIR(9));
+		}
+	}
 	//pink
-	wattron(win, COLOR_PAIR(4));
-	mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
-	wattroff(win, COLOR_PAIR(4));
+	if(ghosts.pink.state != frightened)
+	{
+		wattron(win, COLOR_PAIR(4));
+		mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
+		wattroff(win, COLOR_PAIR(4));
+	}
+	else
+	{
+		if(time(0) % 2)
+		{
+			wattron(win, COLOR_PAIR(8));
+			mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
+			wattroff(win, COLOR_PAIR(8));
+		}
+		else
+		{
+			wattron(win, COLOR_PAIR(9));
+			mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
+			wattroff(win, COLOR_PAIR(9));
+		}
+	}
 	//cyan
-	wattron(win, COLOR_PAIR(5));
-	mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
-	wattroff(win, COLOR_PAIR(5));
+	if(ghosts.cyan.state != frightened)
+	{
+		wattron(win, COLOR_PAIR(5));
+		mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
+		wattroff(win, COLOR_PAIR(5));
+	}
+	else
+	{
+		if(time(0) % 2)
+		{
+			wattron(win, COLOR_PAIR(8));
+			mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
+			wattroff(win, COLOR_PAIR(8));
+		}
+		else
+		{
+			wattron(win, COLOR_PAIR(9));
+			mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
+			wattroff(win, COLOR_PAIR(9));
+		}
+	}
 	//orange
-	wattron(win, COLOR_PAIR(6));
-	mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
-	wattroff(win, COLOR_PAIR(6));		
+	if(ghosts.orange.state != frightened)
+	{
+		wattron(win, COLOR_PAIR(6));
+		mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
+		wattroff(win, COLOR_PAIR(6));
+	}
+	else
+	{
+		if(time(0) % 2)
+		{
+			wattron(win, COLOR_PAIR(8));
+			mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
+			wattroff(win, COLOR_PAIR(8));
+		}
+		else
+		{
+			wattron(win, COLOR_PAIR(9));
+			mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
+			wattroff(win, COLOR_PAIR(9));
+		}
+	}
 }
 
 void reset_pacman(pacman_t *pacman, direction_t *input)
@@ -579,43 +674,45 @@ direction_t direction_right(direction_t direction)
 	}
 }
 
-void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy size, ghosts_t *ghosts)
+void pacman_kollision(pacman_t *pacman, direction_t *input, ghosts_t *ghosts, game_t *game)
 {
-	int x = next_move(pacman->x, pacman->y, *input, size).x;
-	int y = next_move(pacman->x, pacman->y, *input, size).y;
+	int x = next_move(pacman->x, pacman->y, *input, game->size).x;
+	int y = next_move(pacman->x, pacman->y, *input, game->size).y;
 
 	//input übernehmen?
-	if(points[ next_move(pacman->x, pacman->y, *input, size).x ][ next_move(pacman->x, pacman->y, *input,size).y ] != 'W')
+	if(game->field[ next_move(pacman->x, pacman->y, *input, game->size).x ][ next_move(pacman->x, pacman->y, *input, game->size).y ] != 'W')
 	{
 		pacman->direction = *input;
 	}
 	else
 	{
-		x = next_move(pacman->x, pacman->y, pacman->direction, size).x;
-		y = next_move(pacman->x, pacman->y, pacman->direction, size).y;
+		x = next_move(pacman->x, pacman->y, pacman->direction, game->size).x;
+		y = next_move(pacman->x, pacman->y, pacman->direction, game->size).y;
 
-		if(points[x][y] == 'W')
+		if(game->field[x][y] == 'W')
 			return;
 	}
 	
 	//Punkte essen
-	if(points[x][y] == '.')
+	if(game->field[x][y] == '.')
 	{
-		pacman->score += 100;
-		pacman->points_collected -= 1;
-		points[x][y] = ' ';
+		game->score += 100;
+		pacman->dots_collected += 1;
+		game->field[x][y] = ' ';
 	}
 	//enegizer Punkte essen
-	if(points[x][y] == 'o')
+	if(game->field[x][y] == 'o')
 	{
-		pacman->score += 250;
-		pacman->points_collected -= 1;
-		points[x][y] = ' ';
-		//frighten ghosts 
+		game->score += 250;
+		pacman->dots_collected += 1;
+		game->field[x][y] = ' ';
+
+		frighten_ghosts(ghosts);
+
 		//geschwindigkeit pacman anheben? 
 	}
 	//erst bewegen, dann kollision mit Geister bestimmen
-	move_pacman(pacman, size);
+	move_pacman(pacman, game->size);
 
 	//geister kollision
 	if(pacman_geister_kollision(pacman, ghosts))
@@ -627,92 +724,43 @@ void pacman_kollision(pacman_t *pacman, direction_t *input, char **points, xy si
 
 int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts)
 {
-	if(pacman_geist_kollision(pacman, ghosts->red))
+	if(pacman_geist_kollision(pacman, &ghosts->red))
 		return 1;
-	if(pacman_geist_kollision(pacman, ghosts->pink))
+	if(pacman_geist_kollision(pacman, &ghosts->pink))
 		return 1;
-	if(pacman_geist_kollision(pacman, ghosts->orange))
+	if(pacman_geist_kollision(pacman, &ghosts->orange))
 		return 1;
-	if(pacman_geist_kollision(pacman, ghosts->cyan))
+	if(pacman_geist_kollision(pacman, &ghosts->cyan))
 		return 1;
 
 	return 0;
 }
 
-int pacman_geist_kollision(pacman_t *pacman, ghost_t ghost)
+int pacman_geist_kollision(pacman_t *pacman, ghost_t *ghost)
 {
-	if( (ghost.x == pacman->x) && (ghost.y == pacman->y) )
-		return 1;
+	if( (ghost->x == pacman->x) && (ghost->y == pacman->y) )
+	{
+		if(ghost->state != frightened)
+			return 1;
+		else
+			reset_ghost(ghost);
+	}
+	
 	return 0;
 }
 
-void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
+void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size)
 {
-	//double distance_move = 0.0;
-	//double distance_left = 0.0;
-	//double distance_right = 0.0;
-	xy move;
-	xy left;
-	xy right;
 	switch(red->state)
 	{
 		case chase:
-
-			move = next_move(red->x, red->y, red->direction, size);
-			left = next_move_left(red->x, red->y, red->direction, size);
-			right = next_move_right(red->x, red->y, red->direction, size);
-
-		//	get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size);
-			
-			//==================================================
-			/*
-			if(points[move.x][move.y] != 'W')
-				distance_move = sqrt (  pow( absolut(pacman->x - move.x), 2 ) + pow( absolut(pacman->y - move.y), 2 )  );
-			else
-				distance_move = 1000;
-
-			if(points[left.x][left.y] != 'W')
-				distance_left = sqrt (  pow( absolut(pacman->x - left.x), 2 ) + pow( absolut(pacman->y - left.y), 2 )  );
-			else
-				distance_left = 1000;
-
-			if(points[right.x][right.y] != 'W')
-				distance_right = sqrt (  pow( absolut(pacman->x - right.x), 2 ) + pow( absolut(pacman->y - right.y), 2 )  );
-			else
-				distance_right = 1000;
-			//==================================================
-			*/
-
-			if(get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size) == red->direction )
-			{
-				//gerade aus
-				red->x = move.x;
-				red->y = move.y;
-				return;
-			}
-			
-			if(get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size) == direction_left(red->direction))
-			{
-				//links
-				red->x = left.x;
-				red->y = left.y;
-				red->direction = direction_left(red->direction);
-				return;
-			}
-
-			if(get_next_move_ghost(red->x, red->y, red->direction, pacman, points, size) == direction_right(red->direction))
-			{
-				//rechts
-				red->x = right.x;
-				red->y = right.y;
-				red->direction = direction_right(red->direction);
-				return;
-			}
-			//======================================================
+			path_ghost_to_xy(red, pacman->x, pacman->y, field, size);
 			break;
 		case frightened:
+			path_ghost_to_xy(red, rand() % size.x, rand() % size.y, field, size);
 			break;
 		case scatter:
+			path_ghost_to_xy(red, 0, 0, field, size);
 			break;
 		case idle:
 			return;
@@ -720,7 +768,67 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **points, xy size)
 	}
 }
 
-direction_t get_next_move_ghost(int x, int y, direction_t direction, pacman_t *pacman, char **points, xy size)
+void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size)
+{
+	switch(pink->state)
+	{
+		case chase:
+			path_ghost_to_xy(pink, pacman->x, pacman->y, field, size);
+			break;
+		case frightened:
+			path_ghost_to_xy(pink, rand() % size.x, rand() % size.y, field, size);
+			break;
+		case scatter:
+			path_ghost_to_xy(pink, size.x, 0, field, size);
+			break;
+		case idle:
+			return;
+			break;
+	}
+}
+
+void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size)
+{
+	switch(orange->state)
+	{
+		case chase:
+			if( distance_xy(orange->x, orange->y, pacman->x, pacman->y) > 8)
+				path_ghost_to_xy(orange, pacman->x, pacman->y, field, size);
+			else
+				path_ghost_to_xy(orange, 0, size.y, field, size);
+			break;
+		case frightened:
+			path_ghost_to_xy(orange, rand() % size.x, rand() % size.y, field, size);
+			break;
+		case scatter:
+			path_ghost_to_xy(orange, 0, size.y, field, size);
+			break;
+		case idle:
+			return;
+			break;
+	}
+}
+
+void move_ghost_cyan(ghost_t *cyan, pacman_t *pacman, char **field, xy size)
+{
+	switch(cyan->state)
+	{
+		case chase:
+			path_ghost_to_xy(cyan, pacman->x, pacman->y, field, size);
+			break;
+		case frightened:
+			path_ghost_to_xy(cyan, rand() % size.x, rand() % size.y, field, size);
+			break;
+		case scatter:
+			path_ghost_to_xy(cyan, size.x, size.y, field, size);
+			break;
+		case idle:
+			return;
+			break;
+	}
+}
+
+direction_t get_next_direction_ghost(int x, int y, direction_t direction, int to_x, int to_y, char **field, xy size)
 {
 	double distance_move = 0.0;
 	double distance_left = 0.0;
@@ -732,23 +840,23 @@ direction_t get_next_move_ghost(int x, int y, direction_t direction, pacman_t *p
 	xy left_2;
 	xy right_2;
 
-	if(points[move.x][move.y] != 'W')
+	if(field[move.x][move.y] != 'W')
 	{
-		distance_move = get_next_next_move_ghost(move.x, move.y, direction, pacman, points, size);
+		distance_move = get_next_next_move_ghost(move.x, move.y, direction, to_x, to_y, field, size);
 	}
 	else
 		distance_move = 1000;
 
-	if(points[left.x][left.y] != 'W')
+	if(field[left.x][left.y] != 'W')
 	{
-		distance_left = get_next_next_move_ghost(left.x, left.y, direction_left(direction), pacman, points, size);
+		distance_left = get_next_next_move_ghost(left.x, left.y, direction_left(direction), to_x, to_y, field, size);
 	}
 	else
 		distance_left = 1000;
 
-	if(points[right.x][right.y] != 'W')
+	if(field[right.x][right.y] != 'W')
 	{
-		distance_right = get_next_next_move_ghost(right.x, right.y, direction_right(direction), pacman, points, size);
+		distance_right = get_next_next_move_ghost(right.x, right.y, direction_right(direction), to_x, to_y, field, size);
 	}
 	else
 		distance_right = 1000;
@@ -794,7 +902,7 @@ direction_t get_next_move_ghost(int x, int y, direction_t direction, pacman_t *p
 
 }
 
-double get_next_next_move_ghost(int x, int y, direction_t direction, pacman_t *pacman, char **points, xy size)
+double get_next_next_move_ghost(int x, int y, direction_t direction,int to_x, int to_y, char **field, xy size)
 {
 	double distance_move = 0.0;
 	double distance_left = 0.0;
@@ -804,18 +912,18 @@ double get_next_next_move_ghost(int x, int y, direction_t direction, pacman_t *p
 	xy right = next_move_right(x, y, direction, size);
 	
 	//=====Distanz======================================
-	if(points[move.x][move.y] != 'W')
-		distance_move = distance_pacman(move.x, move.y, pacman);
+	if(field[move.x][move.y] != 'W')
+		distance_move = distance_xy(move.x, move.y, to_x, to_y);
 	else
 		distance_move = 1000;
 
-	if(points[left.x][left.y] != 'W')
-		distance_left =  distance_pacman(left.x, left.y, pacman);
+	if(field[left.x][left.y] != 'W')
+		distance_left =  distance_xy(left.x, left.y, to_x, to_y);
 	else
 		distance_left = 1000;
 
-	if(points[right.x][right.y] != 'W')
-		distance_right =  distance_pacman(right.x, right.y, pacman);
+	if(field[right.x][right.y] != 'W')
+		distance_right =  distance_xy(right.x, right.y, to_x, to_y);
 	else
 		distance_right = 1000;
 	//==================================================
@@ -838,4 +946,74 @@ double get_next_next_move_ghost(int x, int y, direction_t direction, pacman_t *p
 		return distance_right;
 	}
 	//==================================================
+}
+
+void path_ghost_to_xy(ghost_t *ghost, int x, int y, char **field, xy size)
+{
+	direction_t new_diretion = get_next_direction_ghost(ghost->x, ghost->y, ghost->direction, x, y, field, size);
+	ghost->x = next_move(ghost->x, ghost->y, new_diretion, size).x;
+	ghost->y = next_move(ghost->x, ghost->y, new_diretion, size).y;
+	ghost->direction = new_diretion;
+}
+
+void reverse_direction(direction_t *direction)
+{
+	switch(*direction)
+	{
+		case up:
+			*direction = down;
+			break;
+		case down:
+			*direction = up;
+			break;
+		case left:
+			*direction = right;
+			break;
+		case right:
+			*direction = left;
+			break;
+		default:
+			*direction = neutral;;
+			break;
+		
+	}
+}
+
+void reset_ghost(ghost_t *ghost)
+{
+	ghost->x = ghost->start_x;
+	ghost->y = ghost->start_y;
+	if(ghost->state == frightened)
+		ghost->speed = ghost->speed / 2;
+	else
+		ghost->speed = 20;
+	ghost->state = idle;
+}
+
+void frighten_ghosts(ghosts_t *ghosts)
+{
+	reverse_direction(&ghosts->red.direction);
+	reverse_direction(&ghosts->pink.direction);
+	reverse_direction(&ghosts->orange.direction);
+	reverse_direction(&ghosts->cyan.direction);
+	if(ghosts->red.state != idle)
+	{
+		ghosts->red.state = frightened;
+		ghosts->red.speed = ghosts->red.speed * 2;
+	}
+	if(ghosts->pink.state != idle)
+	{
+		ghosts->pink.state = frightened;
+		ghosts->pink.speed = ghosts->pink.speed * 2;
+	}
+	if(ghosts->orange.state != idle)
+	{
+		ghosts->orange.state = frightened;
+		ghosts->orange.speed = ghosts->orange.speed * 2;
+	}
+	if(ghosts->cyan.state != idle)
+	{
+		ghosts->cyan.state = frightened;
+		ghosts->cyan.speed = ghosts->cyan.speed * 2;
+	}
 }
