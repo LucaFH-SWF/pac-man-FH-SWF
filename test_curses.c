@@ -212,16 +212,20 @@ int main()
 			}
 		}
 
-		//==Spielverlauf==beeinflussend
-		//spawn_ghost(&ghosts.red, &game.sp_ghohsts);
-		spawn_ghost(&ghosts.pink, &game.sp_ghohsts);
+		//==Spielverlauf==beeinflussend=====
+		spawn_ghost(&ghosts.red, &game.sp_ghohsts);
 		
+		if(pacman.dots_collected > 30)
+		{
+			spawn_ghost(&ghosts.pink, &game.sp_ghohsts);
+		}
 
 		//spawn_ghost(&ghosts.cyan, &game.sp_ghohsts);
 		if(game.level > 0 && pacman.dots_collected > 60)
 		{
 			spawn_ghost(&ghosts.orange, &game.sp_ghohsts);
 		}
+
 		//====PRINT / AUSGABE====
 		werase(game_win);
 
@@ -783,15 +787,10 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size)
 
 void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size)
 {
-	xy nxt;
 	switch(pink->state)
 	{
 		case chase:
-			nxt = next_move(pacman->x, pacman->y, pacman->direction, size);
-			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
-			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
-			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
-			path_ghost_to_xy(pink, nxt.x, nxt.y, field, size);
+			path_ghost_to_xy(pink, pacman->x, pacman->y, field, size);
 			break;
 		case frightened:
 			path_ghost_to_xy(pink, rand() % size.x, rand() % size.y, field, size);
