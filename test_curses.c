@@ -787,10 +787,18 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size)
 
 void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size)
 {
+	xy nxt;
 	switch(pink->state)
 	{
+		pos.x = pacman->x;
+		pos.y = pacman->y;
+
 		case chase:
-			path_ghost_to_xy(pink, pacman->x, pacman->y, field, size);
+			nxt = next_move(pacman->x, pacman->y, pacman->direction, size);
+			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
+			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
+			nxt = next_move(nxt.x, nxt.y, pacman->direction, size);
+			path_ghost_to_xy(pink, nxt.x, nxt.y, field, size);
 			break;
 		case frightened:
 			path_ghost_to_xy(pink, rand() % size.x, rand() % size.y, field, size);
