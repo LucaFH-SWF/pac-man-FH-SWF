@@ -9,6 +9,11 @@ struct xy{
 	int y;
 };
 
+typedef struct{
+	double x;
+	double y;
+} xy_double;
+
 struct ghost{
 	int x;
 	int y;
@@ -18,6 +23,7 @@ struct ghost{
 	direction_t direction;
 	int speed;
     int traped;
+    int frightened_s;
 };
 
 typedef struct xy xy;
@@ -49,6 +55,8 @@ typedef struct{
 	int score;
 	xy sp_ghohsts;
 	int level;
+    int scatter;
+    int scatter_n;
 }game_t;
 
 #endif
