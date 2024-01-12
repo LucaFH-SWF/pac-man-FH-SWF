@@ -66,23 +66,28 @@ double distance_xy(int x, int y, int to_x, int to_y)										//Berechnent den A
 
 int main()
 {
+	// Gödeker | deklarieren der  
 	game_t game;
 	pacman_t pacman;
 	ghosts_t ghosts;
 
 	game.field = NULL;
-	init_field("map.txt", &pacman, &ghosts, &game);
+	init_field("map.txt", &pacman, &ghosts, &game);		//initialisieren der übergebenen strukturen
 	if(!game.field)
 		return -1;
 
+	// Gödeker | ncurses
 	initscr();
 	cbreak();//strg - c zum beenden des Programms
 	noecho();
 	curs_set(0);
 
+	// Gödeker | Größe des Terminals erhalten
 	int x_max, y_max;
 	getmaxyx(stdscr, y_max, x_max);
 
+
+	// Gödeker | überprüfen ob das Terminal Fenster groß genug ist
 	if(x_max<game.size.x || y_max<(game.size.y+5))
 	{
 		endwin();
@@ -91,6 +96,7 @@ int main()
 		return 1;
 	}
 
+	// Gödeker | Positionen und initialisierung des Spiel screens und des score screens
 	int x_screen = x_max/2 - game.size.x/2;
 	int y_srcreen = y_max/2 - game.size.y/2;
 
@@ -98,6 +104,7 @@ int main()
 	WINDOW *score_win = newwin(3, game.size.x, y_srcreen, x_screen);//extra win für den score
 	refresh();
 
+	// Gödeker | ncurses Screen- und Farbeinstellungen
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
 
@@ -114,19 +121,21 @@ int main()
 	init_pair(8, COLOR_BLUE, COLOR_WHITE);	 //Geister frightened
 	init_pair(9, COLOR_WHITE, COLOR_BLUE);   //Geister frightened 2
 	
-	int run = 1;
+	int run = 1; //
 
-	int pressed_key = 0;
+	int pressed_key = 0; //Eingabe
 
+	// Gödeker | Timer Variablen 
 	int move_pacman = 0;
 	int move_red = 0;
 	int move_pink = 0;
 	int move_orange = 0;
 	int move_cyan = 0;
 
+	// Gödeker | integer für die timing(int *) Funktion
 	int prev_loop = 0;
 
-	direction_t input = neutral;
+	direction_t input = neutral; //Eingabe Richtung
 
 	flushinp();
 
@@ -158,13 +167,14 @@ int main()
 					run = 0;
 			}
 
-			flushinp();//bereits vorgemerkte eingaben löschen
+			flushinp();//bereits vorgemerkte Eingaben löschen
 
 			// Gödeker | ====PACMAN====
 
+			//sobald die Timer Variable den benötigten Schwellwert erreicht wird Pacman bewegt
 			if(move_pacman >= pacman.speed)
 			{
-				move_pacman = 0;
+				move_pacman = 0;//timer zurücksetzen
 				
 				pacman_handeling(&pacman, &input, &ghosts, &game);
 			}
@@ -199,7 +209,8 @@ int main()
 			}
 
 			// Gödeker |====Spielverlauf-beeinflussend=====
-			
+			//Spawnbedingugen der Geister überprüfen
+
 			//Red
 			if(ghosts.red.state != idle)
 			{
@@ -232,7 +243,7 @@ int main()
 			}
 			else
 			{
-				if(pacman.dots_collected > 5)//spawnt wenn Pacman 5 dots gesammelt hat
+				if(pacman.dots_collected > 5)//spawnt wenn Pacman mehr als 5 dots gesammelt hat
 				{
 					if(ghosts.pink.traped <= 0)
 						spawn_ghost(&ghosts.pink, &game.sp_ghohsts);
@@ -253,7 +264,7 @@ int main()
 			}
 			else
 			{
-				if(pacman.dots_collected > 30)//spawnt wenn Pacman 30 dots gesammelt hat
+				if(pacman.dots_collected > 30)//spawnt wenn Pacman mehr als 30 dots gesammelt hat
 				{
 					if(ghosts.cyan.traped <= 0)
 						spawn_ghost(&ghosts.cyan, &game.sp_ghohsts);
@@ -274,7 +285,7 @@ int main()
 			}
 			else
 			{
-				if(game.level > 1 && pacman.dots_collected > (pacman.dots_tocollect/3))//spawnt erst ab dem 2. Level und wenn Pacman 1/3 der dots gesammelt hat
+				if(game.level > 1 && pacman.dots_collected >= (pacman.dots_tocollect/3))//spawnt erst ab dem 2. Level und wenn Pacman mindestens 1/3 der dots gesammelt hat
 				{
 					if(ghosts.orange.traped <= 0)
 						spawn_ghost(&ghosts.orange, &game.sp_ghohsts);
@@ -827,6 +838,7 @@ xy next_move_left(int x, int y, direction_t direction, xy size)
 		
 	}
 }
+
 xy next_move_right(int x, int y, direction_t direction, xy size)
 {
 	switch(direction)
@@ -1055,6 +1067,7 @@ void move_ghost_cyan(ghost_t *cyan, ghost_t *red, pacman_t *pacman, char **field
 	}
 }
 
+// Gödeker | bestimmen der nächsten Richtung in die ein Geist gehen muss um das angeegebene Ziel zu erreichen Ziel( to_x, to_y ) 
 direction_t get_next_direction_ghost(int x, int y, direction_t direction, int to_x, int to_y, char **field, xy size)
 {
 	double distance_move = 0.0;
@@ -1129,6 +1142,7 @@ direction_t get_next_direction_ghost(int x, int y, direction_t direction, int to
 
 }
 
+// Gödeker | berechnen von distanzen in alle richtungen in die sich bewegt werden kann
 double get_next_next_move_ghost(int x, int y, direction_t direction,int to_x, int to_y, char **field, xy size)
 {
 	double distance_move = 0.0;
@@ -1175,6 +1189,7 @@ double get_next_next_move_ghost(int x, int y, direction_t direction,int to_x, in
 	//==================================================
 }
 
+ //Gödeker | bewegt den Geist so das er sein Ziel erreicht
 void path_ghost_to_xy(ghost_t *ghost, int x, int y, char **field, xy size)
 {
 	direction_t new_diretion = get_next_direction_ghost(ghost->x, ghost->y, ghost->direction, x, y, field, size);
@@ -1183,6 +1198,7 @@ void path_ghost_to_xy(ghost_t *ghost, int x, int y, char **field, xy size)
 	ghost->direction = new_diretion;
 }
 
+// Gödeker | umkehren der richtung
 void reverse_direction(direction_t *direction)
 {
 	switch(*direction)
@@ -1378,7 +1394,8 @@ void scatter_ghosts(ghosts_t *ghosts, game_t *game)
 	}
 }
 
-void re_init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game)//reinitialisieren von: Spielfeld
+// Gödeker | reinitialisieren des Spielfelds im falle eines Game Over oder neuem Level
+void re_init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game)
 {
 	FILE *fp;
 	fp = fopen(filename, "r");
@@ -1392,20 +1409,22 @@ void re_init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *g
 	fscanf(fp, "%d", &game->size.y);
 	fgetc(fp);
 
-	if(pacman->lives < 0)//GAME OVER
+	if(pacman->lives < 0)//wenn GAME OVER
 	{
 		pacman->lives = 3;
 		game->level = 1;
 		game->score = 0;
 	}
-	else
+	else//wenn nächstes level
 	{
 		pacman->lives += 1;
 	}
+
+	//dots und Timer zurück setzen
 	pacman->dots_collected = 0;
 	pacman->dots_tocollect = 0;
 	game->scatter_n = 0;
-	game->scatter = 1000;
+	game->scatter = 1250;
 
 
 	for(int i = 0; i < game->size.y; ++i)
@@ -1418,7 +1437,7 @@ void re_init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *g
 				case '$':
 					pacman->x = j;
 					pacman->y = i;
-					pacman->speed = 16 + ((game->level-1) * 1);
+					pacman->speed = 16 + ((game->level-1) * 1); //pro Level wird Pacman langsamer
 					pacman->direction = neutral;	
 					game->field[j][i] = ' ';
 					break;
@@ -1432,7 +1451,7 @@ void re_init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *g
 					ghosts->red.y = i;
 					ghosts->red.state = idle;			
 					ghosts->red.direction = left;
-					ghosts->red.speed = 20 - ((game->level-1) * 2);
+					ghosts->red.speed = 20 - ((game->level-1) * 2); //pro Level werden die Geister schneller
 					ghosts->red.traped = 0;
 					ghosts->red.frightened_s = 0;
 					game->field[j][i] = ' ';
