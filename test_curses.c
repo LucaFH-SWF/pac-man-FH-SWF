@@ -727,7 +727,7 @@ void reset_pacman(pacman_t *pacman, direction_t *input)
 	pacman->lives -= 1;
 	*input = neutral;
 }
-
+//Sammelfunktion um alle Geister zu resetten
 void reset_ghosts(ghosts_t *ghosts)
 {
 	reset_ghost(&ghosts->red);
@@ -1021,7 +1021,7 @@ void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size)
 void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size)
 {
 	switch(orange->state)
-	{	//Bewegt sich auf Pacman zu bis er zu nah kommt, dann Scattert er
+	{	//Bewegt sich auf Pacman zu, bis er zu nah kommt, dann Scattert er
 		case chase:
 			if( distance_xy(orange->x, orange->y, pacman->x, pacman->y) > 8)
 				path_ghost_to_xy(orange, pacman->x, pacman->y, field, size);
