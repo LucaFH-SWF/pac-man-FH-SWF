@@ -18,41 +18,42 @@
 
 #include "pac_types.h"
 
-char **create_field(xy size);//alokieren des Speichers für das Spielfeld
-void init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game);//initialisieren von: Spielfeld, Pacman, Geister
-void re_init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game);//reinitialisieren von: Spielfeld
-void reset_pacman(pacman_t *pacman, direction_t *input);//Pacman auf Startposition setzen und 1 Leben abziehen
-void reset_ghosts(ghosts_t *ghosts);//Geister auf Startposition setzen
-void reset_ghost(ghost_t *ghost);//einen Geist auf Startposition setzen
-void trap_ghost(ghost_t *ghost);//einen Geist einsperren
-void print_pacman(pacman_t pacman, WINDOW*);//Ausgabe Pacman
-void print_ghosts(ghosts_t ghosts, WINDOW*);//Ausgabe Geister
-void print_board(char **field, xy size, WINDOW*);//Ausgabe des Spielfeldes
-char richtungtochar(direction_t richtung);//Pfeil Pacman
-xy next_move(int x, int y, direction_t direction, xy size);//gibt die nächste position bei angegebener Richtung zurück
-xy next_move_left(int x, int y, direction_t direction, xy size);//gibt die nächste position links bei angegebener Richtung zurück
-xy next_move_right(int x, int y, direction_t direction, xy size);//gibt die nächste position rechts bei angegebener Richtung zurück
-void move_pacman(pacman_t *pacman, xy size);//Verschiebt die x un y Werte von Pacman in seine Bewegungs Richtung
+char **create_field(xy size);																//alokieren des Speichers für das Spielfeld
+void init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game);			//initialisieren von: Spielfeld, Pacman, Geister
+void re_init_field(char *filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game);		//reinitialisieren von: Spielfeld
+void reset_pacman(pacman_t *pacman, direction_t *input);									//Pacman auf Startposition setzen und 1 Leben abziehen
+void reset_ghosts(ghosts_t *ghosts);														//Geister auf Startposition setzen
+void reset_ghost(ghost_t *ghost);															//einen Geist auf Startposition setzen
+void frighten_ghosts(ghosts_t *ghosts);														//versetzt alle Geister in frightend
+void scatter_ghosts(ghosts_t *ghosts, game_t *game);										//versetzt alle Geister in scatter 
+void trap_ghost(ghost_t *ghost);															//einen Geist einsperren
+void print_pacman(pacman_t pacman, WINDOW*);												//Ausgabe Pacman
+void print_ghosts(ghosts_t ghosts, WINDOW*);												//Ausgabe Geister
+void print_board(char **field, xy size, WINDOW*);											//Ausgabe des Spielfeldes
+char richtungtochar(direction_t richtung);													//Pfeil Pacman
+xy next_move(int x, int y, direction_t direction, xy size);									//gibt die nächste position bei angegebener Richtung zurück
+xy next_move_left(int x, int y, direction_t direction, xy size);							//gibt die nächste position links bei angegebener Richtung zurück
+xy next_move_right(int x, int y, direction_t direction, xy size);							//gibt die nächste position rechts bei angegebener Richtung zurück
+void move_pacman(pacman_t *pacman, xy size);												//Verschiebt die x un y Werte von Pacman in seine Bewegungs Richtung
 void pacman_kollision(pacman_t *pacman, direction_t *input, ghosts_t *ghosts, game_t *game);//Kollisions abfrage Pacman
-int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts, int *score);//kollisons abfrage pacman und alle Geister
-int pacman_geist_kollision(pacman_t *pacman, ghost_t *ghost, int *score);//kollisons abfrage pacman und ein Geist
-void frighten_ghosts(ghosts_t *ghosts);//Geister Richtung umkehren und state ändern
-void spawn_ghost(ghost_t *ghost, xy *pos);//Geister auf dem Spielfeld platzieren
-void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size);
-void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size);
-void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size);
-void move_ghost_cyan(ghost_t *cyan, ghost_t *red, pacman_t *pacman, char **field, xy size);
-void path_ghost_to_xy(ghost_t *ghost, int x, int y, char **field, xy size);
-direction_t get_next_direction_ghost(int x, int y, direction_t direction, int to_x, int to_y, char **field, xy size);
-double get_next_next_move_ghost(int x, int y, direction_t direction,int to_x, int to_y, char **field, xy size);
-direction_t direction_left(direction_t direction);
-direction_t direction_right(direction_t direction);
-void reverse_direction(direction_t *direction);
-xy get_move_ahead(int x, int y, direction_t direction, int n);
-xy cyan_chase(pacman_t *pacman, ghost_t red_ghost);
-void scatter_ghosts(ghosts_t *ghosts, game_t *game);
+int pacman_geister_kollision(pacman_t *pacman, ghosts_t *ghosts, int *score);				//kollisons abfrage pacman und alle Geister
+int pacman_geist_kollision(pacman_t *pacman, ghost_t *ghost, int *score);					//kollisons abfrage pacman und ein Geist
+void spawn_ghost(ghost_t *ghost, xy *pos);													//Geister auf dem Spielfeld platzieren
+void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size);					//Bewege den roten Geist
+void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size);				//Bewege den pinken Geist
+void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size);			//Bewege den orangenen Geist
+void move_ghost_cyan(ghost_t *cyan, ghost_t *red, pacman_t *pacman, char **field, xy size); //Bewege den türkisen Geist
+void path_ghost_to_xy(ghost_t *ghost, int x, int y, char **field, xy size);					//bewegt einen Geist so das er das angegebene x,y erreicht
+xy cyan_chase(pacman_t *pacman, ghost_t red_ghost);											//berechnet das Ziel Feld für den türkisen Geist
+direction_t get_next_direction_ghost(int x, int y, direction_t direction, int to_x, int to_y, char **field, xy size);/*Ruft get_next_next_move_ghost bis zu 3 mal auf
+																													    und wählt die kleinste Entfernung um die Richtung zu bestimmen.*/
+double get_next_next_move_ghost(int x, int y, direction_t direction,int to_x, int to_y, char **field, xy size);		 //wird von get_next_direction_ghost aufgerufen und gibt eine Entfernung zurück
+direction_t direction_left(direction_t direction);											//gibt die richtung links von der angegebenen Richtung zurück
+direction_t direction_right(direction_t direction);											//gibt die richtung rechts von der angegebenen Richtung zurück
+void reverse_direction(direction_t *direction);												//gibt die entgegen gesätzte Richtung zurück
+xy get_move_ahead(int x, int y, direction_t direction, int n);								//gibt die x,y Werte zurück die in n bewegungen, bei angegebener Richtung, erreicht wird 
 
-int absolut(int number)
+int absolut(int number)																		//Betragsfunktion
 {
 	if(number > 0)
 		return number;
@@ -60,7 +61,7 @@ int absolut(int number)
 		return ( number * (-1) );
 }
 
-double distance_xy(int x, int y, int to_x, int to_y)
+double distance_xy(int x, int y, int to_x, int to_y)										//Berechnent den Abstand zwischen zwei Punkten
 {
 	return sqrt (  pow( absolut(to_x - x), 2 ) + pow( absolut(to_y - y), 2 )  );
 }
@@ -112,8 +113,8 @@ int main()
 	init_pair(6, COLOR_BLACK, COLOR_YELLOW); //Geist "Orange"
 
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);  //spielfeld Dots
-	init_pair(8, COLOR_WHITE, COLOR_BLUE);	 //Geister frightened
-	init_pair(8, COLOR_BLUE, COLOR_WHITE);   //
+	init_pair(8, COLOR_BLUE, COLOR_WHITE);	 //Geister frightened
+	init_pair(9, COLOR_WHITE, COLOR_BLUE);   //
 	
 	int run = 1;
 
@@ -345,13 +346,18 @@ int main()
 		wrefresh(game_win);
 
 		
-		mvwprintw(score_win, 0, 0, "LEVEL: %d", game.level);  mvwprintw(score_win, 0, 17, "exit: q");
-		mvwprintw(score_win, 1, 0, "score: %08d", game.score); mvwprintw(score_win, 1, 16, "lives: %d", pacman.lives);
+		mvwprintw(score_win, 0, 0, "LEVEL: %d", game.level);  mvwprintw(score_win, 0, 17, "EXIT: q");
+		mvwprintw(score_win, 1, 0, "SCORE: %08d", game.score); mvwprintw(score_win, 1, 16, "LIVES: %d", pacman.lives);
 
 		wrefresh(score_win);
 		
-		if(pacman.dots_tocollect == pacman.dots_collected)
+		if(pacman.dots_tocollect == pacman.dots_collected)//Next-Level
 		{
+			wattron(game_win, COLOR_PAIR(2));
+			mvwprintw(game_win, game.size.y/2, game.size.x/2-4, "READY !");
+			wattroff(game_win, COLOR_PAIR(2));
+			wrefresh(game_win);
+			sleep(2);
 			game.level += 1;
 			pacman.lives +=1;
 			reset_ghosts(&ghosts);
@@ -364,7 +370,8 @@ int main()
 		if(pacman.lives < 0) //GAME OVER
 		{
 			wattron(game_win, COLOR_PAIR(3));
-			mvwprintw(game_win, game.size.y/2-3, game.size.x/2-5, "GAME OVER");
+			mvwprintw(game_win, game.size.y/2-2, game.size.x/2-5, "GAME OVER");
+			mvwprintw(game_win, game.size.y/2-1, game.size.x/2-8, "SCORE: %08d", game.score);
 			wattroff(game_win, COLOR_PAIR(3));
 			wrefresh(game_win);
 			sleep(3);
@@ -383,6 +390,7 @@ int main()
 	return 0;
 }
 
+//ein char ** feld auf dem heap allokieren und zurück geben
 char **create_field(xy size)
 {
 	char **field;
@@ -402,6 +410,7 @@ char **create_field(xy size)
 	return field;
 }
 
+//ließt die "map.txt" Datei aus, und initialisiert die Werte entsprechend
 void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game)
 {
 	FILE *fp;
@@ -425,6 +434,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 		return;
 	}
 
+	//Werte sind immer gleich
 	pacman->lives = 3;
 	pacman->dots_collected = 0;
 	pacman->dots_tocollect = 0;
@@ -433,7 +443,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 	game->scatter_n = 0;
 	game->scatter = 1000;
 
-
+	//Werte mit Datei inhalt initialisieren
 	for(int i = 0; i < game->size.y; ++i)
 	{
 		for(int j = 0; j < game->size.x; ++j)
@@ -441,7 +451,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 			game->field[j][i] = fgetc(fp);
 			switch(game->field[j][i])
 			{
-				case '$':
+				case '$':	// $ ist Pacman
 					pacman->x = j;
 					pacman->y = i;
 					pacman->start_x = j;
@@ -450,12 +460,12 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					pacman->direction = neutral;	
 					game->field[j][i] = ' ';
 					break;
-				case 'S':
+				case 'S':	// S ist der Startpunkt für die Geister
 					game->sp_ghohsts.x = j;
 					game->sp_ghohsts.y = i;	
 					game->field[j][i] = ' ';
 					break;
-				case 'R':
+				case 'R': // R ist der rote Geist
 					ghosts->red.x = j;
 					ghosts->red.y = i;
 					ghosts->red.start_x = j;
@@ -467,7 +477,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->red.frightened_s = 0;
 					game->field[j][i] = ' ';
 					break;
-				case 'P':
+				case 'P':	// P ist der pinke Geist
 					ghosts->pink.x = j;
 					ghosts->pink.y = i;
 					ghosts->pink.start_x = j;
@@ -479,7 +489,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->pink.frightened_s = 0;
 					game->field[j][i] = ' ';
 					break;
-				case 'C':
+				case 'C': // C ist der türkise Geist
 					ghosts->cyan.x = j;
 					ghosts->cyan.y = i;
 					ghosts->cyan.start_x = j;
@@ -491,7 +501,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->cyan.frightened_s = 0;
 					game->field[j][i] = ' ';
 					break;
-				case 'O':
+				case 'O': // O ist der orangene Geist
 					ghosts->orange.x = j;
 					ghosts->orange.y = i;
 					ghosts->orange.start_x = j;
@@ -503,10 +513,10 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 					ghosts->orange.frightened_s = 0;
 					game->field[j][i] = ' ';
 					break;
-				case '.':
+				case '.': // . ist ein Dot
 					pacman->dots_tocollect += 1;
 					break;
-				case 'o':
+				case 'o': // o ist ein "enegizer"
 					pacman->dots_tocollect += 1;
 					break;
 			} 
@@ -517,6 +527,7 @@ void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game
 	return;
 }
 
+//gibt das Spielfeld mit den entsprechenden Farben, auf dem angegebenen ncurses screen, aus
 void print_board(char **field, xy size, WINDOW* win)
 {
 	for(int i = 0; i < size.y; ++i)
@@ -539,6 +550,7 @@ void print_board(char **field, xy size, WINDOW* win)
 	}
 }
 
+//gibt pacman, auf dem angegebenen ncurses screen, aus
 void print_pacman(pacman_t pacman, WINDOW* win)
 {
 	wattron(win, COLOR_PAIR(2));
@@ -546,6 +558,7 @@ void print_pacman(pacman_t pacman, WINDOW* win)
 	wattroff(win, COLOR_PAIR(2));
 }
 
+//gibt den char zurück, der für Pacman benutzt werden soll 
 char richtungtochar(direction_t richtung)
 {
 	switch(richtung)
@@ -568,30 +581,44 @@ char richtungtochar(direction_t richtung)
 	}
 }
 
+//gibt alle Geister aus, es wird zwischen frightened und nicht frightened unterschieden
 void print_ghosts(ghosts_t ghosts, WINDOW* win)
 {
 	//red
 	if(ghosts.red.state != frightened)
 	{
+		//normale Ausgabe
 		wattron(win, COLOR_PAIR(3));
 		mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
 		wattroff(win, COLOR_PAIR(3));
 	}
 	else
 	{
-		if(time(0) % 2)
+		//Ausgabe wenn der Geist frightened ist
+		if(ghosts.red.frightened_s < 125)
+		{
+			if(time(0) % 2)
+			{
+				wattron(win, COLOR_PAIR(8));
+				mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
+				wattroff(win, COLOR_PAIR(8));
+			}
+			else
+			{
+				wattron(win, COLOR_PAIR(9));
+				mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
+				wattroff(win, COLOR_PAIR(9));
+			}
+		}
+		else
 		{
 			wattron(win, COLOR_PAIR(8));
 			mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
 			wattroff(win, COLOR_PAIR(8));
 		}
-		else
-		{
-			wattron(win, COLOR_PAIR(9));
-			mvwprintw(win, ghosts.red.y, ghosts.red.x, "%c", 'R');
-			wattroff(win, COLOR_PAIR(9));
-		}
+		
 	}
+
 	//pink
 	if(ghosts.pink.state != frightened)
 	{
@@ -601,19 +628,29 @@ void print_ghosts(ghosts_t ghosts, WINDOW* win)
 	}
 	else
 	{
-		if(time(0) % 2)
+		if(ghosts.pink.frightened_s < 125)
+		{
+			if(time(0) % 2)
+			{
+				wattron(win, COLOR_PAIR(8));
+				mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
+				wattroff(win, COLOR_PAIR(8));
+			}
+			else
+			{
+				wattron(win, COLOR_PAIR(9));
+				mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
+				wattroff(win, COLOR_PAIR(9));
+			}
+		}
+		else
 		{
 			wattron(win, COLOR_PAIR(8));
 			mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
 			wattroff(win, COLOR_PAIR(8));
 		}
-		else
-		{
-			wattron(win, COLOR_PAIR(9));
-			mvwprintw(win, ghosts.pink.y, ghosts.pink.x, "%c", 'P');
-			wattroff(win, COLOR_PAIR(9));
-		}
 	}
+
 	//cyan
 	if(ghosts.cyan.state != frightened)
 	{
@@ -623,19 +660,29 @@ void print_ghosts(ghosts_t ghosts, WINDOW* win)
 	}
 	else
 	{
-		if(time(0) % 2)
+		if(ghosts.cyan.frightened_s < 150)
+		{
+			if(time(0) % 2)
+			{
+				wattron(win, COLOR_PAIR(8));
+				mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
+				wattroff(win, COLOR_PAIR(8));
+			}
+			else
+			{
+				wattron(win, COLOR_PAIR(9));
+				mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
+				wattroff(win, COLOR_PAIR(9));
+			}
+		}
+		else
 		{
 			wattron(win, COLOR_PAIR(8));
 			mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
 			wattroff(win, COLOR_PAIR(8));
 		}
-		else
-		{
-			wattron(win, COLOR_PAIR(9));
-			mvwprintw(win, ghosts.cyan.y, ghosts.cyan.x, "%c", 'C');
-			wattroff(win, COLOR_PAIR(9));
-		}
 	}
+
 	//orange
 	if(ghosts.orange.state != frightened)
 	{
@@ -645,21 +692,31 @@ void print_ghosts(ghosts_t ghosts, WINDOW* win)
 	}
 	else
 	{
-		if(time(0) % 2)
+		if(ghosts.orange.frightened_s < 125)
+		{
+			if(time(0) % 2)
+			{
+				wattron(win, COLOR_PAIR(8));
+				mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
+				wattroff(win, COLOR_PAIR(8));
+			}
+			else
+			{
+				wattron(win, COLOR_PAIR(9));
+				mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
+				wattroff(win, COLOR_PAIR(9));
+			}
+		}
+		else
 		{
 			wattron(win, COLOR_PAIR(8));
 			mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
 			wattroff(win, COLOR_PAIR(8));
 		}
-		else
-		{
-			wattron(win, COLOR_PAIR(9));
-			mvwprintw(win, ghosts.orange.y, ghosts.orange.x, "%c", 'O');
-			wattroff(win, COLOR_PAIR(9));
-		}
 	}
 }
 
+//setzt pacmans Werte und den input zurück 
 void reset_pacman(pacman_t *pacman, direction_t *input)
 {
 	pacman->x = pacman->start_x;
@@ -679,6 +736,7 @@ void reset_ghosts(ghosts_t *ghosts)
 	reset_ghost(&ghosts->cyan);
 }
 
+//setzt die Werte des Geistes zurück
 void reset_ghost(ghost_t *ghost)
 {
 	ghost->x = ghost->start_x;
@@ -691,6 +749,7 @@ void reset_ghost(ghost_t *ghost)
 	ghost->state = idle;
 }
 
+//bewegt Pacman
 void move_pacman(pacman_t *pacman, xy size)
 {
 	pacman->x = next_move(pacman->x, pacman->y, pacman->direction, size).x;
@@ -719,7 +778,7 @@ xy next_move(int x, int y, direction_t direction, xy size)
 		default:
 			break;
 	}
-	//außerhalb des Bereichs
+	//auf außerhalb des Bereichs überprüfen:
 	if(pos.x>size.x-1)
 	{
 		pos.x = 0;
@@ -740,6 +799,8 @@ xy next_move(int x, int y, direction_t direction, xy size)
 		pos.y = size.y;
 		return pos;
 	}
+
+	//falls innerhalb des Bereichs:
 	return pos;
 }
 
