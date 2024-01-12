@@ -1,23 +1,23 @@
 #ifndef pacman_types
 #define pacman_types
 
-// definiert die Richtungen und Zustände (hoch, runter, verfolgen..)
+// Gödeker | definiert die Richtungen und Zustände (hoch, runter, verfolgen..)
 typedef enum {up, right, down, left, neutral} direction_t;
 typedef enum {chase, frightened, scatter, idle} state_t;
 
-// struktur für die Koordinaten in 2D (integer)
+// Gödeker | struktur für die Koordinaten in 2D (integer)
 struct xy{
     int x;
     int y;
 };
 
-// struktur für die Koordinaten in 2D (double)
+// Gödeker | struktur für die Koordinaten in 2D (double)
 typedef struct{
     double x;
     double y;
 } xy_double;
 
-// struktur für ein Geist mit Position (x, y), Startposition, Geschwindigkeit und anderen Eigenschaften
+// Gödeker | struktur für ein Geist mit Position (x, y), Startposition, Geschwindigkeit und anderen Eigenschaften
 struct ghost{
     int x;
     int y;
@@ -30,11 +30,11 @@ struct ghost{
     int frightened_s;
 };
 
-// umbennenung von struktur für bessere verständlichkeit
+// Gödeker | umbennenung von struktur für bessere verständlichkeit
 typedef struct xy xy;
 typedef struct ghost ghost_t;
 
-// definition der struktur für alle geister im spiel
+// Gödeker | definition der struktur für alle geister im spiel
 typedef struct{
     ghost_t red;
     ghost_t pink;
@@ -42,7 +42,7 @@ typedef struct{
     ghost_t cyan;
 } ghosts_t;
 
-// definition einer struktur für den Pacman-Charakter (Leben, Punktzahl..)
+// Gödeker | definition einer struktur für den Pacman-Charakter (Leben, Punktzahl..)
 typedef struct{
     int lives;
     int score;
@@ -56,7 +56,7 @@ typedef struct{
     int speed;
 }pacman_t;
 
-// struktur für das Spiel
+// Gödeker | struktur für das Spiel
 typedef struct{
     char** field;        // Spielfeld in 2D-Array von Zeichen
     xy size;        	 // Größe vom Spielfeld in x und y Koordinaten
