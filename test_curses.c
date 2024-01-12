@@ -401,7 +401,7 @@ int main()
 	return 0;
 }
 
-//ein char ** feld auf dem heap allokieren und zurück geben
+//Gödeker | ein char ** feld auf dem heap allokieren und zurück geben
 char **create_field(xy size)
 {
 	char **field;
@@ -421,7 +421,7 @@ char **create_field(xy size)
 	return field;
 }
 
-//ließt die "map.txt" Datei aus, und initialisiert die Werte entsprechend
+//Gödeker | ließt die "map.txt" Datei aus, und initialisiert die Werte entsprechend
 void init_field(char* filename, pacman_t *pacman, ghosts_t *ghosts, game_t *game)
 {
 	FILE *fp;
@@ -561,7 +561,7 @@ void print_board(char **field, xy size, WINDOW* win)
 	}
 }
 
-//gibt pacman, auf dem angegebenen ncurses screen, aus
+//Önder | gibt pacman, auf dem angegebenen ncurses screen, aus
 void print_pacman(pacman_t pacman, WINDOW* win)
 {
 	wattron(win, COLOR_PAIR(2));
@@ -569,7 +569,7 @@ void print_pacman(pacman_t pacman, WINDOW* win)
 	wattroff(win, COLOR_PAIR(2));
 }
 
-//gibt den char zurück, der für Pacman benutzt werden soll 
+//Önder | gibt den char zurück, der für Pacman benutzt werden soll 
 char richtungtochar(direction_t richtung)
 {
 	switch(richtung)
@@ -592,7 +592,7 @@ char richtungtochar(direction_t richtung)
 	}
 }
 
-//gibt alle Geister aus, es wird zwischen frightened und nicht frightened unterschieden
+// Önder | gibt alle Geister aus, es wird zwischen frightened und nicht frightened unterschieden
 void print_ghosts(ghosts_t ghosts, WINDOW* win)
 {
 	//red
@@ -727,7 +727,7 @@ void print_ghosts(ghosts_t ghosts, WINDOW* win)
 	}
 }
 
-//setzt pacmans Werte und den input zurück 
+//Gödeker | setzt pacmans Werte und den input zurück 
 void reset_pacman(pacman_t *pacman, direction_t *input)
 {
 	pacman->x = pacman->start_x;
@@ -738,7 +738,7 @@ void reset_pacman(pacman_t *pacman, direction_t *input)
 	pacman->lives -= 1;
 	*input = neutral;
 }
-//Sammelfunktion um alle Geister zu resetten
+//Gödeker | Sammelfunktion um alle Geister zu resetten
 void reset_ghosts(ghosts_t *ghosts)
 {
 	reset_ghost(&ghosts->red);
@@ -747,7 +747,7 @@ void reset_ghosts(ghosts_t *ghosts)
 	reset_ghost(&ghosts->cyan);
 }
 
-//setzt die Werte des Geistes zurück
+//Gödeker | setzt die Werte des Geistes zurück
 void reset_ghost(ghost_t *ghost)
 {
 	ghost->x = ghost->start_x;
@@ -760,7 +760,7 @@ void reset_ghost(ghost_t *ghost)
 	ghost->state = idle;
 }
 
-//bewegt Pacman
+//Gödeker | bewegt Pacman
 void move_pacman(pacman_t *pacman, xy size)
 {
 	pacman->x = next_move(pacman->x, pacman->y, pacman->direction, size).x;
@@ -815,7 +815,7 @@ xy next_move(int x, int y, direction_t direction, xy size)
 	//falls innerhalb des Bereichs:
 	return pos;
 }
-
+//Gödeker | gibt x und y wert zurück wenn sich  nach links bewegt wird ( mit aktueller Sichtrichtung)
 xy next_move_left(int x, int y, direction_t direction, xy size)
 {
 	switch(direction)
@@ -839,6 +839,7 @@ xy next_move_left(int x, int y, direction_t direction, xy size)
 	}
 }
 
+//Gödeker | gibt x und y wert zurück wenn sich  nach rechts bewegt wird ( mit aktueller Sichtrichtung)
 xy next_move_right(int x, int y, direction_t direction, xy size)
 {
 	switch(direction)
