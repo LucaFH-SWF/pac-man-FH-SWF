@@ -1205,7 +1205,8 @@ void reverse_direction(direction_t *direction)
 		
 	}
 }
-
+//Mike Esteves
+//Sperrt Geister in den Kasten in der mitte der Map, tut sie auf ihre Startposition und setzt ihren Speed zurück
 void trap_ghost(ghost_t *ghost)
 {
 	ghost->x = ghost->start_x;
@@ -1215,7 +1216,8 @@ void trap_ghost(ghost_t *ghost)
 		ghost->speed = ghost->speed / 2;
 	ghost->state = idle;
 }
-
+//Mike Esteves
+//Frightened Verhalten für Geister. Sie sind langsamer, reversen einmal ihre Richtung und bewegen sich dann zufällig. Mit Timer
 void frighten_ghosts(ghosts_t *ghosts)
 {
 	reverse_direction(&ghosts->red.direction);
@@ -1247,8 +1249,8 @@ void frighten_ghosts(ghosts_t *ghosts)
 		ghosts->cyan.frightened_s = 500;
 	}
 }
-
-// Gödeker | setzt einen Geist aufs spielfeld
+//Mike Esteves
+//Wechselt State eines Geists auf Chase und setzt diesen auf die übergeben Position
 void spawn_ghost(ghost_t *ghost, xy *pos)
 {
 	if(ghost->state == idle)
@@ -1260,8 +1262,8 @@ void spawn_ghost(ghost_t *ghost, xy *pos)
 	else
 		return;
 }
-
-
+//Mike Esteves
+//Chase Verhalten für den blauen Geist. Bewegt sich in Relation zu der Position von dem roten Geist zu Pacman.
 xy cyan_chase(pacman_t *pacman, ghost_t red_ghost)
 {
 	xy_double pos;
@@ -1270,24 +1272,10 @@ xy cyan_chase(pacman_t *pacman, ghost_t red_ghost)
 	xy_double vec;
 	xy result;
 
-	switch(pacman->direction)
-	{
-		case up:
-			pos.y -= 2;
-			break;
-		case down:
-			pos.y += 2;
-			break;
-		case left:
-			pos.x -= 2;
-			break;
-		case right:
-			pos.x += 2;
-			break;
-		default:
-			break;
-	}
+	pos = get_move_ahead(pos.x, pos.y, pacman->direction, 2);
 
+	//If Schaltung um die Position von Rot zu Pacman festzustellen. Zieht einen Vektor von Rot auf einen Punk der Pacman 2 Felder vorraus ist.
+	//Verdoppelt dann die länge um das Zielfeld für Blau zu finden.
 	if(red_ghost.x < pos.x)
 	{
 		vec.x = pos.x - red_ghost.x;
@@ -1315,7 +1303,8 @@ xy cyan_chase(pacman_t *pacman, ghost_t red_ghost)
 	result.y = pos.y;
 	return result;
 }
-
+//Mike Esteves
+//Berechnet ein Feld welches n Felder vor der Position einer gewählten Spielfigur ist.
 xy get_move_ahead(int x, int y, direction_t direction, int n)
 {
 	xy pos;
@@ -1340,7 +1329,8 @@ xy get_move_ahead(int x, int y, direction_t direction, int n)
 	}
 	return pos;
 }
-
+//Mike Esteves
+//Scatter Verhalten der Geister - Sie gehen in ihre Home Corner zurück
 void scatter_ghosts(ghosts_t *ghosts, game_t *game)
 {
 	if(!(game->scatter_n % 2))
