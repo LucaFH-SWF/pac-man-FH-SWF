@@ -1,5 +1,6 @@
 #ifndef pacman_win32
 #define pacman_win32
+
 #include <sys/timeb.h>
 
 int timing(int *prev_loop)
