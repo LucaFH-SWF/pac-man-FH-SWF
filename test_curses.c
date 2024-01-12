@@ -738,7 +738,7 @@ void reset_pacman(pacman_t *pacman, direction_t *input)
 	pacman->lives -= 1;
 	*input = neutral;
 }
-
+//Sammelfunktion um alle Geister zu resetten
 void reset_ghosts(ghosts_t *ghosts)
 {
 	reset_ghost(&ghosts->red);
@@ -861,7 +861,8 @@ xy next_move_right(int x, int y, direction_t direction, xy size)
 		
 	}
 }
-
+//Mike Esteves
+//Gibt die Richtung welche abhängig von der aktuellen Richtung links wäre zurück
 direction_t direction_left(direction_t direction)
 {
 	switch(direction)
@@ -884,7 +885,8 @@ direction_t direction_left(direction_t direction)
 		
 	}
 }
-
+//Mike Esteves
+//Gibt die Richtung welche abhängig von der aktuellen Richtung links wäre zurück
 direction_t direction_right(direction_t direction)
 {
 	switch(direction)
@@ -984,11 +986,12 @@ int pacman_geist_kollision(pacman_t *pacman, ghost_t *ghost, int *score)
 	
 	return 0;
 }
-
+//Mike Esteves
+//Wie sich Red in seinen States bewegt
 void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size)
 {
 	switch(red->state)
-	{
+	{	//Bewegt sich auf Pacman zu
 		case chase:
 			path_ghost_to_xy(red, pacman->x, pacman->y, field, size);
 			break;
@@ -1003,12 +1006,13 @@ void move_ghost_red(ghost_t *red, pacman_t *pacman, char **field, xy size)
 			break;
 	}
 }
-
+//Mike Esteves
+//Wie sich Pink in seinen States bewegt
 void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size)
 {
 	xy pos;
 	switch(pink->state)
-	{
+	{	//Bewegt sich auf ein Feld 4 Felder vor Pacman zu
 		case chase:
 			pos = get_move_ahead(pacman->x, pacman->y, pacman->direction, 4);
 			path_ghost_to_xy(pink, pos.x, pos.y, field, size);
@@ -1024,11 +1028,12 @@ void move_ghost_pink(ghost_t *pink, pacman_t *pacman, char **field, xy size)
 			break;
 	}
 }
-
+//Mike Esteves
+//Wie sich Orange in seinen States bewegt
 void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size)
 {
 	switch(orange->state)
-	{
+	{	//Bewegt sich auf Pacman zu, bis er zu nah kommt, dann Scattert er
 		case chase:
 			if( distance_xy(orange->x, orange->y, pacman->x, pacman->y) > 8)
 				path_ghost_to_xy(orange, pacman->x, pacman->y, field, size);
@@ -1046,13 +1051,13 @@ void move_ghost_orange(ghost_t *orange, pacman_t *pacman, char **field, xy size)
 			break;
 	}
 }
-
+//Mike Esteves
+//Wie sich Cyan bewegt in seinen verschiedenen States
 void move_ghost_cyan(ghost_t *cyan, ghost_t *red, pacman_t *pacman, char **field, xy size)
 {
 	switch(cyan->state)
-	{
+	{	//Siehe cyan_chase
 		case chase:
-
 		path_ghost_to_xy(cyan, cyan_chase(pacman, *red).x, cyan_chase(pacman, *red).y, field, size);
 			break;
 		case frightened:
@@ -1197,8 +1202,8 @@ void path_ghost_to_xy(ghost_t *ghost, int x, int y, char **field, xy size)
 	ghost->y = next_move(ghost->x, ghost->y, new_diretion, size).y;
 	ghost->direction = new_diretion;
 }
-
-// Gödeker | umkehren der richtung
+//Mike Esteves
+//Reversed die Richtung 
 void reverse_direction(direction_t *direction)
 {
 	switch(*direction)
